@@ -2,8 +2,8 @@ import React from 'react'
 
 function Login() {
     return (
-        <div>
-            <h1>This is Login page</h1>
+        <div className='flex justify-center items-center min-h-screen bg-gray-200 px-4'>
+
         </div>
     )
 }
