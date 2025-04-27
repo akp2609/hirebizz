@@ -3,13 +3,18 @@ import signupImage from '../assets/signupImage.png'
 
 function SignUp() {
     return (
-        <div className='h-full w-full flex justify-center items-center px-4 bg-gray-900/10'>
+
+        //  outer most div
+        <div className='h-full w-full flex justify-center items-center px-4 mt-4'>
             
+            {/*  image  */}
             <div className='relative w-full sm:w-[60%] md:w-[85%] lg:w-[90%] xl:w-[95%] h-[90vh] bg-cover bg-center
             rounded-xl shadow-xl overflow-hidden mt-2 max-w-7xl opacity-95 ' style={{ backgroundImage: `url(${signupImage})` }}>
 
+                {/*  black overlay */}
                 <div className='absolute inset-0 bg-black/35' />
 
+                {/*  form */}
                 <div className='relative z-10 flex items-center justify-center h-full px-2 mt-4'>
                     <form className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
 
