@@ -9,12 +9,12 @@ import SignUp from './components/SignUp';
 import NavBar from './components/NavBar';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const clientId = '578755151813-c5utfpjau133nahis0ssb1i5ea0gbs8s.apps.googleusercontent.com'
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
 
 function App() {
   return (
 
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={clientId}>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 to-blue-700">
         <BrowserRouter>
           <div className="border-1 border-white">

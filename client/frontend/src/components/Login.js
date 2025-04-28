@@ -1,6 +1,7 @@
 import React from 'react'
 import loginImage from '../assets/loginImage.png'
 import GoogleLoginButton from './GoogleLoginButton'
+import GithubLoginButton from './GithubLoginButton'
 
 function Login() {
     return (
@@ -20,6 +21,7 @@ function Login() {
                     {/* Fixme error 401 google auth access denied */}
                     <div className='mt-4 flex justify-between items-center'>
                         <GoogleLoginButton/>
+                        <GithubLoginButton/>
                     </div>
 
                 </div>
