@@ -12,7 +12,7 @@ const GithubLoginButton = () => {
   return (
     <button
       onClick={handleGitHubLogin}
-      className="flex items-center gap-1 bg-black text-white px-2 py-1 rounded-2xl hover:bg-gray-800 transition"
+      className="flex items-center gap-1 bg-black text-white px-2 py-1 rounded-2xl hover:bg-gray-600 transition"
     >
       <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub logo" className="w-6 h-6" />
       <span>Sign in with GitHub</span>
