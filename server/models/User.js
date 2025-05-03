@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
         type:String
     },
     profilePicture:{
-        type: String
+        type: String,
+        default: 'https://res.cloudinary.com/dmcnrrfxo/image/upload/v1746279568/profile_pictures/mwtyy4ucuie3pvmjj3ay.jpg'
     },
     isVerified:{
         type: Boolean,
@@ -44,4 +45,4 @@ userSchema.pre('save', async function(next){
     next();
 })
 
-module.exports = mongoose.model('User',userSchema);
+export default mongoose.model('User',userSchema);
