@@ -34,7 +34,12 @@ const userSchema = new mongoose.Schema({
     role:{
         type: String,
         enum: ["candidate","employer"]
-    }
+    },
+    company:{
+        name: String,
+        website: String,
+        logo: String
+    },
 },{timestamps:true});
 
 userSchema.pre('save', async function(next){

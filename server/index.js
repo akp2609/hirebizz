@@ -1,8 +1,10 @@
-import express from 'express';
+import express, { application } from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
+import applicationRoutes from './routes/applicationRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
 
 dotenv.config();
 
@@ -12,7 +14,9 @@ connectDB();
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user',userRoutes)
+app.use('/api/user',userRoutes);
+app.use('/api/applications',applicationRoutes);
+app.use('/api/job',jobRoutes)
 
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));

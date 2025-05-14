@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 const requireAuth = async (req, res, next) => {
-    console.log("Authorization Header: " ,req.headers.authorization);
+
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -10,8 +10,7 @@ const requireAuth = async (req, res, next) => {
   }
 
   const token = authorization.split(' ')[1];
-  console.log("Extracted Token ",token)
-  console.log("JWT_SECRET: ",process.env.JWT_SECRET)
+
   try {
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(id).select('-password'); // exclude password
@@ -19,6 +18,21 @@ const requireAuth = async (req, res, next) => {
   } catch (err) {
     res.status(401).json({ error: 'Unauthorized - Invalid token' });
   }
+};
+
+export const isAuthenticated = async (req,res,next)=>{
+
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if(!token)return res.status(401).json({error: "Not uathenticated"});
+
+    try{
+       const decoded = jwt.verify(token,process.env.JWT_SECRET);
+       req.user = await User.findById(decoded.id);
+       next(); 
+    }catch(error){
+        return res.status(401).json({error: 'Invalid token'});
+    }
 };
 
 export default requireAuth;
