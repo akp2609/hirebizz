@@ -1,5 +1,6 @@
 import Application from "../models/Application.js";
 import Job from "../models/Job.js";
+import { uploadToGCS } from "../utils/gcsUploader.js";
 
 
 export const applyToJob = async (req,res)=>{
@@ -12,6 +13,7 @@ export const applyToJob = async (req,res)=>{
 
         if(existing)return res.status(400).json({message: 'Already applied to this job'});
 
+
         const application = await Application.create({
             job: jobId,
             applicant: userId,
@@ -21,7 +23,7 @@ export const applyToJob = async (req,res)=>{
 
         res.status(201).json({message: 'Application submitted', application});
     }catch(err){
-        res.status(500).json({message: 'Error applying to job',error: err.message});
+        res.status(500).json({message: 'Error applying to job',error: err.message || err.toString()});
     }
 };
 
@@ -45,3 +47,7 @@ export const getJobApplications = async (req,res)=>{
         res.status(500).json({message: 'Error fetching applications',error: err.message});
     }
 };
+
+const withdrawApplication = async(req,res)=>{
+    
+}

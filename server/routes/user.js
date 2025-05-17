@@ -1,21 +1,22 @@
 import express from 'express';
 import upload from '../middleware/multer.js';
 import requireAuth from '../middleware/authMiddleware.js';
-import User from '../models/User.js';
+import { deleteResume, uploadResume,uploadProfilePic, saveJobs, getSavedJobs} from '../controllers/userController.js';
+import uploadPDF from '../middleware/upload.js';
+import { appendFile } from 'fs';
+import { error } from 'console';
+
 
 const router = express.Router();
 
-router.post('/upload-profile-pic',requireAuth,upload.single('image'),async(req,res)=>{
-    try{
-        const user = await User.findByIdAndUpdate(
-            req.user._id,
-            {profilePicture: req.file.path},
-            {new: true}
-        );
-        res.json({message: 'Profile picture uploaded', url: user.profilePicture})
-    }catch(err){
-        res.status(500).json({error:'Something went wrong'});
-    }
-})
+router.post('/upload-profile-pic',requireAuth,upload.single('image'),uploadProfilePic)
+
+router.post('/upload-resume',requireAuth,uploadPDF.single('resume'),uploadResume);
+
+router.delete('/delete-resume',requireAuth,deleteResume);
+
+router.post('/:jobId/save-job',requireAuth,saveJobs);
+
+router.get('/saved-jobs',requireAuth,getSavedJobs);
 
 export default router;

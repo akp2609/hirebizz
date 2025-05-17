@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import Job from "./Job.js";
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -40,6 +41,21 @@ const userSchema = new mongoose.Schema({
         website: String,
         logo: String
     },
+    resumeURL:{
+        type:String,
+        default: null
+    },
+    objectName:{
+        type: String,
+        default: null
+    },
+    savedJobs:{
+        type:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:Job
+    }],
+    default: []
+    }
 },{timestamps:true});
 
 userSchema.pre('save', async function(next){

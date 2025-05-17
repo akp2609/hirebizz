@@ -13,6 +13,6 @@ const applicationSchema = new mongoose.Schema({
         required:true},
     status: {type:String,enum: ['pending','reviewed','accepted','rejected'],default:'pending'},
     appliedAt: {type: Date, default: Date.now},
-})
+});
 
 export default mongoose.model("Application",applicationSchema);
