@@ -2,6 +2,10 @@ import User from "../models/User.js";
 import { basename, parse } from "path";
 import { uploadToGCS,deleteFromGCS } from "../utils/gcsUploader.js";
 
+
+const bucketName = process.env.GOOGLE_BUCKET_NAME;
+
+
 export const uploadResume = async (req, res) => {
 
     try {
@@ -18,9 +22,8 @@ export const uploadResume = async (req, res) => {
             try {
 
                 const url = new URL(user.resumeURL);
-                const objectName = decodeURIComponent(url.pathname.split('/').pop());
 
-                await deleteFromGCS(objectName);
+                await deleteFromGCS(user.objectName );
                 console.log('Previous resume deleted');
 
             } catch (err) {
@@ -32,12 +35,13 @@ export const uploadResume = async (req, res) => {
         const localPath = req.file.path;
         const originalName = req.file.originalname;
 
-        const publicUrl = await uploadToGCS(localPath, originalName);
+        const publicUrl = await uploadToGCS(localPath, originalName,user._id);
 
         user.resumeURL = publicUrl.signedUrl;
         const url = new URL(publicUrl.signedUrl);
-        const objectNameCur = decodeURIComponent(url.pathname.split('/').pop());
+        const objectNameCur = `${user._id}/${decodeURIComponent(url.pathname.split('/').pop())}`;
         user.objectName = objectNameCur;
+
         await user.save();
 
         console.log('User updated:', user);

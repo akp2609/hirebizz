@@ -16,9 +16,9 @@ const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
 const bucket = storage.bucket(bucketName);
 
-export const uploadToGCS = (localPath, originalName) => {
+export const uploadToGCS = (localPath, originalName,userId) => {
     console.log('uploadToGCS called with:',localPath,originalName);
-    const uniqueName = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}-${originalName}`;
+    const uniqueName = `${userId}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}-${originalName}`;
     const file = bucket.file(uniqueName);
 
     return new Promise((resolve, reject) => {

@@ -18,7 +18,7 @@ export const registerUser = async (req, res) => {
         const user = await User.create({ name, email, password,role });
         const token = createToken(user._id);
 
-       await sendVerificationEmail(email,token);
+       //await sendVerificationEmail(email,token);
 
         res.status(201).json({ user: { id: user._id, name: user.name, email: user.email }, token });
     } catch (err) {
@@ -30,6 +30,8 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        console.log(password);
 
         const user = await User.findOne({ email });
         if (!user) {
