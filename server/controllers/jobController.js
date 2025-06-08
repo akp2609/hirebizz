@@ -21,7 +21,7 @@ export const createJob = async (req,res)=>{
             });
         }
 
-        if( user.company.name !== companyName || user.company.logo !== comapnyLogo || user.company.website !== companyWebsite){
+        if( user.company.name !== companyName || user.company.logo !== companyLogo || user.company.website !== companyWebsite){
             user.company = {
                 name: companyName,
                 logo: companyLogo,

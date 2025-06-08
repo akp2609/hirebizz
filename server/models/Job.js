@@ -5,7 +5,7 @@ const jobSchema = new mongoose.Schema({
     description: String,
     location: String,
     company: {type: mongoose.Schema.Types.ObjectId, ref: "Company"},
-    skills: [String],
+    skills: {type:[String],required:true},
     embeddings: [[Number]],
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     createdAt:{type:Date,default:Date.now},
