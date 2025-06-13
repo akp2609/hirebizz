@@ -38,3 +38,15 @@ export const sendResetPasswordEmail = async(email,token) => {
     })
 
 };
+
+export const sendUnseenMessagesEmail = async(email,employer)=>{
+
+    transporter.sendMail({
+        from: `"HireBizz" <${process.env.EMAIL_USER}`,
+        to: email,
+        subjec: `You have unseen messages from`,
+        html: `
+        <h3>You have unseen messages from ${employer} based on your applications and interests. </h3>
+        <p>Kindly login to your dashboard to reply and not miss any opportunity to your dream job.</p>`
+    })
+}

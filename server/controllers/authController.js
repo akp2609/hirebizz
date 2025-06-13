@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js'; // Don't forget the `.js` extension in ESM
+import User from '../models/User.js'; 
 import { sendResetPasswordEmail, sendVerificationEmail } from '../utils/mailer.js';
 
 const createToken = (userId,expiresIn = '1h',jwt_secret = process.env.JWT_SECRET) => {

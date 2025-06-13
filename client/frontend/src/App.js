@@ -9,6 +9,7 @@ import SignUp from './pages/SignUp';
 import NavBar from './components/NavBar';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Setting from "./pages/Setting";
+import Dashboard from "./pages/admin/Dashboard";
 
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -30,6 +31,7 @@ function App() {
               <Route path='/login' element={<Login />} />
               <Route path='/signup' element={<SignUp />} />
               <Route path='/setting' element={<Setting />} />
+              <Route path='/admin' element={<Dashboard/>}/>
             
             </Routes>
           </div>

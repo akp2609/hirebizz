@@ -5,6 +5,8 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
+import chatRoutes from './routes/chatRoutes.js'
+import { scheduleRemindersMessage } from './cron/scheduler.js';
 
 dotenv.config();
 
@@ -12,6 +14,8 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+
+scheduleRemindersMessage();
 
 app.use((req,res,next)=>{
     console.log(`incoming ${req.method} ${req.url}`);
@@ -32,7 +36,8 @@ app.use((err,req,res,next)=>{
 app.use('/api/auth', authRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/applications',applicationRoutes);
-app.use('/api/job',jobRoutes)
+app.use('/api/job',jobRoutes);
+app.use('/api/chat',chatRoutes);
 
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));
