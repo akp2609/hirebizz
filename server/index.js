@@ -9,6 +9,7 @@ import chatRoutes from './routes/chatRoutes.js'
 import { scheduleRemindersMessage } from './cron/scheduler.js';
 
 dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
+console.log("Environment loaded:", process.env.NODE_ENV)
 
 const app = express();
 connectDB();
@@ -46,7 +47,12 @@ app.use('/api/chat', chatRoutes);
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+
+try {
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+        console.log(`✅ Server is running on port ${PORT}`);
+    });
+} catch (error) {
+    console.error("❌ Error starting server:", error);
+}
