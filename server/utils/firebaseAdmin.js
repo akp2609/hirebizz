@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const isLocal = process.env.NODE_ENV !== 'production';
 const serviceAccount = isLocal?JSON.parse(
   fs.readFileSync(path.join(__dirname, "../config/firebase-key.json"), "utf-8")
-): fs.readFileSync("/etc/secrets/firebase/hirebizz-firebase-sa", "utf-8");
+): fs.readFileSync("/etc/secrets/firebase/hirebizz-firebase-sa/firebase-key.json", "utf-8");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
