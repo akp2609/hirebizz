@@ -8,7 +8,7 @@ import jobRoutes from './routes/jobRoutes.js';
 import chatRoutes from './routes/chatRoutes.js'
 import { scheduleRemindersMessage } from './cron/scheduler.js';
 
-dotenv.config({ path: '/etc/secrets/hirebizz-backend-secret/.env' });
+dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
 
 const app = express();
 connectDB();
