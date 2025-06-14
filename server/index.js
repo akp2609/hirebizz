@@ -15,29 +15,33 @@ connectDB();
 
 app.use(express.json());
 
-scheduleRemindersMessage();
+if (process.env.NODE_ENV !== 'production') {
+    import('./cron/scheduler.js').then(({ scheduleRemindersMessage }) => {
+        scheduleRemindersMessage();
+    });
+}
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     console.log(`incoming ${req.method} ${req.url}`);
     next();
 })
 
-app.use((err,req,res,next)=>{
-    if(err.code === 'LIMIT_FILE_SIZE'){
-        return res.status(400).json({error: 'File size too large. Max size is 2MB.'});
+app.use((err, req, res, next) => {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'File size too large. Max size is 2MB.' });
     }
 
-    if(err.message === 'Unexpected field' || err.message === 'File too large'){
-        return res.status(400).json({error: err.message});
+    if (err.message === 'Unexpected field' || err.message === 'File too large') {
+        return res.status(400).json({ error: err.message });
     }
     next(err);
 })
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user',userRoutes);
-app.use('/api/applications',applicationRoutes);
-app.use('/api/job',jobRoutes);
-app.use('/api/chat',chatRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/job', jobRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));
