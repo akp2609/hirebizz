@@ -8,9 +8,7 @@ import { fileURLToPath } from "url";
 // const __dirname = path.dirname(__filename);
 
 
-const serviceAccount = JSON.parse(
-  fs.readFileSync(process.env.hirebizz-firebase-key)
-);
+const serviceAccount = JSON.parse(process.env.FIREBASE_KEY_JSON);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://hirebizz-chat-default-rtdb.firebaseio.com"
