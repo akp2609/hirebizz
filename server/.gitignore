@@ -3,3 +3,4 @@
 gcp-key.json
 firebase-key.json
 /uploads
+/node_modules

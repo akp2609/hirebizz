@@ -10,14 +10,18 @@ dotenv.config();
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
-const storage = new Storage({ keyFilename: path.join(_dirname, '../config/gcp-key.json') });
+
+const isLocal = process.env.NODE_ENV !== 'production';
+const storage = isLocal
+    ? new Storage({ keyFilename: path.join(_dirname, '../config/gcp-key.json') })
+    : new Storage();
 
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
 const bucket = storage.bucket(bucketName);
 
-export const uploadToGCS = (localPath, originalName,userId) => {
-    console.log('uploadToGCS called with:',localPath,originalName);
+export const uploadToGCS = (localPath, originalName, userId) => {
+    console.log('uploadToGCS called with:', localPath, originalName);
     const uniqueName = `${userId}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}-${originalName}`;
     const file = bucket.file(uniqueName);
 
@@ -47,20 +51,20 @@ export const uploadToGCS = (localPath, originalName,userId) => {
                     });
 
                     console.log("Generated signed URL:", signedUrl);
-                    resolve({signedUrl,objectName: uniqueName});
+                    resolve({ signedUrl, objectName: uniqueName });
 
                     await fs.unlink(localPath);
                 } catch (err) {
                     console.error("Signed URL error:", JSON.stringify(err, null, 2));
                     reject(new Error(`Signed URL generation failed: ${err.message}`));
-                } finally{
-                    if(localPath){
-                        if(existsSync(localPath)){
-                            try{
+                } finally {
+                    if (localPath) {
+                        if (existsSync(localPath)) {
+                            try {
                                 await unlinkSync(localPath);
-                                console.log('Local file deleted:',localPath);
-                            }catch(cleanupErr){
-                                console.warn('failed to delete local file: ',cleanupErr);
+                                console.log('Local file deleted:', localPath);
+                            } catch (cleanupErr) {
+                                console.warn('failed to delete local file: ', cleanupErr);
                             }
                         }
                     }
@@ -71,7 +75,7 @@ export const uploadToGCS = (localPath, originalName,userId) => {
 };
 
 
-export const deleteFromGCS = async (objectName)=>{
+export const deleteFromGCS = async (objectName) => {
     const file = bucket.file(objectName);
     await file.delete();
 };
