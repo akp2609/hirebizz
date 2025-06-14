@@ -3,9 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createReadStream, existsSync, unlinkSync } from 'fs';
 import crypto from 'crypto';
-import dotenv from 'dotenv';
 
-dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -17,10 +15,6 @@ const storage = isLocal
 
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
-if (!bucketName) {
-    console.log('All env vars:', process.env);
-    throw new Error("❌ GOOGLE_BUCKET_NAME is not defined in env variables!");
-}
 
 const bucket = storage.bucket(bucketName);
 

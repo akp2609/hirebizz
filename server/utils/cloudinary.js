@@ -1,7 +1,7 @@
-import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
-
-dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' })
+dotenv.config({ path: '/etc/secrets/backend/env/hirebizz-backend-env' });
+dotenv.config();
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

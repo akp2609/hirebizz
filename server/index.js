@@ -1,5 +1,7 @@
-import express, { application } from 'express';
 import dotenv from 'dotenv';
+dotenv.config({ path: '/etc/secrets/backend/env/hirebizz-backend-env' });
+
+import express, { application } from 'express';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
@@ -8,7 +10,7 @@ import jobRoutes from './routes/jobRoutes.js';
 import chatRoutes from './routes/chatRoutes.js'
 import { scheduleRemindersMessage } from './cron/scheduler.js';
 
-dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
+
 console.log("Environment loaded:", process.env.NODE_ENV)
 
 const app = express();
