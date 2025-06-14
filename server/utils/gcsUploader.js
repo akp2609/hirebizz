@@ -19,7 +19,8 @@ const storage = isLocal
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
 if (!bucketName) {
-  throw new Error("❌ GOOGLE_BUCKET_NAME is not defined in env variables!");
+    console.log('All env vars:', process.env);
+    throw new Error("❌ GOOGLE_BUCKET_NAME is not defined in env variables!");
 }
 
 const bucket = storage.bucket(bucketName);
