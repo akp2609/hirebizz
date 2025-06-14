@@ -4,11 +4,14 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+const isLocal = process.env.NODE_ENV !== 'production';
+const serviceAccount = isLocal?JSON.parse(
+  fs.readFileSync(path.join(__dirname, "../config/firebase-key.json"), "utf-8")
+):JSON.parse(process.env.FIREBASE_KEY_JSON);
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_KEY_JSON);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://hirebizz-chat-default-rtdb.firebaseio.com"
