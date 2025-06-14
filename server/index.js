@@ -8,8 +8,9 @@ import jobRoutes from './routes/jobRoutes.js';
 import chatRoutes from './routes/chatRoutes.js'
 import { scheduleRemindersMessage } from './cron/scheduler.js';
 
-dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
+dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret/.env' });
 console.log("Environment loaded:", process.env.NODE_ENV)
+console.error("✅ GOOGLE_BUCKET_NAME:", process.env.GOOGLE_BUCKET_NAME);
 
 const app = express();
 connectDB();
