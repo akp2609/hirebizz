@@ -5,11 +5,10 @@ import { createReadStream, existsSync, unlinkSync } from 'fs';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
-
 
 const isLocal = process.env.NODE_ENV !== 'production';
 const storage = isLocal

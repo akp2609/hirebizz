@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: '/etc/secrets/env/hirebizz-backend-secret' });
 
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
