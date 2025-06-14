@@ -18,6 +18,10 @@ const storage = isLocal
 
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
+if (!bucketName) {
+  throw new Error("❌ GOOGLE_BUCKET_NAME is not defined in env variables!");
+}
+
 const bucket = storage.bucket(bucketName);
 
 export const uploadToGCS = (localPath, originalName, userId) => {
