@@ -1,9 +1,12 @@
 import express from 'express';
-import { isAuthenticated } from '../middleware/authMiddleware.js';
-import { createJob } from '../controllers/jobController.js';
+import requireAuth, { isAuthenticated } from '../middleware/authMiddleware.js';
+import { createJob, deleteJob } from '../controllers/jobController.js';
+import { authLimiter, generalLimiter } from '../utils/authLimiter.js';
 
 const router = express.Router();
 
-router.post("/create", isAuthenticated, createJob);
+router.post("/create", isAuthenticated,authLimiter, createJob);
+
+router.delete("/delete-job/:jobId",requireAuth,generalLimiter,deleteJob);
 
 export default router;

@@ -5,14 +5,14 @@ import OpenAI from "openai";
 
 const client = new OpenAI();
 
-export const createJob = async (req,res)=>{
-    try{
-        const user = await User.findById(req.user.id);
-        const {title,details,location,skills,companyName,companyLogo,companyWebsite} = req.body;
+export const createJob = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        const { title, details, location, skills, companyName, companyLogo, companyWebsite } = req.body;
 
-        let company = await Company.findOne({name: companyName});
+        let company = await Company.findOne({ name: companyName });
 
-        if(!company){
+        if (!company) {
             company = await Company.create({
                 name: companyName,
                 logo: companyLogo,
@@ -21,7 +21,7 @@ export const createJob = async (req,res)=>{
             });
         }
 
-        if( user.company.name !== companyName || user.company.logo !== companyLogo || user.company.website !== companyWebsite){
+        if (user.company.name !== companyName || user.company.logo !== companyLogo || user.company.website !== companyWebsite) {
             user.company = {
                 name: companyName,
                 logo: companyLogo,
@@ -56,11 +56,36 @@ export const createJob = async (req,res)=>{
             message: 'Job created succesfully',
             job
         })
-    }catch(error){
-        res.status(500).json({success: false,
+    } catch (error) {
+        res.status(500).json({
+            success: false,
             message: 'server error',
             error: error.message
         });
+    }
+}
+
+export const deleteJob = async (req, res) => {
+    try {
+        const { jobId } = req.params;
+
+        const job = await Job.findById(jobId);
+
+        if (!job) {
+            return res.status(404).json('Job not found');
+        }
+
+        if (job.createdBy.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Unauthorized to delete this job' });
+        }
+
+        await Job.findByIdAndDelete(jobId);
+
+        return res.status(200).json('Job deleted successfully');
+    }
+    catch (err) {
+        console.error('Failed to delete job: ', err);
+        return res.status(500).json({ message: 'Failed to delete job', error: err.message });
     }
 }
 

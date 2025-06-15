@@ -18,7 +18,7 @@ export const registerUser = async (req, res) => {
         const user = await User.create({ name, email, password,role });
         const token = createToken(user._id);
 
-       //await sendVerificationEmail(email,token);
+       await sendVerificationEmail(email,token);
 
         res.status(201).json({ user: { id: user._id, name: user.name, email: user.email }, token });
     } catch (err) {
@@ -36,10 +36,6 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        if(!user.isVerified){
-            return res.status(401).json({error: 'Please verify your email before logging in.'})
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

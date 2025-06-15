@@ -8,6 +8,8 @@ import userRoutes from './routes/user.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import chatRoutes from './routes/chatRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
+import cors from 'cors';
 import { scheduleRemindersMessage } from './cron/scheduler.js';
 
 
@@ -18,11 +20,18 @@ connectDB();
 
 app.use(express.json());
 
+
+app.use(cors({
+  origin: '*',
+  credentials: true,
+}));
+
 if (process.env.NODE_ENV !== 'production') {
     import('./cron/scheduler.js').then(({ scheduleRemindersMessage }) => {
         scheduleRemindersMessage();
     });
 }
+
 
 app.use((req, res, next) => {
     console.log(`incoming ${req.method} ${req.url}`);
@@ -45,6 +54,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/job', jobRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));
