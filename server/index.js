@@ -20,6 +20,7 @@ connectDB();
 
 app.use(express.json());
 
+app.set('trust proxy', 1);
 
 app.use(cors({
   origin: '*',
@@ -31,6 +32,8 @@ if (process.env.NODE_ENV !== 'production') {
         scheduleRemindersMessage();
     });
 }
+ 
+app.use(generalLimiter)
 
 
 app.use((req, res, next) => {
@@ -49,7 +52,7 @@ app.use((err, req, res, next) => {
     next(err);
 })
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth',authLimiter, authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/job', jobRoutes);
