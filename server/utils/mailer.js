@@ -18,7 +18,7 @@ export const sendVerificationEmail = async (to,token) => {
         from: `"HireBizz" <${process.env.EMAIL_USER}>`,
         to,
         subject: 'Verify Your Email',
-        html: `<p>Click <a href = "${url}">here</a> to verify your email. This link expires in 1 hour.</p>`
+        html: `<p>Click <a href = "${url}">here</a> to verify your email. This link expires in 1 hour. ${token}</p>`
     });
 };
 
