@@ -78,7 +78,7 @@ export const sendVerificationEmail = async (to, token) => {
     await axios.post(
       BREVO_API_URL,
       {
-        sender: { name: 'HireBizz', email: 'no-reply@hirebizz.com' },
+        sender: { name: 'HireBizz', email: 'amanpandey2609@gmail.com' },
         to: [{ email: to }],
         subject: 'Verify Your Email',
         htmlContent: `<p>Click <a href="${url}">here</a> to verify your email. This link expires in 1 hour.</p>`,
@@ -96,7 +96,7 @@ export const sendResetPasswordEmail = async (email, token) => {
     await axios.post(
       BREVO_API_URL,
       {
-        sender: { name: 'HireBizz', email: 'no-reply@hirebizz.com' },
+        sender: { name: 'HireBizz', email: 'amanpandey2609@gmail.com' },
         to: [{ email }],
         subject: 'Reset Your Password',
         htmlContent: `
@@ -116,7 +116,7 @@ export const sendUnseenMessagesEmail = async (email, employer) => {
     await axios.post(
       BREVO_API_URL,
       {
-        sender: { name: 'HireBizz', email: 'no-reply@hirebizz.com' },
+        sender: { name: 'HireBizz', email: 'amanpandey2609@gmail.com' },
         to: [{ email }],
         subject: 'You have unseen messages',
         htmlContent: `
