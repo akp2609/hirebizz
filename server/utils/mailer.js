@@ -14,12 +14,17 @@ const transporter = nodemailer.createTransport({
 export const sendVerificationEmail = async (to,token) => {
     const url = `http://localhost:3000/verify-email/${token}`;
 
-    await transporter.sendMail({
+    try {
+  await transporter.sendMail({
         from: `"HireBizz" <${process.env.EMAIL_USER}>`,
         to,
         subject: 'Verify Your Email',
         html: `<p>Click <a href = "${url}">here</a> to verify your email. This link expires in 1 hour.</p>`
     });
+} catch (err) {
+  console.error("❌ Email send failed:", err);
+}
+    
 };
 
 export const sendResetPasswordEmail = async(email,token) => {
@@ -40,10 +45,10 @@ export const sendResetPasswordEmail = async(email,token) => {
 
 export const sendUnseenMessagesEmail = async(email,employer)=>{
 
-    transporter.sendMail({
-        from: `"HireBizz" <${process.env.EMAIL_USER}`,
+    await transporter.sendMail({
+        from: `"HireBizz" <${process.env.EMAIL_USER}>`,
         to: email,
-        subjec: `You have unseen messages from`,
+        subject: `You have unseen messages from`,
         html: `
         <h3>You have unseen messages from ${employer} based on your applications and interests. </h3>
         <p>Kindly login to your dashboard to reply and not miss any opportunity to your dream job.</p>`
