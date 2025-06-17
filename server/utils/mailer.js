@@ -65,7 +65,7 @@
 import axios from 'axios';
 
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
-const BREVO_API_KEY = process.env.EMAIL_PASS;
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
 const headers = {
   'api-key': BREVO_API_KEY,
