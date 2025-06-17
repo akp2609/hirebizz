@@ -28,7 +28,7 @@ export const sendVerificationEmail = async (to,token) => {
         html: `<p>Click <a href = "${url}">here</a> to verify your email. This link expires in 1 hour.</p>`
     });
 } catch (err) {
-  console.error("❌ Email send failed:", err);
+  console.error(`❌ Email send failed: ${process.env.EMAIL_HOST}`, err);
 }
     
 };
