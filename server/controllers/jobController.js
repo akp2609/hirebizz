@@ -8,7 +8,7 @@ const client = new OpenAI();
 export const createJob = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
-        const { title, details, location, skills, companyName, companyLogo, companyWebsite } = req.body;
+        const { title, details, location, skills, compensation, companyName, companyLogo, companyWebsite } = req.body;
 
         let company = await Company.findOne({ name: companyName });
 
@@ -46,6 +46,7 @@ export const createJob = async (req, res) => {
             details,
             location,
             skills,
+            compensation,
             embeddings,
             company: company._id,
             createdBy: user._id,
@@ -86,6 +87,54 @@ export const deleteJob = async (req, res) => {
     catch (err) {
         console.error('Failed to delete job: ', err);
         return res.status(500).json({ message: 'Failed to delete job', error: err.message });
+    }
+}
+
+export const getAllJobs = async (req, res) => {
+    try {
+        const jobs = await Job.find();
+        res.status(200).json({ success: true, jobs });
+    }
+    catch (err) {
+        console.error('Failed to fetch jobs', err);
+        return res.status(500).json({ message: 'Failed to fetch all jobs', error: err.message });
+    }
+}
+
+export const getJobById = async (req, res) => {
+    try { 
+         const { jobId } = req.params;
+
+        const job = await Job.findById(jobId);
+
+        if (!job) {
+            return res.status(404).json('Job not found');
+        }
+
+        return res.status(200).json({success:true,job});
+    }
+    catch (err) {
+        console.error('Failed to fetch job', err);
+        return res.status(500).json({ message: 'Failed to fetch the job', error: err.message });
+    }
+}
+
+export const setJobStatus = async (jobId, newStatus) => {
+    try {
+
+        if (!['not applied', 'applied'].includes(newStatus)) {
+            throw new Error('Invalid status');
+        }
+
+        const job = await Job.findByIdAndUpdate({ _id: jobId }, { status: newStatus }, { new: true });
+
+        if (!job) {
+            throw new Error('job not found');
+        }
+
+        return job;
+    } catch (err) {
+        console.error('Failed to update job status', err);
     }
 }
 

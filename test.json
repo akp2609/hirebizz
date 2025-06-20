@@ -1,0 +1,18 @@
+{
+  "6845c4080e4683aedb9a8287_681ccf57c10e9dab988d8041": {
+    "msg1": {
+      "message": "Hi, I am interested in this job.",
+      "senderId": "681ca3612203f53b532b7db1",
+      "receiverId": "681ccf57c10e9dab988d8041",
+      "timestamp": 1717947600000,
+      "seen": false
+    },
+    "msg2": {
+      "message": "Please share your availability.",
+      "senderId": "681ca3612203f53b532b7db1",
+      "receiverId": "681ccf57c10e9dab988d8041",
+      "timestamp": 1717947600000,
+      "seen": false
+    }
+  }
+}

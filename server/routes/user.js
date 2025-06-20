@@ -5,7 +5,7 @@ import { deleteResume, uploadResume,uploadProfilePic, saveJobs, getSavedJobs, re
 import uploadPDF from '../middleware/upload.js';
 import { appendFile } from 'fs';
 import { error } from 'console';
-import { authLimiter, generalLimiter } from '../utils/authLimiter.js';
+import { authLimiter } from '../utils/authLimiter.js';
 
 
 const router = express.Router();
@@ -28,6 +28,6 @@ router.delete('/saved-jobs/:jobId',requireAuth,deleteSavedJobs)
 
 router.get('/get-profile',requireAuth,getUserProfile);
 
-router.patch('/update-profile',requireAuth,generalLimiter,updateUserProfile)
+router.patch('/update-profile',requireAuth,updateUserProfile)
 
 export default router;

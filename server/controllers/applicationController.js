@@ -2,6 +2,7 @@ import Application from "../models/Application.js";
 import Job from "../models/Job.js";
 import User from "../models/User.js";
 import { uploadToGCS } from "../utils/gcsUploader.js";
+import { setJobStatus } from "./jobController.js";
 
 
 export const applyToJob = async (req, res) => {
@@ -25,6 +26,8 @@ export const applyToJob = async (req, res) => {
             resumeURL: user.resumeURL,
             coverLetter
         });
+
+        setJobStatus(jobId,'applied');
 
         res.status(201).json({ message: 'Application submitted', application });
     } catch (err) {
