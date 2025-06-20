@@ -12,7 +12,7 @@ router.patch('/assign-role',requireAuth,requireSuperAdmin,authLimiter,assignUser
 
 router.get('/get-all-jobs',requireAuth,requireAdmin,getAllJobs)
 
-router.post('/update-job-status',requireAuth,requireAdmin,updateJobStatus);
+router.patch('/update-job-status',requireAuth,requireAdmin,updateJobStatus);
 
 router.delete('/delete-user',requireAuth,requireAdmin,authLimiter,deleteUser);
 

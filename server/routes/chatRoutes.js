@@ -8,7 +8,7 @@ router.post('/send',requireAuth,sendMessages);
 
 router.get("/:user1/:user2", requireAuth,getChat);
 
-router.post('/mark-as-seen',requireAuth,markAsSeen);
+router.patch('/mark-as-seen',requireAuth,markAsSeen);
 
 router.get('/check-unseen-messages',verifyGoogleOIDC,checkUnseenMessages)
 
