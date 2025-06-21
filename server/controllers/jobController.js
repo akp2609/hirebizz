@@ -92,7 +92,7 @@ export const deleteJob = async (req, res) => {
 
 export const getAllJobs = async (req, res) => {
     try {
-        const jobs = await Job.find();
+        const jobs = await Job.find().select('-embeddings');
         res.status(200).json({ success: true, jobs });
     }
     catch (err) {
@@ -102,16 +102,16 @@ export const getAllJobs = async (req, res) => {
 }
 
 export const getJobById = async (req, res) => {
-    try { 
-         const { jobId } = req.params;
+    try {
+        const { jobId } = req.params;
 
-        const job = await Job.findById(jobId);
+        const job = await Job.findById(jobId).select('-embeddings');
 
         if (!job) {
             return res.status(404).json('Job not found');
         }
 
-        return res.status(200).json({success:true,job});
+        return res.status(200).json({ success: true, job });
     }
     catch (err) {
         console.error('Failed to fetch job', err);
@@ -134,6 +134,22 @@ export const setJobStatus = async (jobId, newStatus) => {
 
         return job;
     } catch (err) {
+        console.error('Failed to update job status', err);
+    }
+}
+
+export const closeJob = async (jobId) => {
+    try {
+
+        const job = await Job.findByIdAndUpdate({ _id: jobId }, { isActive: false }, { new: true });
+
+        if (!job) {
+            throw new Error('job not found');
+        }
+
+        return job;
+    }
+    catch (err) {
         console.error('Failed to update job status', err);
     }
 }

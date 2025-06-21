@@ -2,4 +2,4 @@
 /package-lock.json
 
 /frontend/.env
-/frontend/src/firebase/js
+/frontend/src/firebase.js

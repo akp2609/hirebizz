@@ -4,17 +4,18 @@ const jobSchema = new mongoose.Schema({
     title: String,
     description: String,
     location: String,
-    company: {type: mongoose.Schema.Types.ObjectId, ref: "Company"},
-    skills: {type:[String],required:true},
+    company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
+    skills: { type: [String], required: true },
     embeddings: [[Number]],
-    compensation:Number,
-    status:{
-        type:String,
-        enum:['not applied','applied'],
-        default:'not applied'
+    compensation: Number,
+    status: {
+        type: String,
+        enum: ['not applied', 'applied'],
+        default: 'not applied'
     },
-    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    createdAt:{type:Date,default:Date.now},
+    isActive: { type: Boolean, default: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    createdAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.model("Job",jobSchema);
+export default mongoose.model("Job", jobSchema);

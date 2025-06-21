@@ -19,3 +19,8 @@ export const fetchJobById = async(jobId)=>{
     const res = await apiClient.get(`/job/${jobId}`);
     return res.data;
 }
+
+export const closeJob = async(jobId)=>{
+    const res = await apiClient.patch(`/job/close-job/${jobId}`);
+    return res.data;
+}

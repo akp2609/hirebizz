@@ -9,10 +9,16 @@ const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
 const isLocal = process.env.NODE_ENV !== 'production';
-const storage = isLocal
-    ? new Storage({ keyFilename: path.join(_dirname, '../config/gcp-key.json') })
-    : new Storage();
-
+let storage;
+if (isLocal) {
+    const keyPath = path.join(_dirname, '../config/gcp-key.json');
+    if (!existsSync(keyPath)) {
+        throw new Error(`Missing service account key file at: ${keyPath}`);
+    }
+    storage = new Storage({ keyFilename: keyPath });
+} else {
+    storage = new Storage();
+}
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
 
@@ -40,7 +46,9 @@ export const uploadToGCS = (localPath, originalName, userId) => {
         });
 
         stream.on('finish', () => {
-            unlinkSync(localPath);
+            if (existsSync(localPath)) {
+                unlinkSync(localPath);
+            }
             (async () => {
                 try {
                     const [signedUrl] = await file.getSignedUrl({
