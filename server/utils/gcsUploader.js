@@ -8,17 +8,9 @@ import crypto from 'crypto';
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
-const isLocal = process.env.NODE_ENV !== 'production';
-let storage;
-if (isLocal) {
-    const keyPath = path.join(_dirname, '../config/gcp-key.json');
-    if (!existsSync(keyPath)) {
-        throw new Error(`Missing service account key file at: ${keyPath}`);
-    }
-    storage = new Storage({ keyFilename: keyPath });
-} else {
-    storage = new Storage();
-}
+
+storage = new Storage();
+
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
 
