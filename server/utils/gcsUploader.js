@@ -9,7 +9,7 @@ const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
 
-storage = new Storage();
+const storage = new Storage();
 
 const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
