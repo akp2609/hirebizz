@@ -92,7 +92,25 @@ export const deleteJob = async (req, res) => {
 
 export const getAllJobs = async (req, res) => {
     try {
-        const jobs = await Job.find().select('-embeddings');
+        const { location, jobType, tags, search, sortBy } = req.query;
+        const filter = {};
+
+        if (location) filter.location = location;
+        if (jobType) filter.jobType = jobType;
+        if (tags) filter.tags = { $in: tags.split(',') };
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+            ];
+        }
+        let query = Job.find(filter).select('-embeddings').populate('company');
+
+        if (sortBy === 'latest') query = query.sort({ createdAt: -1 });
+        else if (sortBy === 'salary') query = query.sort({ salary: -1 });
+
+        const jobs = await query;
+
         res.status(200).json({ success: true, jobs });
     }
     catch (err) {

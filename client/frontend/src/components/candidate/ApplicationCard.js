@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 const ApplicationCard = ({ application }) => {
-    const { job, applicant, coverLetter, status, appliedAt, resumeURL } = application;
+    const { job,  coverLetter, status, appliedAt, resumeURL } = application;
     const [showFull, setShowFull] = useState(false);
 
     return (
         <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
-            <div className="flex justify-between">
+            <div className="flex justify-between space-y-1">
                 <div>
                     <h2 className="text-lg font-bold">{job.title}</h2>
                     <p className="text-sm text-gray-600">{job.company} — {job.location}</p>
@@ -37,7 +37,7 @@ const ApplicationCard = ({ application }) => {
 
 
             <div className="mt-2">
-                <p className='text-gray-500'>Application by - {applicant.name} ({applicant.email})</p>
+                
                 <p className="text-xs text-gray-500">Applied: {new Date(appliedAt).toLocaleDateString()}</p>
                 {resumeURL && (
                     <a

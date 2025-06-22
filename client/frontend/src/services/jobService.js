@@ -1,26 +1,38 @@
 import apiClient from "../lib/apiClient";
 
-export const postJob = async(jobData)=>{
-    const res = await apiClient.post('/job/create',jobData);
+export const postJob = async (jobData) => {
+    const res = await apiClient.post('/job/create', jobData);
     return res.data;
 }
 
-export const deleteJob = async(jobId)=>{
+export const deleteJob = async (jobId) => {
     const res = await apiClient.delete(`/job/delete-job/${jobId}`);
     return res.data;
 }
 
-export const fetchJobs = async()=>{
-    const res = await apiClient.get('/job');
+export const fetchJobs = async (filters = {}) => {
+    const queryParams = new URLSearchParams();
+
+
+    Object.entries(filters).forEach(([key, value]) => {
+        if (value) {
+            if (Array.isArray(value)) {
+                queryParams.append(key, value.join(','));
+            } else {
+                queryParams.append(key, value);
+            }
+        }
+    });
+    const res = await apiClient.get(`/job?${queryParams.toString()}`);
     return res.data;
 }
 
-export const fetchJobById = async(jobId)=>{
+export const fetchJobById = async (jobId) => {
     const res = await apiClient.get(`/job/${jobId}`);
     return res.data;
 }
 
-export const closeJob = async(jobId)=>{
+export const closeJob = async (jobId) => {
     const res = await apiClient.patch(`/job/close-job/${jobId}`);
     return res.data;
 }

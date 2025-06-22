@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import jobService from '../services/jobService.js';
+import {fetchJobs} from '../services/jobService.js';
 
 
 const useJobs = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-   
+
 
     const getJobs = useCallback(async () => {
         setLoading(true);
