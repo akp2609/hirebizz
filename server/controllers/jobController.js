@@ -92,22 +92,60 @@ export const deleteJob = async (req, res) => {
 
 export const getAllJobs = async (req, res) => {
     try {
-        const { location, jobType, tags, search, sortBy } = req.query;
+        const {
+            location,
+            skills,
+            isActive,
+            search,
+            sortBy,
+            minComp,
+            maxComp
+        } = req.query;
+
         const filter = {};
 
-        if (location) filter.location = location;
-        if (jobType) filter.jobType = jobType;
-        if (tags) filter.tags = { $in: tags.split(',') };
+
+        if (location) {
+            filter.location = { $regex: location, $options: 'i' };
+        }
+
+
+        if (skills) {
+            const skillsArray = skills.split(',').map(s => s.trim());
+            filter.skills = {
+                $in: skillsArray.map(skill => new RegExp(skill, 'i'))
+            };
+        }
+
+
+        if (isActive !== undefined) {
+            filter.isActive = isActive === 'true';
+        }
+
+
         if (search) {
             filter.$or = [
                 { title: { $regex: search, $options: 'i' } },
                 { description: { $regex: search, $options: 'i' } },
             ];
         }
+
+
+        if (minComp || maxComp) {
+            filter.compensation = {};
+            if (minComp) filter.compensation.$gte = Number(minComp);
+            if (maxComp) filter.compensation.$lte = Number(maxComp);
+        }
+
+
         let query = Job.find(filter).select('-embeddings').populate('company');
 
-        if (sortBy === 'latest') query = query.sort({ createdAt: -1 });
-        else if (sortBy === 'salary') query = query.sort({ salary: -1 });
+
+        if (sortBy === 'latest') {
+            query = query.sort({ createdAt: -1 });
+        } else if (sortBy === 'compensation') {
+            query = query.sort({ compensation: -1 });
+        }
 
         const jobs = await query;
 
