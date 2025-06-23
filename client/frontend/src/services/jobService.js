@@ -15,8 +15,10 @@ export const fetchJobs = async (filters = {}) => {
 
 
     Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
-            if (Array.isArray(value)) {
+        if (value !== '' && value !== undefined && value !== null) {
+            if (key === 'isActive') {
+                queryParams.append(key, value === 'true');
+            } else if (Array.isArray(value)) {
                 queryParams.append(key, value.join(','));
             } else {
                 queryParams.append(key, value);

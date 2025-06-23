@@ -117,9 +117,13 @@ export const getAllJobs = async (req, res) => {
             };
         }
 
-
-        if (isActive !== undefined) {
-            filter.isActive = isActive === 'true';
+        if (typeof req.query.isActive !== 'undefined') {
+            const isActiveStr = req.query.isActive.toLowerCase();
+            if (isActiveStr === 'true') {
+                filter.isActive = true;
+            } else if (isActiveStr === 'false') {
+                filter.isActive = false;
+            }
         }
 
 
