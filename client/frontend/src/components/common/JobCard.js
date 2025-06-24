@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 const JobCard = ({ job, onViewClick }) => {
 
 
-    const { title, description, location, company, skills, compensation, status, isActive, createdBy, createdAt } = job || {};
+    const { title, description, location, company, skills, compensation, status, relevancy, isActive, createdBy, createdAt } = job || {};
 
     const [showFull, setShowFull] = useState(false);
     return (
@@ -42,6 +42,7 @@ const JobCard = ({ job, onViewClick }) => {
                 <p className="text-green-600 font-medium text-sm mb-2">₹{compensation.toLocaleString()}</p>
             )}
 
+
             <div className="flex flex-wrap gap-2 text-xs mb-3">
                 {Array.isArray(job?.skills) && job.skills?.map((tag, idx) => (
                     <span
@@ -52,6 +53,10 @@ const JobCard = ({ job, onViewClick }) => {
                     </span>
                 ))}
             </div>
+
+            {relevancy && (
+                <p className="text-sm font-bold text-green-600">Relevancy: {Math.round(relevancy)}%</p>
+            )}
 
             {isActive ?
                 <button

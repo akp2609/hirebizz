@@ -1,5 +1,6 @@
 import React from 'react';
 import JobsPage from './candidate/jobsPage.js'; // or actual relative path
+import UserProfilePage from './common/UserProfilePage.js';
 
 const DevPage = () => {
   return (

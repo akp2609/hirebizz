@@ -11,6 +11,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Setting from "./pages/common/Setting";
 import Dashboard from "./pages/admin/Dashboard";
 import DevPlayground from "./pages/_dev";
+import { UserProvider } from "./context/UserContext";
 
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -22,21 +23,25 @@ function App() {
 
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 to-blue-700">
         <BrowserRouter>
-          <div className="border-1 border-white">
-            <NavBar />
-          </div>
-          <div className="flex-1">
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/about' element={<About />} />
-              <Route path='/login' element={<Login />} />
-              <Route path='/signup' element={<SignUp />} />
-              <Route path='/setting' element={<Setting />} />
-              <Route path='/admin' element={<Dashboard />} />
-              <Route path='/_dev' element={<DevPlayground/>}/>
-            </Routes>
-          </div>
-          <Footer />
+
+          <UserProvider>
+            <div className="border-1 border-white">
+              <NavBar />
+            </div>
+            <div className="flex-1">
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/about' element={<About />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/signup' element={<SignUp />} />
+                <Route path='/setting' element={<Setting />} />
+                <Route path='/admin' element={<Dashboard />} />
+                <Route path='/_dev' element={<DevPlayground />} />
+              </Routes>
+            </div>
+            <Footer />
+          </UserProvider>
+
         </BrowserRouter>
       </div>
 

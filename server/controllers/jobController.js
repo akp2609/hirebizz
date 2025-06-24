@@ -8,7 +8,7 @@ const client = new OpenAI();
 export const createJob = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
-        const { title, details, location, skills, compensation, companyName, companyLogo, companyWebsite } = req.body;
+        const { title, description, location, skills, compensation, companyName, companyLogo, companyWebsite } = req.body;
 
         let company = await Company.findOne({ name: companyName });
 
@@ -30,7 +30,7 @@ export const createJob = async (req, res) => {
             await user.save();
         }
 
-        const embeddingData = `${details}\nSkills required: ${skills.join(",")}`;
+        const embeddingData = `${description}\nSkills required: ${skills.join(",")}`;
 
         const response = await client.embeddings.create({
             model: "text-embedding-3-small",
@@ -43,14 +43,14 @@ export const createJob = async (req, res) => {
 
         const job = await Job.create({
             title,
-            details,
+            description,
             location,
             skills,
             compensation,
             embeddings,
             company: company._id,
             createdBy: user._id,
-        });
+        }).select('-embeddings');
 
         res.status(201).json({
             success: true,

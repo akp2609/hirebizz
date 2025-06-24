@@ -44,7 +44,7 @@ export const updateUserProfile = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(userId, updates, {
             new: true,
             runValidators: true,
-            select: 'name email bio location', 
+            select: 'name email bio location',
         }).select('-password');
 
         res.status(200).json({ message: 'Profile updated', user: updatedUser });
@@ -284,6 +284,10 @@ export const relevantJobs = async (req, res) => {
                     location: 1,
                     skills: 1,
                     company: 1,
+                    isActive: 1,
+                    createdAt: 1,
+                    description: 1,
+                    compensation: 1,
                     relevancy: {
                         $multiply: [{ $meta: "vectorSearchScore" }, 100]
                     }
