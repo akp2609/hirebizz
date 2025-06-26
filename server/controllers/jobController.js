@@ -50,12 +50,14 @@ export const createJob = async (req, res) => {
             embeddings,
             company: company._id,
             createdBy: user._id,
-        }).select('-embeddings');
+        });
+
+        const jobData = await Job.findById(job._id).select('-embeddings').populate('company');
 
         res.status(201).json({
             success: true,
             message: 'Job created succesfully',
-            job
+            jobData
         })
     } catch (error) {
         res.status(500).json({
@@ -220,7 +222,7 @@ export const getEmployerJob = async(req,res)=>{
         if(!user){
             return res.status(404).json({message: 'Useer not found'});
         }
-        const jobs = await Job.find({createdBy:req.user._id});
+        const jobs = await Job.find({createdBy:req.user._id}).select('-embeddings');
 
         if(!jobs){
             return res.status(401).json({message: 'No jobs by this user'});

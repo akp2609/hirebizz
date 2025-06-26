@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const MyJobCard = ({ job, onDelete, onClose }) => {
     const { title, location,description, company, createdAt, status } = job;
