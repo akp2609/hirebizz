@@ -38,3 +38,8 @@ export const closeJob = async (jobId) => {
     const res = await apiClient.patch(`/job/close-job/${jobId}`);
     return res.data;
 }
+
+export const fetchEmployerJobs = async()=>{
+    const res = await apiClient.get('/job/posted-jobs');
+    return res.data;
+}

@@ -7,6 +7,7 @@ import Pagination from '../../components/common/Pagination';
 import { fetchJobs } from '../../services/jobService';
 import { getUserRelevantJobs } from '../../services/userService';
 import { useUser } from '../../context/UserContext';
+import JobDetailsModal from '../../components/candidate/JobDetailsModal';
 
 const defaultFilters = {
     location: '',
@@ -27,8 +28,10 @@ const JobsPage = () => {
     const [error, setError] = useState('');
     const [hasResume, setHasResume] = useState(false);
     const [relevantJobs, setRelevantJobs] = useState([]);
-    const { user, loadingUser } = useUser();
+    const { user } = useUser();
 
+    const [selectedJob, setSelectedJob] = useState(null); // ✅ Track clicked job
+    const [showDetailsModal, setShowDetailsModal] = useState(false); // ✅ Modal state
 
     useEffect(() => {
         const query = Object.fromEntries([...searchParams]);
@@ -62,7 +65,6 @@ const JobsPage = () => {
         }
     }, [user]);
 
-
     const loadJobs = async (appliedFilters) => {
         try {
             setLoading(true);
@@ -95,16 +97,21 @@ const JobsPage = () => {
         updateFilters(updated);
     };
 
+    const openJobDetails = (job) => {
+        setSelectedJob(job);
+        setShowDetailsModal(true);
+    };
+
+    const closeJobDetails = () => {
+        setSelectedJob(null);
+        setShowDetailsModal(false);
+    };
+
     return (
         <div className="max-w-7xl mx-auto p-4">
-
-
-
             <h2 className="text-xl font-bold mb-3">Explore All Jobs</h2>
 
             <JobFilters filters={filters} onChange={updateFilters} />
-
-            
 
             {loading && <p>Loading jobs...</p>}
             {error && <p className="text-red-600">{error}</p>}
@@ -114,7 +121,12 @@ const JobsPage = () => {
                     <h2 className="text-xl font-bold mb-3">Recommended Jobs Based on Your Resume</h2>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
                         {relevantJobs.map(job => (
-                            <JobCard key={job._id} job={job} score={job.similarity} />
+                            <JobCard
+                                key={job._id}
+                                job={job}
+                                score={job.similarity}
+                                onClick={() => openJobDetails(job)} 
+                            />
                         ))}
                     </div>
                 </>
@@ -125,13 +137,23 @@ const JobsPage = () => {
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {jobs.map(job => (
-                    <JobCard key={job._id} job={job} />
+                    <JobCard
+                        key={job._id}
+                        job={job}
+                        onClick={() => openJobDetails(job)} // ✅ Make card clickable
+                    />
                 ))}
             </div>
 
             <Pagination page={filters.page} totalPages={totalPages} onPageChange={handlePageChange} />
-        </div>
 
+            {/* ✅ Job Details Modal */}
+            <JobDetailsModal
+                job={selectedJob}
+                isOpen={showDetailsModal}
+                onClose={closeJobDetails}
+            />
+        </div>
     );
 };
 

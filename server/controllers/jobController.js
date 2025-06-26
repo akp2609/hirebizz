@@ -214,3 +214,24 @@ export const closeJob = async (jobId) => {
     }
 }
 
+export const getEmployerJob = async(req,res)=>{
+    try{
+        const user = await User.find(req.user._id);
+        if(!user){
+            return res.status(404).json({message: 'Useer not found'});
+        }
+        const jobs = await Job.find(req.user._id);
+
+        if(!jobs){
+            return res.status(401).json({message: 'No jobs by this user'});
+        }
+
+        return res.status(200).json({
+            success: true,
+            jobs
+        });
+    }catch(err){
+        console.log('Failed to get employers job postings',err);
+        return res.status(500).json({message: 'Failed to get employers jobs postings',error:err.message});
+    }
+}

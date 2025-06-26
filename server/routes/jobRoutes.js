@@ -1,6 +1,6 @@
 import express from 'express';
 import requireAuth, { isAuthenticated } from '../middleware/authMiddleware.js';
-import { closeJob, createJob, deleteJob, getAllJobs, getJobById } from '../controllers/jobController.js';
+import { closeJob, createJob, deleteJob, getAllJobs, getEmployerJob, getJobById } from '../controllers/jobController.js';
 import { authLimiter } from '../utils/authLimiter.js';
 
 const router = express.Router();
@@ -14,5 +14,7 @@ router.get("/",getAllJobs);
 router.get("/:jobId",getJobById);
 
 router.patch("/close-job/:jobId",closeJob);
+
+router.get("/posted-jobs",requireAuth,getEmployerJob);
 
 export default router;
