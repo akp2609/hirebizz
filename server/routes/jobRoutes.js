@@ -11,10 +11,10 @@ router.delete("/delete-job/:jobId",requireAuth,deleteJob);
 
 router.get("/",getAllJobs);
 
-router.get("/:jobId",getJobById);
-
 router.patch("/close-job/:jobId",closeJob);
 
 router.get("/posted-jobs",requireAuth,getEmployerJob);
+
+router.get("/:jobId",getJobById);
 
 export default router;
