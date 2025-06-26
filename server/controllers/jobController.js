@@ -220,7 +220,7 @@ export const getEmployerJob = async(req,res)=>{
         if(!user){
             return res.status(404).json({message: 'Useer not found'});
         }
-        const jobs = await Job.find(req.user._id);
+        const jobs = await Job.find({createdBy:req.user._id});
 
         if(!jobs){
             return res.status(401).json({message: 'No jobs by this user'});
