@@ -1,5 +1,7 @@
+import Job from '../models/Job.js';
 import Report from '../models/report.js';
 import User from '../models/User.js';
+
 
 export const createReport = async (req, res) => {
     try {
