@@ -21,6 +21,7 @@ export const getAllJobs = async(page=1,limit=10)=>{
             limit,
         }
     })
+    return res.data;
 };
 
 export const updateJobStatus = async(formData)=>{

@@ -6,11 +6,12 @@ export const postReport = async(formData)=>{
 }
 
 export const getAllReports = async()=>{
-    const res = await apiClient.get('/admin/get-all-reports');
+    const res = await apiClient.get('/report/get-all-reports');
+    console.log(res.data);
     return res.data;
 }
 
 export const updateReportStatus = async(reportId,formData)=>{
-    const res = await apiClient.patch(`/admin/${reportId}/status`,formData);
+    const res = await apiClient.patch(`/report/${reportId}/status`,formData);
     return res.data;
 }
