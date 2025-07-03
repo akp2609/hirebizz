@@ -19,7 +19,7 @@ const UserProfileCard = ({ user }) => {
     return (
 
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200">
-            {/* Header */}
+            
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 <img
                     src={profilePicture}
@@ -34,10 +34,10 @@ const UserProfileCard = ({ user }) => {
                 </div>
             </div>
 
-            {/* Divider */}
+            
             <hr className="my-6" />
 
-            {/* Details Grid */}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-1">Location</h3>
@@ -73,7 +73,7 @@ const UserProfileCard = ({ user }) => {
                 </div>
             </div>
 
-            {/* Footer (Optional) */}
+            
             <div className="mt-6 flex justify-end">
                 <button className="btn btn-outline btn-sm">Edit Profile</button>
             </div>

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import ModalWrapper from "../common/ModalWrapper";
 import ApplyJobModal from "./ApplyJobModal";
 
-
-const JobDetailsModal = ({ job, isOpen, onClose }) => {
+const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
     const [applyOpen, setApplyOpen] = useState(false);
 
     if (!isOpen || !job) return null;
@@ -17,7 +16,7 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
                 maxWidth="max-w-3xl"
             >
                 <p className="text-sm text-gray-500 mb-2">
-                    {job.company.name} • {job.location}
+                    {job.company?.name || "Unknown Company"} • {job.location}
                 </p>
 
                 <div className="whitespace-pre-wrap text-sm text-gray-800 mb-4">
@@ -45,21 +44,27 @@ const JobDetailsModal = ({ job, isOpen, onClose }) => {
                     <p className="text-sm">₹{job.compensation}</p>
                 </div>
 
-                <div className="flex justify-end mt-6">
-                    <button
-                        onClick={() => setApplyOpen(true)}
-                        className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 text-sm"
-                    >
-                        Apply
-                    </button>
-                </div>
+                {/* Only show apply button if not in admin view */}
+                {!isAdminView && (
+                    <div className="flex justify-end mt-6">
+                        <button
+                            onClick={() => setApplyOpen(true)}
+                            className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 text-sm"
+                        >
+                            Apply
+                        </button>
+                    </div>
+                )}
             </ModalWrapper>
 
-            <ApplyJobModal
-                isOpen={applyOpen}
-                onClose={() => setApplyOpen(false)}
-                jobId={job._id}
-            />
+
+            {!isAdminView && (
+                <ApplyJobModal
+                    isOpen={applyOpen}
+                    onClose={() => setApplyOpen(false)}
+                    jobId={job._id}
+                />
+            )}
         </>
     );
 };
