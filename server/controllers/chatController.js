@@ -123,3 +123,30 @@ export const markAsSeen = async (req, res) => {
     }
 
 } 
+
+export const getUserChatThreads = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const snapshot = await db.ref("/").once("value");
+    const data = snapshot.val() || {};
+
+    const relevantChats = [];
+
+    for (const chatId in data) {
+      if (chatId.includes(userId)) {
+        const [user1, user2] = chatId.split("_");
+        const otherUserId = user1 === userId ? user2 : user1;
+        const user = await User.findById(otherUserId).select('name email profilePicture');
+        if (user) {
+          relevantChats.push({ chatId, participant: user });
+        }
+      }
+    }
+
+    res.status(200).json({ threads: relevantChats });
+  } catch (err) {
+    console.error("Failed to get user threads:", err);
+    res.status(500).json({ message: "Failed to get user threads" });
+  }
+};
