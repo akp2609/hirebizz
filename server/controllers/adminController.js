@@ -174,7 +174,7 @@ export const getAdminStats = async (req, res) => {
         const totalUsers = await User.countDocuments();
         const totalJobs = await Job.countDocuments();
         const totalApplications = await Application.countDocuments();
-        const totalReport = await Report.countDocuments();
+        const totalReports = await Report.countDocuments();
 
         res.status(200).json({
             totalUsers,
