@@ -3,6 +3,7 @@ import Job from "../models/Job.js";
 import { get } from "mongoose";
 import Application from "../models/Application.js";
 import { deleteFromGCS } from "../utils/gcsUploader.js";
+import Report from '../modals/report.js'
 
 export const assignUserRole = async (req, res) => {
     const { userId, newRole } = req.body;
@@ -166,4 +167,23 @@ export const getUserById = async (req, res) => {
         console.error('Failed to get user', err);
         res.status(500).json({ message: 'Server error fetching user' })
     }
-} 
+}
+
+export const getAdminStats = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalJobs = await Job.countDocuments();
+        const totalApplications = await Application.countDocuments();
+        const totalReports = await Report.countDocuments();
+
+        res.status(200).json({
+            totalUsers,
+            totalJobs,
+            totalApplications,
+            totalReports,
+        });
+    } catch (err) {
+        console.error("Failed to get admin stats", err);
+        res.status(500).json({ message: "Failed to get stats" });
+    }
+};

@@ -65,13 +65,10 @@ export const loginUser = async (req, res) => {
 
         const token = createToken(user._id, '30d');
 
+        const { password: pwd, ...userWithoutPassword } = user.toObject();
+
         res.status(200).json({
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                profilePicture: user.profilePicture
-            },
+            user:userWithoutPassword,
             token
         });
     } catch (err) {

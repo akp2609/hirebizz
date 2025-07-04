@@ -33,3 +33,8 @@ export const deleteUser = async(formData)=>{
     const res = await apiClient.delete('/admin/delete-user',formData);
     return res.data;
 }
+
+export const getUserById = async(userId)=>{
+    const res = await apiClient.get(`/admin/get-user/${userId}`);
+    return res.data;
+}
