@@ -3,7 +3,7 @@ import Job from "../models/Job.js";
 import { get } from "mongoose";
 import Application from "../models/Application.js";
 import { deleteFromGCS } from "../utils/gcsUploader.js";
-import Report from '../modals/report.js'
+import Report from '../models/report.js';
 
 export const assignUserRole = async (req, res) => {
     const { userId, newRole } = req.body;
@@ -174,7 +174,7 @@ export const getAdminStats = async (req, res) => {
         const totalUsers = await User.countDocuments();
         const totalJobs = await Job.countDocuments();
         const totalApplications = await Application.countDocuments();
-        const totalReports = await Report.countDocuments();
+        const totalReport = await Report.countDocuments();
 
         res.status(200).json({
             totalUsers,

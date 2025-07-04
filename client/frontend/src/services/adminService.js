@@ -38,3 +38,8 @@ export const getUserById = async(userId)=>{
     const res = await apiClient.get(`/admin/get-user/${userId}`);
     return res.data;
 }
+
+export const getAdminStats = async()=>{
+    const res = await apiClient.get('/admin/stats');
+    return res.data;
+}
