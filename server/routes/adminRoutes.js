@@ -18,6 +18,6 @@ router.delete('/delete-user',requireAuth,requireAdmin,authLimiter,deleteUser);
 
 router.get('/get-user/:userId',requireAuth,requireAdmin,getUserById);
 
-router.get('/admin/stats',requireAdmin,getAdminStats)
+router.get('/stats',requireAuth,requireAdmin,getAdminStats)
 
 export default router;
