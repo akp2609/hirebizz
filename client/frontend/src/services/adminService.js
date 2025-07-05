@@ -41,5 +41,6 @@ export const getUserById = async(userId)=>{
 
 export const getAdminStats = async()=>{
     const res = await apiClient.get('/admin/stats');
+    console.log(res.data)
     return res.data;
 }

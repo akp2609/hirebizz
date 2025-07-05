@@ -27,7 +27,7 @@ export const applyToJob = async (req, res) => {
             coverLetter
         });
 
-        setJobStatus(jobId,'applied');
+        setJobStatus(jobId, 'applied');
 
         res.status(201).json({ message: 'Application submitted', application });
     } catch (err) {
@@ -118,3 +118,23 @@ export const getMyApplications = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch your applications', error: err.message });
     }
 };
+
+export const getAssociatedApplications = async (req, res) => {
+    try {
+        const { jobId } = req.params;
+
+        const applications = await Application.find({ job: jobId })
+            .populate('applicant', 'name email resumeURL')
+            .sort({ appliedAt: -1 });
+
+        if (!applications.length) {
+            return res.status(404).json({ message: 'No applications found for this job' });
+        }
+
+        res.status(200).json(applications);
+    }
+    catch (error) {
+        console.error('Error fetching applications:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}

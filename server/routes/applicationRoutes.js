@@ -1,5 +1,5 @@
 import express from 'express';
-import { applyToJob, getJobApplication, getMyApplications, updateApplicationStatus, withdrawApplication } from '../controllers/applicationController.js';
+import { applyToJob, getAssociatedApplications, getJobApplication, getMyApplications, updateApplicationStatus, withdrawApplication } from '../controllers/applicationController.js';
 import requireAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -13,5 +13,7 @@ router.delete('/withdraw-application/:appId',requireAuth,withdrawApplication);
 router.patch('/update-application-status/:appId',requireAuth,updateApplicationStatus);
 
 router.get('/my-applications', requireAuth, getMyApplications);
+
+router.get('/:jobId/associated-applications',requireAuth,getAssociatedApplications)
 
 export default router;
