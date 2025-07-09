@@ -1,56 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ApplicantModal from './ApplicantModal';
 
-const ApplicantCard = ({ applicant }) => {
-    const { name, email, resumeURL, coverLetter, status, appliedAt } = applicant;
+const ApplicantCard = ({ application }) => {
+    const [open, setOpen] = useState(false);
+
+    if (!application || typeof application !== 'object') {
+        console.warn("Invalid application object:", application);
+        return null;
+    }
+
+    const { applicant, appliedAt, status } = application;
+
+    if (!applicant || typeof applicant !== 'object') {
+        console.warn("Missing or invalid applicant in application:", application);
+        return null;
+    }
+
+    const name = applicant.name ?? "Unknown";
+    const email = applicant.email ?? "No email";
 
     return (
-        <div className="bg-gray-50 p-4 rounded-lg border">
-            <div className="flex justify-between items-start mb-2 space-y-1">
-                <div><h4 className="text-md font-semibold">{name}</h4>
-                    <p className="text-sm text-gray-600">{email}</p></div>
-
-
-                <div className='space-y-1'>
-                    <div className='space-x-1'>
-
-                        {status === 'pending' ? (
-                            <>
-                                <button className='text-sm font-medium px-2 py-3 rounded-md bg-green-100 text-green-700'>Accept</button>
-                                <button className='bg-red-100 text-red-700 text-sm font-medium px-2 py-3 rounded-md'>Reject</button>
-
-                            </>
-                        ) : (
-                            <>
-                                <span className={`text-sm font-medium px-2 py-1 rounded-full ${status === 'accepted' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                    }`}>
-                                    {status}
-                                </span>
-                                <button className="ml-2 bg-blue-600 text-white px-3 py-1 rounded">
-                                    Message
-                                </button>
-                            </>
-                        )}
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">Applied on {new Date(appliedAt).toLocaleDateString()}</p>
-                </div>
+        <>
+            <div
+                className="p-4 bg-white rounded shadow hover:shadow-md cursor-pointer"
+                onClick={() => setOpen(true)}
+            >
+                <h3 className="font-semibold text-lg">{name}</h3>
+                <p className="text-sm text-gray-600">{email}</p>
+                <p className="text-xs text-gray-500">
+                    Applied: {appliedAt ? new Date(appliedAt).toLocaleDateString() : 'Unknown'}
+                </p>
+                <p className="text-xs text-gray-600 mt-1">Status: {status}</p>
             </div>
 
-
-            {coverLetter && (
-                <p className="text-sm mt-2 text-gray-700 italic">"{coverLetter}"</p>
+            {open && (
+                <ApplicantModal
+                    applicantName={name}
+                    applicantEmail={email}
+                    application={application}
+                    onClose={() => setOpen(false)}
+                />
             )}
-
-            {resumeURL && (
-                <a
-                    href={resumeURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 text-sm underline mt-2 inline-block"
-                >
-                    View Resume
-                </a>
-            )}
-        </div>
+        </>
     );
 };
 

@@ -126,12 +126,7 @@ export const getAssociatedApplications = async (req, res) => {
         const applications = await Application.find({ job: jobId })
             .populate('applicant', 'name email resumeURL')
             .sort({ appliedAt: -1 });
-
-        if (!applications.length) {
-            return res.status(404).json({ message: 'No applications found for this job' });
-        }
-
-        
+  
         res.status(200).json({ success: true, applications: applications });
     }
     catch (error) {
