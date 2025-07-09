@@ -131,7 +131,7 @@ export const getAssociatedApplications = async (req, res) => {
             return res.status(404).json({ message: 'No applications found for this job' });
         }
 
-        res.status(200).json(applications);
+        res.status(200).json({ success: true, applications: applications });
     }
     catch (error) {
         console.error('Error fetching applications:', error);

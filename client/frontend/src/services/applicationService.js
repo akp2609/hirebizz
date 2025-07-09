@@ -25,3 +25,9 @@ export const updateApplicationStatus = async(applicationId,applicationData)=>{
     return res.data;
 }
 
+export const getAssociatedApplications = async(jobId)=>{
+    const res = await apiClient.get(`/applications/${jobId}/associated-applications`);
+    return res.data;
+
+}
+

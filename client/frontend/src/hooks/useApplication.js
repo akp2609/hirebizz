@@ -1,30 +1,29 @@
-import { useCallback, useState } from "react"
-import { postApplication } from "../services/applicationService";
+import { useCallback, useState, useEffect } from "react"
+import { postApplication, getAssociatedApplications } from "../services/applicationService";
 
+export const useApplication = () => {
+    const [error, setError] = useState(null);
+    const [applying, setApplying] = useState(false);
+    const [application, setApplication] = useState(null);
 
-const useApplication = ()=>{
-    const [error,setError] = useState(null);
-    const [applying,setApplying] = useState(false);
-    const [application,setApplication] = useState(null);
-
-    const postNewApplication = useCallback(async({jobId,coverletter})=>{
+    const postNewApplication = useCallback(async ({ jobId, coverletter }) => {
         setApplying(true);
         setError(null);
-        try{
+        try {
             const applicationData = new FormData();
-            applicationData.append("coverLetter",coverletter);
+            applicationData.append("coverLetter", coverletter);
 
-            const data = await postApplication(jobId,applicationData);
+            const data = await postApplication(jobId, applicationData);
             setApplication(data);
             return data;
-        }catch(err){
+        } catch (err) {
             console.log('Error applying for the job');
             setError(err);
             return null;
-        }finally{
+        } finally {
             setApplying(false);
         }
-    },[]);
+    }, []);
 
     return {
         application,
@@ -34,4 +33,29 @@ const useApplication = ()=>{
     }
 }
 
-export default useApplication;
+export const useApplications = (jobId) => {
+    console.log('Entered hook');
+    const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                console.log("Calling getAssociatedApplications with jobId:", jobId);
+                const data = await getAssociatedApplications(jobId);
+                console.log("Fetched applications:", data);
+                setApplications(data);
+            } catch (err) {
+                console.error("Error fetching applications:", err);
+                setError('Failed to fetch applications');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (jobId) getData();
+    }, [jobId]);
+    console.log('From hook', applications);
+    return { applications, loading, error };
+};

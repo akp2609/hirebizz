@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import useResumeUpload from "../../hooks/useResumeUpload";
-import useApplication from "../../hooks/useApplication";
+import {useApplication} from "../../hooks/useApplication";
 import { toast } from "react-hot-toast";
 
 const ApplyJobModal = ({ jobId, isOpen, onClose }) => {

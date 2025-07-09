@@ -12,6 +12,9 @@ import Setting from "./pages/common/Setting";
 import DevPlayground from "./pages/_dev";
 import { UserProvider } from "./context/UserContext";
 import AdminRoutes from "./components/admin/AdminRoutes";
+import Applications from "./pages/employer/Applicantions";
+
+
 
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -37,6 +40,7 @@ function App() {
                 <Route path='/setting' element={<Setting />} />
                 <Route path='/admin/*' element={<AdminRoutes />} />
                 <Route path='/_dev' element={<DevPlayground />} />
+                <Route path='/employer/job/:jobId/applications' element={<Applications/>}/>
               </Routes>
             </div>
             <Footer />
