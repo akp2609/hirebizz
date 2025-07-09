@@ -45,7 +45,8 @@ export const useApplications = (jobId) => {
                 console.log("Calling getAssociatedApplications with jobId:", jobId);
                 const data = await getAssociatedApplications(jobId);
                 console.log("Fetched applications:", data);
-                setApplications(data);
+                const appList = data?.applications || [];
+                setApplications(appList);
             } catch (err) {
                 console.error("Error fetching applications:", err);
                 setError('Failed to fetch applications');

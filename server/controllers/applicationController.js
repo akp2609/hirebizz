@@ -131,7 +131,19 @@ export const getAssociatedApplications = async (req, res) => {
             return res.status(404).json({ message: 'No applications found for this job' });
         }
 
-        res.status(200).json({ success: true, applications: applications });
+        const flattened = applications.map(app => ({
+            _id: app._id,
+            job: app.job,
+            applicantId: app.applicant._id,
+            applicantName: app.applicant.name,
+            applicantEmail: app.applicant.email,
+            resumeURL: app.applicant.resumeURL || app.resumeURL,
+            coverLetter: app.coverLetter,
+            status: app.status,
+            appliedAt: app.appliedAt,
+        }));
+
+        res.status(200).json({ success: true, applications: flattened });
     }
     catch (error) {
         console.error('Error fetching applications:', error);
