@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import mongoose from "mongoose";
 import { basename, parse } from "path";
-import { uploadToGCS, deleteFromGCS } from "../utils/gcsUploader.js";
+import { uploadToGCS, deleteFromGCS, getSignedUrl } from "../utils/gcsUploader.js";
 import { getDbByName } from "../config/db.js";
 
 
@@ -73,115 +73,84 @@ export const updateEmployerVerified = async (req, res) => {
     }
 }
 
+export const refreshSignedResumeURL = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
 
-// export const uploadResume = async (req, res) => {
+        if (!user || !user.objectName) {
+            return res.status(404).json({ message: 'Resume not found' });
+        }
 
-//     try {
+        const signedUrl = await getSignedUrl(user.objectName);
 
-//         if (!req.file) {
-//             return res.status(400).json({ message: 'No file uploaded' });
-//         }
+        user.resumeURL = signedUrl;  
+        await user.save();
 
-//         const user = await User.findById(req.user._id).select('-password');
+        return res.status(200).json({ resumeURL: signedUrl });
+    } catch (error) {
+        console.error('Error refreshing resume URL:', error);
+        return res.status(500).json({ message: 'Failed to refresh resume URL' });
+    }
+};
 
-//         if (!user) return res.status(404).json({ message: 'User not found' });
-
-//         if (user.resumeURL) {
-//             try {
-
-//                 const url = new URL(user.resumeURL);
-
-//                 await deleteFromGCS(user.objectName);
-//                 console.log('Previous resume deleted');
-
-//             } catch (err) {
-//                 console.error('Failed to delete previous resume: ', err.message);
-//                 return res.status(404).json({ message: err.message });
-//             }
-//         }
-
-//         const localPath = req.file.path;
-//         const originalName = req.file.originalname;
-
-//         const publicUrl = await uploadToGCS(localPath, originalName, user._id);
-
-//         user.resumeURL = publicUrl.signedUrl;
-//         const url = new URL(publicUrl.signedUrl);
-//         const objectNameCur = `${user._id}/${decodeURIComponent(url.pathname.split('/').pop())}`;
-//         user.objectName = objectNameCur;
-
-//         await user.save();
-
-//         console.log('User updated:', user);
-
-//         res.status(200).json({
-//             message: "Resume uploaded successfully",
-//             resumeURL: publicUrl,
-//             objectName: objectNameCur,
-//             user
-//         });
-
-//     } catch (err) {
-//         console.error({ message: 'Resume upload failed', err });
-//         res.status(500).json({
-//             message: "Upload failed",
-//             error: err.message || "Unknown error"
-//         });
-//     }
-// };
 
 export const uploadResume = async (req, res) => {
+
     try {
+
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
         const user = await User.findById(req.user._id).select('-password');
+
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-
-        if (user.objectName) {
+        if (user.resumeURL) {
             try {
+
+                const url = new URL(user.resumeURL);
+
                 await deleteFromGCS(user.objectName);
                 console.log('Previous resume deleted');
+
             } catch (err) {
                 console.error('Failed to delete previous resume: ', err.message);
-                return res.status(500).json({ message: 'Failed to delete old resume' });
+                return res.status(404).json({ message: err.message });
             }
         }
 
         const localPath = req.file.path;
         const originalName = req.file.originalname;
 
-        const { objectName } = await uploadToGCS(localPath, originalName, user._id);
+        const publicUrl = await uploadToGCS(localPath, originalName, user._id);
 
+        user.resumeURL = publicUrl.signedUrl;
+        const url = new URL(publicUrl.signedUrl);
+        const objectNameCur = `${user._id}/${decodeURIComponent(url.pathname.split('/').pop())}`;
+        user.objectName = objectNameCur;
 
-        user.objectName = objectName;
         await user.save();
 
-        return res.status(200).json({
+        console.log('User updated:', user);
+
+        res.status(200).json({
             message: "Resume uploaded successfully",
-            objectName,
+            resumeURL: publicUrl,
+            objectName: objectNameCur,
+            user
         });
+
     } catch (err) {
-        console.error("Resume upload error:", err);
-        return res.status(500).json({ message: "Upload failed", error: err.message });
+        console.error({ message: 'Resume upload failed', err });
+        res.status(500).json({
+            message: "Upload failed",
+            error: err.message || "Unknown error"
+        });
     }
 };
 
-export const getSignedResumeURL = async (req, res) => {
-    try {
 
-        const user = await User.findById(req.user._id);
-        if (!user || !user.objectName) return res.status(404).json({ message: 'Resume not found' });
-        console.log('Generating signed URL for objectName:', user.objectName, typeof user.objectName);
-        const signedUrl = await getSignedUrl(user.objectName);
-        res.status(200).json({ url: signedUrl });
-    } catch (err) {
-        console.error("Error generating signed resume URL:", err);
-        res.status(500).json({ message: 'Could not get signed URL' });
-    }
-};
 
 export const deleteResume = async (req, res) => {
     try {
