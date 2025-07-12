@@ -171,10 +171,10 @@ export const uploadResume = async (req, res) => {
 
 export const getSignedResumeURL = async (req, res) => {
     try {
-        
+
         const user = await User.findById(req.user._id);
         if (!user || !user.objectName) return res.status(404).json({ message: 'Resume not found' });
-
+        console.log('Generating signed URL for objectName:', user.objectName, typeof user.objectName);
         const signedUrl = await getSignedUrl(user.objectName);
         res.status(200).json({ url: signedUrl });
     } catch (err) {

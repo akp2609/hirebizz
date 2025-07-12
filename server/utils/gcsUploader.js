@@ -95,7 +95,7 @@ export const uploadToGCS = (localPath, originalName, userId) => {
         });
 
         stream.on('finish', () => {
-            
+
             if (existsSync(localPath)) {
                 try {
                     unlinkSync(localPath);
@@ -105,19 +105,24 @@ export const uploadToGCS = (localPath, originalName, userId) => {
                 }
             }
 
-            resolve({ objectName: uniqueName }); 
+            resolve({ objectName: uniqueName });
         });
     });
 };
 
 export const getSignedUrl = async (objectName) => {
+    if (typeof objectName !== 'string') {
+        throw new Error(`Invalid objectName for signed URL: ${objectName}`);
+    }
+
     const file = bucket.file(objectName);
-    const [url] = await file.getSignedUrl({
-        version: 'v4',
+
+    const [signedUrl] = await file.getSignedUrl({
         action: 'read',
-        expires: Date.now() + 15 * 60 * 1000, 
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
     });
-    return url;
+
+    return signedUrl;
 };
 
 
