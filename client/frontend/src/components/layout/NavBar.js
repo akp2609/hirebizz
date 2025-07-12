@@ -11,7 +11,7 @@ function NavBar() {
     const defaultProfilePic = "https://www.w3schools.com/howto/img_avatar.png";
 
     return (
-        <nav className="bg-blue-600 text-white px-7 py-6  shadow-md flex justify-between">
+        <nav className="bg-blue-700 text-white px-7 py-6  shadow-md flex justify-between">
             <h1 className='text-2xl font-bold'>HireBizz</h1>
             <div className='space-x-4 flex'>
                 <Link to='/' className='hover:text-cyan-300 hover:underline text-xl'>Home</Link>

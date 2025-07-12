@@ -13,6 +13,7 @@ import DevPlayground from "./pages/_dev";
 import { UserProvider } from "./context/UserContext";
 import AdminRoutes from "./components/admin/AdminRoutes";
 import Applications from "./pages/employer/Applicantions";
+import 'tw-elements';
 
 
 
@@ -24,14 +25,14 @@ function App() {
 
     <GoogleOAuthProvider clientId={clientId}>
 
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 to-blue-700">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-100 via-gray-50 to-white">
         <BrowserRouter>
 
           <UserProvider>
             <div className="border-1 border-white">
               <NavBar />
             </div>
-            <div className="flex-1">
+            <div className="flex-1  shadow-inner">
               <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/about' element={<About />} />

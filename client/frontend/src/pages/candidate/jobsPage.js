@@ -28,10 +28,11 @@ const JobsPage = () => {
     const [error, setError] = useState('');
     const [hasResume, setHasResume] = useState(false);
     const [relevantJobs, setRelevantJobs] = useState([]);
+    const [showAllRelevant,setShowAllRelevant] = useState(false)
     const { user } = useUser();
 
-    const [selectedJob, setSelectedJob] = useState(null); // ✅ Track clicked job
-    const [showDetailsModal, setShowDetailsModal] = useState(false); // ✅ Modal state
+    const [selectedJob, setSelectedJob] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
 
     useEffect(() => {
         const query = Object.fromEntries([...searchParams]);
@@ -116,19 +117,31 @@ const JobsPage = () => {
             {loading && <p>Loading jobs...</p>}
             {error && <p className="text-red-600">{error}</p>}
 
-            {hasResume && (
+            {hasResume && relevantJobs.length > 0 && (
                 <>
                     <h2 className="text-xl font-bold mb-3">Recommended Jobs Based on Your Resume</h2>
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
-                        {relevantJobs.map(job => (
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-4">
+                        {(showAllRelevant ? relevantJobs : relevantJobs.slice(0, 6)).map(job => (
                             <JobCard
                                 key={job._id}
                                 job={job}
                                 score={job.similarity}
-                                onClick={() => openJobDetails(job)} 
+                                onClick={() => openJobDetails(job)}
                             />
                         ))}
+                        <div className="col-span-full flex justify-center">
+                            {relevantJobs.length > 6 && (
+                        <button
+                            className=" text-lg font-bold hover:underline p-6 rounded-lg cursor-pointer bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-6 py-4 shadow-md text-center hover:scale-[1.02] transition duration-200"
+                            onClick={() => setShowAllRelevant(prev => !prev)}
+                        >
+                            {showAllRelevant ? "Show Less" : "Show All Relevant Jobs =>"}
+                        </button>
+                    )}
+                        </div>
+                        
                     </div>
+                    
                 </>
             )}
 
@@ -140,14 +153,13 @@ const JobsPage = () => {
                     <JobCard
                         key={job._id}
                         job={job}
-                        onClick={() => openJobDetails(job)} // ✅ Make card clickable
+                        onClick={() => openJobDetails(job)}
                     />
                 ))}
             </div>
 
             <Pagination page={filters.page} totalPages={totalPages} onPageChange={handlePageChange} />
 
-            {/* ✅ Job Details Modal */}
             <JobDetailsModal
                 job={selectedJob}
                 isOpen={showDetailsModal}

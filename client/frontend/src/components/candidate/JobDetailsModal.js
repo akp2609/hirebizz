@@ -44,7 +44,7 @@ const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
                     <p className="text-sm">₹{job.compensation}</p>
                 </div>
 
-                {/* Only show apply button if not in admin view */}
+                
                 {!isAdminView && (
                     <div className="flex justify-end mt-6">
                         <button

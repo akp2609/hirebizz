@@ -6,6 +6,7 @@ import uploadPDF from '../middleware/upload.js';
 import { appendFile } from 'fs';
 import { error } from 'console';
 import { authLimiter } from '../utils/authLimiter.js';
+import { getSignedUrl } from '../utils/gcsUploader.js';
 
 
 const router = express.Router();
@@ -29,5 +30,7 @@ router.delete('/saved-jobs/:jobId',requireAuth,deleteSavedJobs)
 router.get('/get-profile',requireAuth,getUserProfile);
 
 router.patch('/update-profile',requireAuth,updateUserProfile)
+
+router.get('/resume',requireAuth,getSignedUrl)
 
 export default router;
