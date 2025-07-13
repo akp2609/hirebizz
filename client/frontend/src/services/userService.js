@@ -49,3 +49,8 @@ export const updateUserProfile = async(formData)=>{
     const res = await apiClient.patch('/user/update-profile',formData);
     return res.data;
 }
+
+export const refreshResumeURL = async()=>{
+    const res = await apiClient.get('/user/refresh-resume-url');
+    return res.data;
+}

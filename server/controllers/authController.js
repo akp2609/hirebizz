@@ -63,7 +63,7 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        const token = createToken(user._id, '30d');
+        const token = createToken(user._id, '7d');
 
         const { password: pwd, ...userWithoutPassword } = user.toObject();
 

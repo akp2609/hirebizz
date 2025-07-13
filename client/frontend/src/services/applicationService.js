@@ -10,10 +10,17 @@ export const getJobApplicationById = async(jobId)=>{
     return res.data;
 }
 
-export const getMyJobApplications = async()=>{
-    const res = await apiClient.get('/applications/my-applications');
-    return res.data;
-}
+export const getMyJobApplications = async ({ search = "", sortBy = "appliedAt", order = "desc" } = {}) => {
+    const query = new URLSearchParams({ search, sortBy, order }).toString();
+    const res = await fetch(`/api/user/applications?${query}`, {
+        headers: {
+            Authorization: `Bearer ${yourToken}`,
+        },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to fetch applications");
+    return data;
+};
 
 export const withdrawJobApplication = async(applicationId)=>{
     const res = await apiClient.delete(`/applications/withdraw-application/${applicationId}`);

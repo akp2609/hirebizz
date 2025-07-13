@@ -105,15 +105,33 @@ export const updateApplicationStatus = async (req, res) => {
 
 export const getMyApplications = async (req, res) => {
     try {
+        const { search = "", sortBy = "appliedAt", order = "desc" } = req.query;
+
+        const sortOptions = {};
+        sortOptions[sortBy] = order === "asc" ? 1 : -1;
+
+        const searchRegex = new RegExp(search, "i");
+
         const applications = await Application.find({ applicant: req.user._id })
             .populate({
                 path: 'job',
+                match: { title: searchRegex },
                 select: 'title company',
                 populate: { path: 'company', select: 'name' }
             })
-            .sort({ appliedAt: -1 });
+            .populate({
+                path: 'applicant',
+                select: 'name email profileImage'
+            })
+            .sort(sortOptions);
 
-        res.status(200).json(applications);
+        const filtered = applications.filter(app =>
+            app.coverLetter?.toLowerCase().includes(search.toLowerCase()) ||
+            app.job !== null 
+        );
+
+
+        res.status(200).json(filtered);
     } catch (err) {
         res.status(500).json({ message: 'Failed to fetch your applications', error: err.message });
     }
@@ -126,7 +144,7 @@ export const getAssociatedApplications = async (req, res) => {
         const applications = await Application.find({ job: jobId })
             .populate('applicant', 'name email resumeURL')
             .sort({ appliedAt: -1 });
-  
+
         res.status(200).json({ success: true, applications: applications });
     }
     catch (error) {

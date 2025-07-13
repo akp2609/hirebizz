@@ -9,6 +9,7 @@ import { getUserRelevantJobs } from '../../services/userService';
 import { useUser } from '../../context/UserContext';
 import JobDetailsModal from '../../components/candidate/JobDetailsModal';
 
+
 const defaultFilters = {
     location: '',
     skills: [],

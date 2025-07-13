@@ -29,7 +29,7 @@ router.delete('/saved-jobs/:jobId',requireAuth,deleteSavedJobs)
 
 router.get('/get-profile',requireAuth,getUserProfile);
 
-router.patch('/update-profile',requireAuth,updateUserProfile)
+router.patch('/update-profile',requireAuth,updateUserProfile);
 
 router.get('/refresh-resume-url', requireAuth, refreshSignedResumeURL);
 
