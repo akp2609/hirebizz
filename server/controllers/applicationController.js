@@ -155,7 +155,7 @@ export const getAssociatedApplications = async (req, res) => {
 
 export const refreshResumeUrlApplications = async (req, res) => {
     try {
-        const application = await Application.findById(req.params.applicantionId).lean();
+        const application = await Application.findById(req.params.applicationId).lean();
         if (!application) return res.status(404).json({ message: "Application not found" });
 
         const resumePath = application.resumePath;
