@@ -1,5 +1,5 @@
 import express from 'express';
-import { applyToJob, getAssociatedApplications, getJobApplication, getMyApplications, updateApplicationStatus, withdrawApplication } from '../controllers/applicationController.js';
+import { applyToJob, getAssociatedApplications, getJobApplication, getMyApplications, refreshResumeUrlApplications, updateApplicationStatus, withdrawApplication } from '../controllers/applicationController.js';
 import requireAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -15,5 +15,7 @@ router.patch('/update-application-status/:appId',requireAuth,updateApplicationSt
 router.get('/my-applications', requireAuth, getMyApplications);
 
 router.get('/:jobId/associated-applications',requireAuth,getAssociatedApplications)
+
+router.get(`/:applicationId/refresh-resume-url`,requireAuth,refreshResumeUrlApplications);
 
 export default router;

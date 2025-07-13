@@ -23,7 +23,7 @@ export const applyToJob = async (req, res) => {
         const application = await Application.create({
             job: jobId,
             applicant: userId,
-            resumeURL: user.resumeURL,
+            resumeObject: user.objectName,
             coverLetter
         });
 
@@ -127,7 +127,7 @@ export const getMyApplications = async (req, res) => {
 
         const filtered = applications.filter(app =>
             app.coverLetter?.toLowerCase().includes(search.toLowerCase()) ||
-            app.job !== null 
+            app.job !== null
         );
 
 
@@ -150,5 +150,28 @@ export const getAssociatedApplications = async (req, res) => {
     catch (error) {
         console.error('Error fetching applications:', error);
         res.status(500).json({ message: 'Server error' });
+    }
+}
+
+export const refreshResumeUrlApplications = async (req, res) => {
+    try {
+        const application = await Application.findById(req.params.applicantionId).lean();
+        if (!application) return res.status(404).json({ message: "Application not found" });
+
+        const resumePath = application.resumePath;
+        if (!resumePath) return res.status(400).json({ message: "No resume path stored in this application" });
+
+        const [signedUrl] = await storage
+            .bucket(process.env.RESUME_BUCKET_NAME)
+            .file(resumePath)
+            .getSignedUrl({
+                version: "v4",
+                action: "read",
+                expires: Date.now() + 5 * 60 * 1000,
+            });
+
+        res.status(200).json({ url: signedUrl });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to generate signed URL", error: err.message });
     }
 }
