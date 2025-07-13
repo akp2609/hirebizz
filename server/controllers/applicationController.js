@@ -1,7 +1,7 @@
 import Application from "../models/Application.js";
 import Job from "../models/Job.js";
 import User from "../models/User.js";
-import { uploadToGCS } from "../utils/gcsUploader.js";
+import { getSignedUrl, uploadToGCS } from "../utils/gcsUploader.js";
 import { setJobStatus } from "./jobController.js";
 
 
@@ -158,18 +158,8 @@ export const refreshResumeUrlApplications = async (req, res) => {
         const application = await Application.findById(req.params.applicationId).lean();
         if (!application) return res.status(404).json({ message: "Application not found" });
 
-        const resumePath = application.resumePath;
-        if (!resumePath) return res.status(400).json({ message: "No resume path stored in this application" });
-
-        const [signedUrl] = await storage
-            .bucket(process.env.RESUME_BUCKET_NAME)
-            .file(resumePath)
-            .getSignedUrl({
-                version: "v4",
-                action: "read",
-                expires: Date.now() + 5 * 60 * 1000,
-            });
-
+        const signedUrl = await getSignedUrl(application.objectName);
+        
         res.status(200).json({ url: signedUrl });
     } catch (error) {
         res.status(500).json({ message: "Failed to generate signed URL", error: err.message });
