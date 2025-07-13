@@ -158,7 +158,7 @@ export const refreshResumeUrlApplications = async (req, res) => {
         const application = await Application.findById(req.params.applicationId).lean();
         if (!application) return res.status(404).json({ message: "Application not found" });
 
-        const signedUrl = await getSignedUrl(application.objectName);
+        const signedUrl = await getSignedUrl(application.resumeObject);
         
         res.status(200).json({ url: signedUrl });
     } catch (error) {
