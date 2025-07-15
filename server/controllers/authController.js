@@ -14,8 +14,9 @@ export const registerUser = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
+        const isEmailVerified = false;
 
-        const user = await User.create({ name, email, password, role });
+        const user = await User.create({ name, email, password, role ,isEmailVerified});
         const token = createToken(user._id);
         await sendVerificationEmail(email, token);
 
