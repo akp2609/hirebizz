@@ -50,7 +50,7 @@ export const updateUserProfile = async(formData)=>{
     return res.data;
 }
 
-export const refreshResumeURL = async()=>{
+export const refreshUserResumeURL = async()=>{
     const res = await apiClient.get('/user/refresh-resume-url');
     return res.data;
 }

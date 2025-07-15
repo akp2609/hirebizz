@@ -83,7 +83,7 @@ export const refreshSignedResumeURL = async (req, res) => {
 
         const signedUrl = await getSignedUrl(user.objectName);
 
-        user.resumeURL = signedUrl;  
+        user.resumeURL = signedUrl;
         await user.save();
 
         return res.status(200).json({ resumeURL: signedUrl });
@@ -298,6 +298,10 @@ export const relevantJobs = async (req, res) => {
                     numCandidates: 100,
                     limit: 10,
                     index: "jobsIndex"
+                }
+            }, {
+                $match: {
+                    isActive: true
                 }
             }, {
                 $project: {

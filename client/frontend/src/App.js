@@ -14,8 +14,8 @@ import { UserProvider } from "./context/UserContext";
 import AdminRoutes from "./components/admin/AdminRoutes";
 import Applications from "./pages/employer/Applicantions";
 import 'tw-elements';
-
-
+import VerifyEmail from "./pages/common/VerifyEmail";
+import VerifyEmailSent from "./pages/common/VerifyEmailSent";
 
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
@@ -41,7 +41,9 @@ function App() {
                 <Route path='/setting' element={<Setting />} />
                 <Route path='/admin/*' element={<AdminRoutes />} />
                 <Route path='/_dev' element={<DevPlayground />} />
-                <Route path='/employer/job/:jobId/applications' element={<Applications/>}/>
+                <Route path='/employer/job/:jobId/applications' element={<Applications />} />
+                <Route path="/verify-email/:token" element={<VerifyEmail />} />
+                <Route path="/verify-email-sent" element={<VerifyEmailSent />} />
               </Routes>
             </div>
             <Footer />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getRefreshedResumeUrl } from '../../services/applicationService';
 
 const ApplicationCard = ({ application }) => {
-    const { job, coverLetter, status, appliedAt, resumePath } = application;
+    const { job, coverLetter, status, appliedAt, resumeObject, _id: applicationId } = application;
 
     const [showFull, setShowFull] = useState(false);
     const [resumeURL, setResumeURL] = useState(null);
@@ -10,31 +10,35 @@ const ApplicationCard = ({ application }) => {
 
     useEffect(() => {
         const fetchResumeUrl = async () => {
-            
-            if (!resumePath || resumeURL) return;
+            if (!resumeObject) {
+                console.warn("No resumeObject found in application:", applicationId);
+                return;
+            }
 
             setLoadingResume(true);
             try {
-                const resume = await getRefreshedResumeUrl(resumePath);
+
+                const resume = await getRefreshedResumeUrl(applicationId);
                 if (resume) {
                     setResumeURL(resume);
-                    console.log("Fetched refreshed resume URL:", resume);
+
+                } else {
+                    console.warn("Resume URL returned null or empty.");
                 }
             } catch (err) {
-                console.error('Error refreshing resume URL for application:', err);
+                console.error(" Error fetching resume URL:", err);
             } finally {
                 setLoadingResume(false);
             }
         };
 
         fetchResumeUrl();
-    }, [resumePath, resumeURL]);
+    }, [applicationId, resumeObject]);
 
-    
     if (!job || !job.title) {
         return (
             <div className="bg-white rounded-xl shadow-md p-4 text-center text-gray-600">
-                <p className="text-sm">This job posting may have been removed.</p>
+                <p className="text-sm">⚠️ This job posting may have been removed.</p>
             </div>
         );
     }
@@ -48,13 +52,12 @@ const ApplicationCard = ({ application }) => {
                         {job.company?.name || "Unknown Company"} — {job.location || "Location not specified"}
                     </p>
                 </div>
-                <span className={`text-sm font-medium px-2 py-1 rounded-md ${
-                    status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : status === 'accepted'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                }`}>
+                <span className={`text-sm font-medium px-2 py-1 rounded-md ${status === 'pending'
+                    ? 'bg-yellow-100 text-yellow-700'
+                    : status === 'accepted'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}>
                     {status}
                 </span>
             </div>
@@ -79,7 +82,9 @@ const ApplicationCard = ({ application }) => {
                     Applied: {new Date(appliedAt).toLocaleDateString()}
                 </p>
 
-                {resumeURL ? (
+                {loadingResume ? (
+                    <p className="text-xs text-gray-400 italic">Loading resume...</p>
+                ) : resumeURL ? (
                     <a
                         href={resumeURL}
                         target="_blank"
@@ -88,9 +93,9 @@ const ApplicationCard = ({ application }) => {
                     >
                         View Resume
                     </a>
-                ) : loadingResume ? (
-                    <p className="text-xs text-gray-400 italic">Loading resume...</p>
-                ) : null}
+                ) : (
+                    <p className="text-xs text-red-500 italic">Resume not available</p>
+                )}
             </div>
         </div>
     );

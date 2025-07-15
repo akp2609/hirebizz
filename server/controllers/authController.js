@@ -36,6 +36,20 @@ export const verifyEmail = async (req, res) => {
         if (!decoded.id) {
             return res.status(400).json({ message: 'Malformed token' });
         }
+
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.isEmailVerified) {
+            return res.status(200).json({ message: 'Email already verified' });
+        }
+
+        user.isEmailVerified = true;
+        await user.save();
+
         res.status(200).json({ message: 'Email verified successfully' });
     } catch (err) {
         console.error(err);
@@ -58,6 +72,12 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
+        if(!user.isEmailVerified){
+            const token = createToken(user._id);
+            await sendVerificationEmail(email,token);
+            return res.status(400).json({message: 'email not verified. Email verification link resent to your email please verify and login'});
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
@@ -68,7 +88,7 @@ export const loginUser = async (req, res) => {
         const { password: pwd, ...userWithoutPassword } = user.toObject();
 
         res.status(200).json({
-            user:userWithoutPassword,
+            user: userWithoutPassword,
             token
         });
     } catch (err) {

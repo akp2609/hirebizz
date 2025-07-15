@@ -33,6 +33,6 @@ export const getAssociatedApplications = async(jobId)=>{
 
 export const getRefreshedResumeUrl = async(applicationId)=>{
     const res = await apiClient.get(`/applications/${applicationId}/refresh-resume-url`);
-    return res.data;
+    return res.data.url;
 }
 
