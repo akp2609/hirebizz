@@ -5,7 +5,6 @@ export const postUser = async (userData) => {
     return res.data;
 };
 
-
 export const verifyEmail = async (token) => {
     const res = await apiClient.get(`/auth/verify-email/${token}`);
     return res.data;

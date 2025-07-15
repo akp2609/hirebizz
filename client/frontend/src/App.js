@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 
 import Footer from './components/layout/Footer';
@@ -16,9 +16,17 @@ import Applications from "./pages/employer/Applicantions";
 import 'tw-elements';
 import VerifyEmail from "./pages/common/VerifyEmail";
 import VerifyEmailSent from "./pages/common/VerifyEmailSent";
+import { useAuth } from "./context/AuthContext";
+
 
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
+
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
 
 function App() {
   return (
@@ -34,14 +42,14 @@ function App() {
             </div>
             <div className="flex-1  shadow-inner">
               <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/about' element={<About />} />
+                <Route path='/' element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path='/about' element={<PrivateRoute><About /></PrivateRoute>} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<SignUp />} />
-                <Route path='/setting' element={<Setting />} />
-                <Route path='/admin/*' element={<AdminRoutes />} />
-                <Route path='/_dev' element={<DevPlayground />} />
-                <Route path='/employer/job/:jobId/applications' element={<Applications />} />
+                <Route path='/setting' element={<PrivateRoute><Setting /></PrivateRoute>} />
+                <Route path='/admin/*' element={<PrivateRoute><AdminRoutes /></PrivateRoute>} />
+                <Route path='/_dev' element={<PrivateRoute><DevPlayground /></PrivateRoute>} />
+                <Route path='/employer/job/:jobId/applications' element={<PrivateRoute><Applications /></PrivateRoute>} />
                 <Route path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route path="/verify-email-sent" element={<VerifyEmailSent />} />
               </Routes>
