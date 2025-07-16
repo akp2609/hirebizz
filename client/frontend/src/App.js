@@ -17,6 +17,8 @@ import 'tw-elements';
 import VerifyEmail from "./pages/common/VerifyEmail";
 import VerifyEmailSent from "./pages/common/VerifyEmailSent";
 import { useAuth } from "./context/AuthContext";
+import UserProfilePage from "./pages/common/UserProfilePage";
+import SavedJobs from "./pages/common/SavedJob";
 
 
 
@@ -47,11 +49,14 @@ function App() {
                 <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<SignUp />} />
                 <Route path='/setting' element={<PrivateRoute><Setting /></PrivateRoute>} />
+                <Route path='/profile' element={<PrivateRoute><UserProfilePage></UserProfilePage></PrivateRoute>}/>
                 <Route path='/admin/*' element={<PrivateRoute><AdminRoutes /></PrivateRoute>} />
                 <Route path='/_dev' element={<PrivateRoute><DevPlayground /></PrivateRoute>} />
                 <Route path='/employer/job/:jobId/applications' element={<PrivateRoute><Applications /></PrivateRoute>} />
                 <Route path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route path="/verify-email-sent" element={<VerifyEmailSent />} />
+                <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs/></PrivateRoute>}/>
+                <Route path="*" element={<Navigate to="/login" />} />
               </Routes>
             </div>
             <Footer />

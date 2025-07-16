@@ -215,7 +215,7 @@ export const saveJobs = async (req, res) => {
 export const getSavedJobs = async (req, res) => {
     try {
 
-        const savedJobs = await User.findById(req.user._id).select('savedJobs -password').populate('savedJobs');
+        const savedJobs = await User.findById(req.user._id).select('-password').populate('savedJobs');
 
         if (!savedJobs) {
             return res.status(404).json({ message: 'User not found' });

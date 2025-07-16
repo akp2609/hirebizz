@@ -33,9 +33,14 @@ function NavBar() {
                         {isOpen && (
                             <div className="absolute right-0 overflow-hidden top-16 w-40 bg-white border rounded-md shadow-lg py-2 z-50 items-center">
                                 <p className='text-black flex justify-center items-center'>{user.name}</p>
-                                <hr style={{border: '1px solid gray'}} className='mt-2'/>
+                                <hr style={{ border: '1px solid gray' }} className='mt-2' />
+                                <Link to="/profile" className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Profile</Link>
+                                <hr style={{ border: '1px solid gray' }} className='mt-2' />
+                                <Link to="/saved-jobs" className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Saved Jobs</Link>
+                                <hr style={{ border: '1px solid gray' }} className='mt-2' />
                                 <Link to='/setting' className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Setting</Link>
-                                <hr style={{border: '1px solid gray'}} className='mt-2'/>
+                                <hr style={{ border: '1px solid gray' }} className='mt-2' />
+
                                 <button
                                     onClick={logout}
                                     className="w-full text-left px-4  hover:bg-gray-100 text-black flex justify-center items-center"
