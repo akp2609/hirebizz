@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         unique: true,
     },
-    isEmailVerified:{
+    isEmailVerified: {
         type: Boolean,
         default: false,
         required: true
@@ -67,7 +67,11 @@ const userSchema = new mongoose.Schema({
             ref: Job
         }],
         default: []
-    }
+    },
+    appliedJobs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job"
+    }],
 }, { timestamps: true }, { collection: "users" });
 
 userSchema.pre('save', async function (next) {

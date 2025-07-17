@@ -181,28 +181,9 @@ export const getJobById = async (req, res) => {
     }
 }
 
-export const setJobStatus = async (jobId, newStatus) => {
+export const closeJob = async (req,res) => {
     try {
-
-        if (!['not applied', 'applied'].includes(newStatus)) {
-            throw new Error('Invalid status');
-        }
-
-        const job = await Job.findByIdAndUpdate({ _id: jobId }, { status: newStatus }, { new: true });
-
-        if (!job) {
-            throw new Error('job not found');
-        }
-
-        return job;
-    } catch (err) {
-        console.error('Failed to update job status', err);
-    }
-}
-
-export const closeJob = async (jobId) => {
-    try {
-
+        const {jobId} = req.params;
         const job = await Job.findByIdAndUpdate({ _id: jobId }, { isActive: false }, { new: true });
 
         if (!job) {

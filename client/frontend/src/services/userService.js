@@ -22,7 +22,8 @@ export const saveJob = async (jobId) => {
 
 export const getUserSavedJobs = async () => {
     const res = await apiClient.get('/user/saved-jobs');
-    return res.data;
+    console.log(res.data.savedJobs);
+    return res.data.savedJobs || [];
 }
 
 export const getUserRelevantJobs = async () => {
@@ -40,17 +41,17 @@ export const deleteUserSavedJob = async (jobId) => {
     return res.data;
 }
 
-export const getUserProfile = async()=>{
+export const getUserProfile = async () => {
     const res = await apiClient.get('/user/get-profile');
     return res.data;
 }
 
-export const updateUserProfile = async(formData)=>{
-    const res = await apiClient.patch('/user/update-profile',formData);
+export const updateUserProfile = async (formData) => {
+    const res = await apiClient.patch('/user/update-profile', formData);
     return res.data;
 }
 
-export const refreshUserResumeURL = async()=>{
+export const refreshUserResumeURL = async () => {
     const res = await apiClient.get('/user/refresh-resume-url');
     return res.data;
 }

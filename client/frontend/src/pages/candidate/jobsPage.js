@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-
 import JobCard from '../../components/common/JobCard';
 import JobFilters from '../../components/common/JobFilters';
 import Pagination from '../../components/common/Pagination';
 import { fetchJobs } from '../../services/jobService';
-import { getUserRelevantJobs } from '../../services/userService';
+import { getUserRelevantJobs, getUserSavedJobs } from '../../services/userService';
 import { useUser } from '../../context/UserContext';
 import JobDetailsModal from '../../components/candidate/JobDetailsModal';
-
 
 const defaultFilters = {
     location: '',
@@ -29,11 +27,26 @@ const JobsPage = () => {
     const [error, setError] = useState('');
     const [hasResume, setHasResume] = useState(false);
     const [relevantJobs, setRelevantJobs] = useState([]);
-    const [showAllRelevant,setShowAllRelevant] = useState(false)
+    const [showAllRelevant, setShowAllRelevant] = useState(false);
+    const [savedJobIds, setSavedJobIds] = useState([]);
     const { user } = useUser();
 
     const [selectedJob, setSelectedJob] = useState(null);
     const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+    useEffect(() => {
+        const fetchSavedJobIds = async () => {
+            try {
+                const savedJobs = await getUserSavedJobs();
+                const ids = savedJobs.map(job => job._id.toString());
+                setSavedJobIds(ids);
+            } catch (err) {
+                console.error("Failed to fetch saved jobs", err);
+            }
+        };
+
+        fetchSavedJobIds();
+    }, []);
 
     useEffect(() => {
         const query = Object.fromEntries([...searchParams]);
@@ -50,19 +63,14 @@ const JobsPage = () => {
     useEffect(() => {
         if (user && user.resumeURL) {
             setHasResume(true);
-
             getUserRelevantJobs()
                 .then(res => {
                     if (res?.success && Array.isArray(res.relevantJobs)) {
                         setRelevantJobs(res.relevantJobs);
-                    } else {
-                        console.warn("Unexpected relevant jobs response:", res);
-                        setRelevantJobs([]);
                     }
                 })
                 .catch(err => {
                     console.error("Failed to fetch relevant jobs:", err);
-                    setRelevantJobs([]);
                 });
         }
     }, [user]);
@@ -112,7 +120,6 @@ const JobsPage = () => {
     return (
         <div className="max-w-7xl mx-auto p-4">
             <h2 className="text-xl font-bold mb-3">Explore All Jobs</h2>
-
             <JobFilters filters={filters} onChange={updateFilters} />
 
             {loading && <p>Loading jobs...</p>}
@@ -122,50 +129,47 @@ const JobsPage = () => {
                 <>
                     <h2 className="text-xl font-bold mb-3">Recommended Jobs Based on Your Resume</h2>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-4">
-                        {(showAllRelevant ? relevantJobs : relevantJobs.slice(0, 6)).map(job => (
-                            <JobCard
-                                key={job._id}
-                                job={job}
-                                score={job.similarity}
-                                onClick={() => openJobDetails(job)}
-                            />
-                        ))}
-                        <div className="col-span-full flex justify-center">
-                            {relevantJobs.length > 6 && (
-                        <button
-                            className=" text-lg font-bold hover:underline p-6 rounded-lg cursor-pointer bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-6 py-4 shadow-md text-center hover:scale-[1.02] transition duration-200"
-                            onClick={() => setShowAllRelevant(prev => !prev)}
-                        >
-                            {showAllRelevant ? "Show Less" : "Show All Relevant Jobs =>"}
-                        </button>
-                    )}
-                        </div>
-                        
+                        {(showAllRelevant ? relevantJobs : relevantJobs.slice(0, 6))
+                            .filter(job => !user?.appliedJobs?.includes(job._id.toString()))
+                            .map(job => (
+                                <JobCard
+                                    key={job._id}
+                                    job={job}
+                                    isSaved={savedJobIds.includes(job._id.toString())}
+                                    onClick={() => openJobDetails(job)}
+                                />
+                            ))}
                     </div>
-                    
+                    {relevantJobs.length > 6 && (
+                        <div className="flex justify-center">
+                            <button
+                                onClick={() => setShowAllRelevant(prev => !prev)}
+                                className="text-lg font-bold hover:underline bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-6 py-3 rounded-lg"
+                            >
+                                {showAllRelevant ? 'Show Less' : 'Show All Relevant Jobs =>'}
+                            </button>
+                        </div>
+                    )}
                 </>
             )}
 
-            <div>
-                <h2 className="text-xl font-bold mb-3">All Jobs Posted</h2>
-            </div>
+            <h2 className="text-xl font-bold mb-3">All Jobs Posted</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {jobs.map(job => (
-                    <JobCard
-                        key={job._id}
-                        job={job}
-                        onClick={() => openJobDetails(job)}
-                    />
-                ))}
+                {jobs
+                    .filter(job => !user?.appliedJobs?.includes(job._id.toString()))
+                    .map(job => (
+                        <JobCard
+                            key={job._id}
+                            job={job}
+                            onClick={() => openJobDetails(job)}
+                            isSaved={savedJobIds.includes(job._id.toString())}
+                        />
+                    ))}
             </div>
 
             <Pagination page={filters.page} totalPages={totalPages} onPageChange={handlePageChange} />
 
-            <JobDetailsModal
-                job={selectedJob}
-                isOpen={showDetailsModal}
-                onClose={closeJobDetails}
-            />
+            <JobDetailsModal job={selectedJob} isOpen={showDetailsModal} onClose={closeJobDetails} />
         </div>
     );
 };

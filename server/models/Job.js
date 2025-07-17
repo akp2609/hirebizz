@@ -8,11 +8,6 @@ const jobSchema = new mongoose.Schema({
     skills: { type: [String], required: true },
     embeddings: [[Number]],
     compensation: Number,
-    status: {
-        type: String,
-        enum: ['not applied', 'applied'],
-        default: 'not applied'
-    },
     isActive: { type: Boolean, default: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     createdAt: { type: Date, default: Date.now },

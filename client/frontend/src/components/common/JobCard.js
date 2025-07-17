@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BookmarkIcon from './BookmarkIcon';
 import { saveJob, deleteUserSavedJob } from '../../services/userService';
 
-
-
-const JobCard = ({ job, onClick }) => {
+const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
     const {
         _id,
         title,
@@ -13,22 +11,22 @@ const JobCard = ({ job, onClick }) => {
         company,
         skills,
         compensation,
-        status,
         relevancy,
         isActive,
         createdAt,
     } = job || {};
 
-    const [showFull, setShowFull] = useState(false);
-
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(initiallySaved);
     const [loadingSave, setLoadingSave] = useState(false);
 
-    const handleSaveJob = async () => {
-        if (loadingSave) return;
-        setLoadingSave(true);
+    useEffect(() => {
+        setIsSaved(initiallySaved);
+    }, [initiallySaved]);
 
+
+    const handleToggleSave = async () => {
         try {
+            setLoadingSave(true);
             if (isSaved) {
                 await deleteUserSavedJob(_id);
                 setIsSaved(false);
@@ -37,7 +35,7 @@ const JobCard = ({ job, onClick }) => {
                 setIsSaved(true);
             }
         } catch (err) {
-            console.error("❌ Save/Unsave job failed:", err.message);
+            console.error("❌ Save toggle failed:", err.message);
         } finally {
             setLoadingSave(false);
         }
@@ -45,35 +43,25 @@ const JobCard = ({ job, onClick }) => {
 
     return (
         <div className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition duration-300">
-
             <div className="flex justify-between items-start mb-2">
                 <div>
-                    <div className='flex-1 inline-flex'>
-                        <BookmarkIcon isSaved={isSaved} onClick={handleSaveJob} />
-                        <h3 className="text-xl font-semibold text-gray-800 ml-1">{title}</h3>
+                    <div className="flex items-center space-x-2">
+                        <BookmarkIcon isSaved={isSaved} onClick={handleToggleSave} />
+                        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
                     </div>
-                    
                     <p className="text-sm text-gray-600">
                         {(company?.name || 'Unknown Company')} — {location}
                     </p>
-
                 </div>
                 <div className="text-sm text-gray-500 text-right">
                     <p>{new Date(createdAt).toLocaleDateString()}</p>
-                    {isActive ? (
-                        <p className="text-green-600 font-bold">Active</p>
-                    ) : (
-                        <p className="text-red-600 font-bold">Closed</p>
-                    )}
+                    <p className={isActive ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                        {isActive ? 'Active' : 'Closed'}
+                    </p>
                 </div>
-                
             </div>
 
-
-            <p className={'text-sm text-gray-700 line-clamp-2'}>
-                {description}
-            </p>
-
+            <p className="text-sm text-gray-700 line-clamp-2">{description}</p>
 
             {compensation && (
                 <p className="text-green-600 font-medium text-sm mt-2">
@@ -81,14 +69,10 @@ const JobCard = ({ job, onClick }) => {
                 </p>
             )}
 
-
             <div className="flex flex-wrap gap-2 text-xs mt-2 mb-3">
                 {Array.isArray(skills) &&
                     skills.map((tag, idx) => (
-                        <span
-                            key={idx}
-                            className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
-                        >
+                        <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
                             {tag}
                         </span>
                     ))}
@@ -99,7 +83,6 @@ const JobCard = ({ job, onClick }) => {
                     Relevancy: {Math.round(relevancy)}%
                 </p>
             )}
-
 
             {isActive ? (
                 <button
