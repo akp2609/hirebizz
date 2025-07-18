@@ -5,7 +5,7 @@ dotenv.config();
 
 
 export const sendVerificationEmail = async (to, token) => {
-  const url = `http://localhost:3000/verify-email/${token}`;
+  const url = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
   const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
@@ -32,7 +32,7 @@ export const sendVerificationEmail = async (to, token) => {
 };
 
 export const sendResetPasswordEmail = async (email, token) => {
-  const resetURL = `http://localhost:3000/reset-password?token=${token}`;
+  const resetURL = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
   const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   const headers = {
