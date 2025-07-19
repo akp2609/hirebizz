@@ -1,7 +1,25 @@
 import axios from 'axios';
 
+const fallbackURL = process.env.REACT_APP_FALLBACK_BASE_API_URL;
+const customDomain = process.env.REACT_APP_BASE_API_URL;
+
+let baseURL = customDomain;
+
+const isBlocked = async()=>{
+    try{
+        await fetch(`${customDomain}/health`);
+        return false;
+    }catch(err){
+        return true;
+    }
+}
+
+(async()=>{
+    if(await isBlocked()) baseURL = fallbackURL;
+})();
+
 const apiClient = axios.create({
-    baseURL: process.env.REACT_APP_BASE_API_URL,
+    baseURL,
     headers: {
         'Content-Type': 'application/json'
     }
