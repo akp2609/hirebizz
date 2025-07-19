@@ -5,13 +5,11 @@ import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
     });
-
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -26,11 +24,10 @@ function SignUp() {
         e.preventDefault();
         setError(null);
         setLoading(true);
-
         try {
             const { name, email, password } = formData;
             await postUser({ name, email, password });
-            navigate('/verify-email-sent'); // Redirect after success
+            navigate('/verify-email-sent');
         } catch (err) {
             setError(err?.response?.data?.message || 'Sign up failed. Please try again.');
         } finally {
@@ -39,21 +36,11 @@ function SignUp() {
     };
 
     return (
-        <div className='h-full w-full flex justify-center items-center px-4 mt-4'>
-            <div
-                className='relative w-full sm:w-[60%] md:w-[85%] lg:w-[90%] xl:w-[95%] h-[90vh] bg-cover bg-center
-                rounded-xl shadow-xl overflow-hidden mt-2 max-w-7xl opacity-95'
-                style={{ backgroundImage: `url(${signupImage})` }}
-            >
-                <div className='absolute inset-0 bg-black/35' />
-
-                <div className='relative z-10 flex items-center justify-center h-full px-2 mt-4'>
-                    <form
-                        onSubmit={handleSubmit}
-                        className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'
-                    >
-                        <h2 className='flex justify-center text-2xl font-robotoMono font-semibold mb-4'>Sign Up</h2>
-
+        <div className='flex flex-col lg:flex-row h-screen w-full'>
+            <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-600 p-4'>
+                <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
+                    <h2 className='text-2xl font-robotoMono font-semibold mb-4 text-center'>Sign Up</h2>
+                    <form onSubmit={handleSubmit}>
                         <input
                             type='text'
                             name='name'
@@ -81,9 +68,7 @@ function SignUp() {
                             required
                             className='mb-4 p-2 w-full border rounded outline-none'
                         />
-
                         {error && <p className='text-red-500 text-sm mb-2 text-center'>{error}</p>}
-
                         <button
                             type='submit'
                             disabled={loading}
@@ -93,6 +78,9 @@ function SignUp() {
                         </button>
                     </form>
                 </div>
+            </div>
+            <div className='w-full lg:w-1/2 hidden lg:block'>
+                <img src={signupImage} alt='Signup Visual' className='h-full w-full object-cover' />
             </div>
         </div>
     );
