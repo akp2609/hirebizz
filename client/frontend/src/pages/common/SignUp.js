@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import signupImage from '../../assets/signupImage.png';
 import { postUser } from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function SignUp() {
     const navigate = useNavigate();
@@ -37,7 +37,8 @@ function SignUp() {
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
-            <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-600 p-4'>
+
+            <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-600 p-4 min-h-screen lg:min-h-0'>
                 <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
                     <h2 className='text-2xl font-robotoMono font-semibold mb-4 text-center'>Sign Up</h2>
                     <form onSubmit={handleSubmit}>
@@ -77,8 +78,19 @@ function SignUp() {
                             {loading ? 'Signing up...' : 'Sign Up'}
                         </button>
                     </form>
+
+                    <div className='text-center mt-4'>
+                        <p>
+                            Already got an account?{' '}
+                            <Link to="/login" className='text-blue-700 hover:text-blue-400'>
+                                login
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
+
+            {/* Right Section - Image */}
             <div className='w-full lg:w-1/2 hidden lg:block'>
                 <img src={signupImage} alt='Signup Visual' className='h-full w-full object-cover' />
             </div>

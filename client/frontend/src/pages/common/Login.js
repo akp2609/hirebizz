@@ -32,7 +32,8 @@ const Login = () => {
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
-            <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-500 p-4'>
+            
+            <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-500 p-4 min-h-screen'>
                 <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
                     <h1 className='font-robotoMono text-black font-semibold text-center mb-4 text-3xl'>Login</h1>
                     <form onSubmit={handleSubmit}>
@@ -59,16 +60,26 @@ const Login = () => {
                             Login
                         </button>
                     </form>
+
                     <p className='mt-4 font-robotoMono text-gray-600 text-center'>Or login with</p>
-                    <div className='mt-4 flex justify-between gap-4'>
+
+                    
+                    <div className='mt-4 flex flex-col sm:flex-row gap-4 w-full justify-center'>
                         <GoogleLoginButton />
                         <GithubLoginButton />
                     </div>
+
                     <div className='text-center mt-4'>
-                        <p>Don't have an account? <Link to="/signup" className='text-blue-700 hover:text-blue-400'>Sign up</Link></p>
+                        <p>
+                            Don't have an account?{" "}
+                            <Link to="/signup" className='text-blue-700 hover:text-blue-400'>
+                                Sign up
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </div>
+
             <div className='w-full lg:w-1/2 hidden lg:block'>
                 <img src={loginImage} alt='Login Visual' className='h-full w-full object-cover' />
             </div>
