@@ -54,7 +54,7 @@ const UserProfileCard = ({ user,resumeURL}) => {
                         <a
                             href={resumeURL}
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                             className="text-blue-600 underline"
                         >
                             View Resume
