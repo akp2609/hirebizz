@@ -15,6 +15,8 @@ const UserProfileCard = ({ user,resumeURL}) => {
         authProvider
     } = user;
 
+    console.log(resumeURL)
+
     return (
 
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200">
