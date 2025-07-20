@@ -42,7 +42,7 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
 
     return (
         <div className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition duration-300 h-full flex flex-col justify-between">
-            {/* Header */}
+
             <div className="flex justify-between items-start mb-2">
                 <div className="flex-1 pr-2">
                     <div className="flex items-center gap-2 mb-1">
@@ -61,17 +61,17 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                 </div>
             </div>
 
-            {/* Description */}
+
             <p className="text-sm text-gray-700 line-clamp-2 mb-2">{description}</p>
 
-            {/* Compensation */}
+
             {compensation && (
                 <p className="text-green-600 font-medium text-sm mb-2">
                     ₹{compensation.toLocaleString()}
                 </p>
             )}
 
-            {/* Skills */}
+
             <div className="flex flex-wrap gap-2 text-xs mb-3">
                 {Array.isArray(skills) &&
                     skills.map((tag, idx) => (
@@ -91,7 +91,7 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                 </p>
             )}
 
-            {/* Action */}
+
             {isActive ? (
                 <button
                     onClick={() => onClick(job)}

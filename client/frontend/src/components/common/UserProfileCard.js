@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserProfileCard = ({ user }) => {
+const UserProfileCard = ({ user,resumeURL}) => {
     if (!user) return null;
 
     const {
@@ -11,7 +11,6 @@ const UserProfileCard = ({ user }) => {
         role,
         profilePicture,
         company,
-        resumeURL,
         isVerified,
         authProvider
     } = user;
