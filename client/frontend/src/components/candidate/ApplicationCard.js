@@ -21,6 +21,7 @@ const ApplicationCard = ({ application }) => {
                 const resume = await getRefreshedResumeUrl(applicationId);
                 if (resume) {
                     setResumeURL(resume);
+                    console.log(resume)
 
                 } else {
                     console.warn("Resume URL returned null or empty.");
@@ -33,7 +34,7 @@ const ApplicationCard = ({ application }) => {
         };
 
         fetchResumeUrl();
-    }, [applicationId, resumeObject]);
+    }, []);
 
     if (!job || !job.title) {
         return (
