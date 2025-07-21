@@ -21,6 +21,7 @@ import UserProfilePage from "./pages/common/UserProfilePage";
 import SavedJobs from "./pages/common/SavedJob";
 import AppLayout from "./components/layout/AppLayout";
 import AuthLayout from "./components/layout/AuthLayout";
+import MyApplications from "./pages/candidate/MyApplications";
 
 
 
@@ -54,8 +55,8 @@ function App() {
                   <Route path='/admin/*' element={<PrivateRoute><AdminRoutes /></PrivateRoute>} />
                   <Route path='/_dev' element={<PrivateRoute><DevPlayground /></PrivateRoute>} />
                   <Route path='/employer/job/:jobId/applications' element={<PrivateRoute><Applications /></PrivateRoute>} />
-
                   <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
+                  <Route path="/my-applications" element={<PrivateRoute><MyApplications/></PrivateRoute>}/>
                 </Route>
 
                 <Route path="*" element={<Navigate to="/login" />} />

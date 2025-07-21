@@ -43,6 +43,12 @@ function NavBar() {
                                         <Link to="/saved-jobs" className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Saved Jobs</Link>
                                     </>
                                 )}
+                                {user.role === 'candidate' && (
+                                    <>
+                                        <hr style={{ border: '1px solid gray' }} className='mt-2' />
+                                        <Link to="/my-applications" className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>My Applications</Link>
+                                    </>
+                                )}
                                 <hr style={{ border: '1px solid gray' }} className='mt-2' />
                                 <Link to='/setting' className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Setting</Link>
                                 <hr style={{ border: '1px solid gray' }} className='mt-2' />
