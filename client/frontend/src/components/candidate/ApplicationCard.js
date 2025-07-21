@@ -34,7 +34,11 @@ const ApplicationCard = ({ application }) => {
         };
 
         fetchResumeUrl();
-    }, []);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [applicationId, resumeObject]);
 
     if (!job || !job.title) {
         return (
