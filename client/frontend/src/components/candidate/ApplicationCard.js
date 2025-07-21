@@ -9,27 +9,21 @@ const ApplicationCard = ({ application }) => {
     const [loadingResume, setLoadingResume] = useState(false);
 
     useEffect(() => {
+        let isMounted = true;
+
         const fetchResumeUrl = async () => {
-            if (!resumeObject) {
-                console.warn("No resumeObject found in application:", applicationId);
-                return;
-            }
+            if (!resumeObject) return;
 
             setLoadingResume(true);
             try {
-
                 const resume = await getRefreshedResumeUrl(applicationId);
-                if (resume) {
+                if (isMounted && resume) {
                     setResumeURL(resume);
-                    console.log(resume)
-
-                } else {
-                    console.warn("Resume URL returned null or empty.");
                 }
             } catch (err) {
-                console.error(" Error fetching resume URL:", err);
+                if (isMounted) console.error(err);
             } finally {
-                setLoadingResume(false);
+                if (isMounted) setLoadingResume(false);
             }
         };
 
@@ -39,6 +33,7 @@ const ApplicationCard = ({ application }) => {
             isMounted = false;
         };
     }, [applicationId, resumeObject]);
+
 
     if (!job || !job.title) {
         return (
