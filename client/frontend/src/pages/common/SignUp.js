@@ -9,9 +9,11 @@ function SignUp() {
         name: '',
         email: '',
         password: '',
+        role: isEmployer ? 'employer' : 'candidate'
     });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isEmployer, setIsEmployer] = useState(false);
 
     const handleChange = (e) => {
         setFormData(prev => ({
@@ -69,6 +71,18 @@ function SignUp() {
                             required
                             className='mb-4 p-2 w-full border rounded outline-none'
                         />
+                        <div className="flex items-center mb-4">
+                            <input
+                                id="employer"
+                                type="checkbox"
+                                checked={isEmployer}
+                                onChange={() => setIsEmployer(!isEmployer)}
+                                className="mr-2"
+                            />
+                            <label htmlFor="employer" className="text-sm text-gray-700">
+                                Register as Employer?
+                            </label>
+                        </div>
                         {error && <p className='text-red-500 text-sm mb-2 text-center'>{error}</p>}
                         <button
                             type='submit'
