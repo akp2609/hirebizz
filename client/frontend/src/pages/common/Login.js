@@ -3,9 +3,10 @@ import loginImage from '../../assets/loginImage.png';
 import GoogleLoginButton from '../../components/auth/GoogleLoginButton';
 import GithubLoginButton from '../../components/auth/GithubLoginButton';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/authService';
+import { loginUser, requestResetUserPassword } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
 import { useUser } from '../../context/UserContext';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');

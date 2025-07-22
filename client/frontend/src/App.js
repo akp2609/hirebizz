@@ -22,6 +22,7 @@ import SavedJobs from "./pages/common/SavedJob";
 import AppLayout from "./components/layout/AppLayout";
 import AuthLayout from "./components/layout/AuthLayout";
 import MyApplications from "./pages/candidate/MyApplications";
+import ResetPassword from "./pages/common/ResetPassword";
 
 
 
