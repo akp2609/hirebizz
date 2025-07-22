@@ -5,15 +5,16 @@ import { useNavigate, Link } from 'react-router-dom';
 
 function SignUp() {
     const navigate = useNavigate();
+    const [isEmployer, setIsEmployer] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
-        role: isEmployer ? 'employer' : 'candidate'
+        role: 'candidate'
     });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [isEmployer, setIsEmployer] = useState(false);
 
     const handleChange = (e) => {
         setFormData(prev => ({
@@ -28,7 +29,8 @@ function SignUp() {
         setLoading(true);
         try {
             const { name, email, password } = formData;
-            await postUser({ name, email, password });
+            const role = isEmployer ? 'employer' : 'candidate';
+            await postUser({ name, email, password, role });
             navigate('/verify-email-sent');
         } catch (err) {
             setError(err?.response?.data?.message || 'Sign up failed. Please try again.');
