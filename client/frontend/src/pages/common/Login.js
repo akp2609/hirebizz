@@ -14,6 +14,9 @@ const Login = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
     const { reloadUser } = useUser();
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetStatus, setResetStatus] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,7 +35,7 @@ const Login = () => {
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
-            
+
             <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-500 p-4 min-h-screen'>
                 <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
                     <h1 className='font-robotoMono text-black font-semibold text-center mb-4 text-3xl'>Login</h1>
@@ -63,7 +66,7 @@ const Login = () => {
 
                     <p className='mt-4 font-robotoMono text-gray-600 text-center'>Or login with</p>
 
-                    
+
                     <div className='mt-4 flex flex-col sm:flex-row gap-4 w-full justify-center'>
                         <GoogleLoginButton />
                         <GithubLoginButton />
@@ -77,8 +80,55 @@ const Login = () => {
                             </Link>
                         </p>
                     </div>
+
+                    <p className='text-sm mt-2 text-center'>
+                        <button
+                            onClick={() => setShowForgotPassword(true)}
+                            className='text-blue-700 hover:text-blue-500 underline'>
+                            Forgot Password?
+                        </button>
+                    </p>
                 </div>
             </div>
+
+            {showForgotPassword && (
+                <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+                    <div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-sm'>
+                        <h2 className='text-lg font-semibold mb-4 text-center'>Reset Password</h2>
+                        <input
+                            type='email'
+                            placeholder='Enter your email'
+                            value={resetEmail}
+                            onChange={(e) => setResetEmail(e.target.value)}
+                            className='w-full p-2 border rounded mb-4'
+                        />
+                        <button
+                            className='w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded'
+                            onClick={async () => {
+                                try {
+                                    await requestResetUserPassword({ email: resetEmail });
+                                    setResetStatus('Link sent! Check your email.');
+                                } catch (err) {
+                                    setResetStatus('Something went wrong.');
+                                }
+                            }}
+                        >
+                            Send Reset Link
+                        </button>
+                        {resetStatus && <p className='text-sm text-center mt-2 text-gray-700'>{resetStatus}</p>}
+                        <button
+                            className='mt-4 text-blue-700 hover:text-blue-500 block mx-auto'
+                            onClick={() => {
+                                setShowForgotPassword(false);
+                                setResetStatus('');
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
+
 
             <div className='w-full lg:w-1/2 hidden lg:block'>
                 <img src={loginImage} alt='Login Visual' className='h-full w-full object-cover' />

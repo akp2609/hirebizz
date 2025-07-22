@@ -66,6 +66,7 @@ function App() {
                   <Route path="/verify-email-sent" element={<VerifyEmailSent />} />
                   <Route path='/login' element={<Login />} />
                   <Route path='/signup' element={<SignUp />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
                 </Route>
               </Routes>
             </div>

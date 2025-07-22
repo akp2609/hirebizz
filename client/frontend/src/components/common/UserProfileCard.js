@@ -50,7 +50,7 @@ const UserProfileCard = ({ user,resumeURL}) => {
                     <p className="text-gray-700">{bio || "No bio available"}</p>
                 </div>
 
-                <div>
+                {role === 'candidate'?(<div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-1">Resume</h3>
                     {resumeURL ? (
                         <a
@@ -64,7 +64,7 @@ const UserProfileCard = ({ user,resumeURL}) => {
                     ) : (
                         <p className="text-red-500">Not uploaded</p>
                     )}
-                </div>
+                </div>):(<></>)}
 
                 <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-1">Verification</h3>

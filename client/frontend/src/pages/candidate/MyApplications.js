@@ -40,7 +40,7 @@ const MyApplications = () => {
     if (error) return <p className="text-red-500 text-sm">{error}</p>;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 mt-4">
             <div className="mb-4">
                 <div className="relative w-full">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
