@@ -16,7 +16,7 @@ const ResetPassword = () => {
             return;
         }
         try {
-            await resetUserPassword({ token, password: newPassword });
+            await resetUserPassword({ token, newPassword });
             setStatus('Password reset successfully!');
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
@@ -25,7 +25,8 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-500'>
+        <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-purple-500">
+
             <div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md'>
                 <h2 className='text-2xl font-bold text-center mb-4 text-gray-700'>Reset Your Password</h2>
                 <input
