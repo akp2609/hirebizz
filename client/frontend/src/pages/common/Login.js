@@ -107,7 +107,7 @@ const Login = () => {
                             className='w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded'
                             onClick={async () => {
                                 try {
-                                    await requestResetUserPassword({ email: resetEmail });
+                                    await requestResetUserPassword(resetEmail);
                                     setResetStatus('Link sent! Check your email.');
                                 } catch (err) {
                                     setResetStatus('Something went wrong.');
