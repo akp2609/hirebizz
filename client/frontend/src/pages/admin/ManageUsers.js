@@ -34,7 +34,7 @@ const ManageUsers = () => {
             ) : error ? (
                 <p className="text-red-600">{error}</p>
             ) : (
-                <UserTable users={users} onPageChange={setPage} currentPage={page} totalPages={totalPages} />
+                <UserTable users={users} onPageChange={setPage} currentPage={page} totalPages={totalPages} refreshUsers={fetchUsers}/>
             )}
         </div>
     );
