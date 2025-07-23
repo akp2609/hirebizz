@@ -50,22 +50,30 @@ const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange,
                                 {job.company?.createdBy?.name}<br />
                                 <span className="text-sm text-gray-600">{job.company?.createdBy?.email}</span>
                             </td>
-                            <td className="p-2 border capitalize">{job.status}</td>
                             <td className="p-2 border flex gap-2 justify-center">
-                                <button
-                                    disabled={loadingJobId === job._id}
-                                    onClick={() => handleJobStatus(job._id, "approved")}
-                                    className="px-2 py-1 bg-green-500 text-white rounded text-sm disabled:opacity-50"
-                                >
-                                    {loadingJobId === job._id ? "..." : "Approve"}
-                                </button>
-                                <button
-                                    disabled={loadingJobId === job._id}
-                                    onClick={() => handleJobStatus(job._id, "rejected")}
-                                    className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
-                                >
-                                    {loadingJobId === job._id ? "..." : "Reject"}
-                                </button>
+                                {["approved", "rejected"].includes(job.status) ? (
+                                    <span className={`px-2 py-1 rounded text-sm font-semibold ${job.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                        }`}>
+                                        {job.status}
+                                    </span>
+                                ) : (
+                                    <>
+                                        <button
+                                            disabled={loadingJobId === job._id}
+                                            onClick={() => handleJobStatus(job._id, "approved")}
+                                            className="px-2 py-1 bg-green-500 text-white rounded text-sm disabled:opacity-50"
+                                        >
+                                            {loadingJobId === job._id ? "..." : "Approve"}
+                                        </button>
+                                        <button
+                                            disabled={loadingJobId === job._id}
+                                            onClick={() => handleJobStatus(job._id, "rejected")}
+                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
+                                        >
+                                            {loadingJobId === job._id ? "..." : "Reject"}
+                                        </button>
+                                    </>
+                                )}
                             </td>
                         </tr>
                     ))}

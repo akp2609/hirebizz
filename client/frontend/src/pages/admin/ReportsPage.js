@@ -62,6 +62,7 @@ const ReportsPage = () => {
                         totalPages={totalPages}
                         onPageChange={setPage}
                         onStatusChange={handleStatusChange}
+                        refreshReports = {fetchReports}
                     />
 
                     <h2 className="text-xl font-semibold mb-2 mt-10 text-gray-800">🗃️ Dismissed Reports</h2>

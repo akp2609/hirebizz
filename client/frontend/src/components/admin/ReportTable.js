@@ -1,10 +1,29 @@
 import React, { useState } from "react";
 import UserDetailsModal from "../common/UserDetailsModal";
 import JobDetailsModal from "../candidate/JobDetailsModal";
+import { updateReportStatus } from "../../services/reportService";
 
-const ReportTable = ({ reports, onAction, currentPage, totalPages, onPageChange }) => {
+
+const ReportTable = ({ reports, currentPage, totalPages, onPageChange, refreshReports }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedJob, setSelectedJob] = useState(null);
+    const [loadingReportId, setLoadingReportId] = useState(null);
+
+    const handleAction = async (reportId, actionType) => {
+        const status = actionType === "dismiss" ? "dismissed" : "reviewed";
+        if (!window.confirm(`Are you sure you want to ${actionType} this report?`)) return;
+
+        try {
+            setLoadingReportId(reportId);
+            await updateReportStatus(reportId, { status });
+            refreshReports();
+        } catch (err) {
+            console.error("Failed to update report status:", err);
+            alert("Failed to update report status.");
+        } finally {
+            setLoadingReportId(null);
+        }
+    };
 
     return (
         <>
@@ -31,7 +50,6 @@ const ReportTable = ({ reports, onAction, currentPage, totalPages, onPageChange 
                                     <div className="text-xs text-gray-600">{report.reporter?.email}</div>
                                 </td>
                                 <td className="p-2 border capitalize">{report.targetType}</td>
-
                                 <td className="p-2 border">
                                     {report.targetType === "user" && report.reportedUser ? (
                                         <a
@@ -53,29 +71,29 @@ const ReportTable = ({ reports, onAction, currentPage, totalPages, onPageChange 
                                         "N/A"
                                     )}
                                 </td>
-
                                 <td className="p-2 border">{report.reason}</td>
                                 <td className="p-2 border capitalize">{report.status}</td>
                                 <td className="p-2 border">{new Date(report.createdAt).toLocaleDateString()}</td>
                                 <td className="p-2 border flex justify-center gap-2">
                                     <button
-                                        onClick={() => onAction(report._id, "dismiss")}
-                                        className="px-2 py-1 bg-gray-400 text-white rounded text-sm"
+                                        disabled={loadingReportId === report._id}
+                                        onClick={() => handleAction(report._id, "dismiss")}
+                                        className="px-2 py-1 bg-gray-400 text-white rounded text-sm disabled:opacity-50"
                                     >
-                                        Dismiss
+                                        {loadingReportId === report._id ? "..." : "Dismiss"}
                                     </button>
                                     <button
-                                        onClick={() => onAction(report._id, "delete")}
-                                        className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                        disabled={loadingReportId === report._id}
+                                        onClick={() => handleAction(report._id, "delete")}
+                                        className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
                                     >
-                                        Delete
+                                        {loadingReportId === report._id ? "..." : "Delete"}
                                     </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-
 
                 <div className="flex justify-between items-center mt-4">
                     <button
@@ -97,7 +115,6 @@ const ReportTable = ({ reports, onAction, currentPage, totalPages, onPageChange 
                     </button>
                 </div>
             </div>
-
 
             <JobDetailsModal
                 isOpen={!!selectedJob}
