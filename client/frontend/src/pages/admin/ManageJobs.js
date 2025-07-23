@@ -65,6 +65,7 @@ const ManageJobs = () => {
                     onPageChange={setPage}
                     onStatusChange={handleStatusChange}
                     onTitleClick={openModal}
+                    refreshJobs={fetchJobs}
                 />
             )}
 

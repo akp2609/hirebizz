@@ -1,7 +1,25 @@
 // src/components/admin/JobTable.jsx
-import React from "react";
+import React, { useState } from "react";
+import { updateJobStatus } from "../../services/adminService";
 
-const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange,onTitleClick }) => {
+const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange, onTitleClick, refreshJobs }) => {
+
+    const [loadingJobId, setLoadingJobId] = useState(null);
+
+    const handleJobStatus = async (jobId, status) => {
+        try {
+            setLoadingJobId(jobId);
+
+            await updateJobStatus({ jobId, status });
+            refreshJobs();
+        } catch (err) {
+            console.error('Failed to update job status:', err);
+            alert('Failed to update job status');
+        } finally {
+            setLoadingJobId(null);
+        }
+    };
+
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full border border-gray-300 bg-white">
@@ -35,16 +53,18 @@ const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange,
                             <td className="p-2 border capitalize">{job.status}</td>
                             <td className="p-2 border flex gap-2 justify-center">
                                 <button
-                                    onClick={() => onStatusChange(job._id, "approved")}
-                                    className="px-2 py-1 bg-green-500 text-white rounded text-sm"
+                                    disabled={loadingJobId === job._id}
+                                    onClick={() => handleJobStatus(job._id, "approved")}
+                                    className="px-2 py-1 bg-green-500 text-white rounded text-sm disabled:opacity-50"
                                 >
-                                    Approve
+                                    {loadingJobId === job._id ? "..." : "Approve"}
                                 </button>
                                 <button
-                                    onClick={() => onStatusChange(job._id, "rejected")}
-                                    className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                    disabled={loadingJobId === job._id}
+                                    onClick={() => handleJobStatus(job._id, "rejected")}
+                                    className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
                                 >
-                                    Reject
+                                    {loadingJobId === job._id ? "..." : "Reject"}
                                 </button>
                             </td>
                         </tr>
