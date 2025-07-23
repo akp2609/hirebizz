@@ -129,29 +129,37 @@ export const getUserChatThreads = async (req, res) => {
 
     try {
         const snapshot = await db.ref("/").once("value");
-        const data = snapshot.val() || {};
+        const allChats = snapshot.val() || {};
 
-        const relevantChatIds = Object.keys(data).filter(chatId =>
-            chatId.includes(userId)
-        );
+        const relevantThreads = [];
 
+        for (const chatId in allChats) {
+            const [id1, id2] = chatId.split("_");
 
-        const relevantChats = await Promise.all(relevantChatIds.map(async (chatId) => {
-            const [user1, user2] = chatId.split("_");
-            const otherUserId = user1 === userId ? user2 : user1;
-            const user = await User.findById(otherUserId).select('name email profilePicture');
-            if (user) {
-                return { chatId, participant: user };
+            if (id1 !== userId && id2 !== userId) continue;
+
+            const messages = Object.values(allChats[chatId]);
+
+            if (messages.length === 0) continue;
+
+            const latestMessage = messages.sort((a, b) => b.timestamp - a.timestamp)[0];
+
+            const otherUserId = userId === id1 ? id2 : id1;
+
+            const otherUser = await User.findById(otherUserId).select("name email profilePicture");
+
+            if (otherUser) {
+                relevantThreads.push({
+                    chatId,
+                    latestMessage,
+                    participant: otherUser,
+                });
             }
-            return null;
-        }));
+        }
 
-
-        const filteredChats = relevantChats.filter(chat => chat !== null);
-
-        res.status(200).json({ threads: filteredChats });
+        res.status(200).json({ threads: relevantThreads });
     } catch (err) {
-        console.error("Failed to get user threads:", err);
-        res.status(500).json({ message: "Failed to get user threads" });
+        console.error("Error fetching chat threads:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
