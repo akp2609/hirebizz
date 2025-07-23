@@ -15,6 +15,7 @@ const ManageUsers = () => {
             const data = await getAllUsers(pageNum, 10);
             setUsers(data.users || []);
             setTotalPages(data.totalPage || 1);
+            setPage(1)
         } catch (err) {
             setError("Failed to load users");
         } finally {
