@@ -30,7 +30,7 @@ export const updateJobStatus = async(formData)=>{
 }
 
 export const deleteUser = async(formData)=>{
-    const res = await apiClient.delete('/admin/delete-user',formData);
+    const res = await apiClient.delete('/admin/delete-user',{data:formData});
     return res.data;
 }
 
