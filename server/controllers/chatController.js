@@ -130,6 +130,7 @@ export const getUserChatThreads = async (req, res) => {
     try {
         const snapshot = await db.ref("/").once("value");
         const allChats = snapshot.val() || {};
+        console.log("All Firebase Chat Keys:", Object.keys(allChats));
 
         const relevantThreads = [];
 
