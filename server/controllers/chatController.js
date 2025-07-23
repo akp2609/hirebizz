@@ -101,7 +101,7 @@ export const getChat = async (req, res) => {
     const chatId = [user1, user2].sort().join('_');
 
     try {
-        console.log('fetchng chat for chatId: ',chatId);
+        console.log('fetchng chat for chatId: ', chatId);
         const snapshot = await db.ref(`${chatId}`).once("value");
         res.status(200).json(snapshot.val() || {});
     }
@@ -118,35 +118,40 @@ export const markAsSeen = async (req, res) => {
         await db.ref(`${chatId}/${messageKey}`).update({ seen: true });
         res.status(200).json({ success: true });
     } catch (err) {
-        console.error('Failed to mark as seen the messages: ',err);
-        res.status(500).json({success:false,message:'Failed to mark as seen the messages'});
+        console.error('Failed to mark as seen the messages: ', err);
+        res.status(500).json({ success: false, message: 'Failed to mark as seen the messages' });
     }
 
-} 
+}
 
 export const getUserChatThreads = async (req, res) => {
-  const { userId } = req.params;
+    const { userId } = req.params;
 
-  try {
-    const snapshot = await db.ref("/").once("value");
-    const data = snapshot.val() || {};
+    try {
+        const snapshot = await db.ref("/").once("value");
+        const data = snapshot.val() || {};
 
-    const relevantChats = [];
+        const relevantChatIds = Object.keys(data).filter(chatId =>
+            chatId.includes(userId)
+        );
 
-    for (const chatId in data) {
-      if (chatId.includes(userId)) {
-        const [user1, user2] = chatId.split("_");
-        const otherUserId = user1 === userId ? user2 : user1;
-        const user = await User.findById(otherUserId).select('name email profilePicture');
-        if (user) {
-          relevantChats.push({ chatId, participant: user });
-        }
-      }
+
+        const relevantChats = await Promise.all(relevantChatIds.map(async (chatId) => {
+            const [user1, user2] = chatId.split("_");
+            const otherUserId = user1 === userId ? user2 : user1;
+            const user = await User.findById(otherUserId).select('name email profilePicture');
+            if (user) {
+                return { chatId, participant: user };
+            }
+            return null;
+        }));
+
+
+        const filteredChats = relevantChats.filter(chat => chat !== null);
+
+        res.status(200).json({ threads: filteredChats });
+    } catch (err) {
+        console.error("Failed to get user threads:", err);
+        res.status(500).json({ message: "Failed to get user threads" });
     }
-
-    res.status(200).json({ threads: relevantChats });
-  } catch (err) {
-    console.error("Failed to get user threads:", err);
-    res.status(500).json({ message: "Failed to get user threads" });
-  }
 };
