@@ -1,4 +1,3 @@
-// src/components/admin/JobTable.jsx
 import React, { useState } from "react";
 import { updateJobStatus } from "../../services/adminService";
 
@@ -53,13 +52,16 @@ const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange,
                             <td className="p-2 border text-center">
                                 <span
                                     className={`px-2 py-1 rounded text-sm font-semibold
-      ${job.status === "approved" ? "bg-green-100 text-green-800" :
-                                            job.status === "rejected" ? "bg-red-100 text-red-800" :
-                                                "bg-yellow-100 text-yellow-800"}
-    `}
+    ${job.status === "approved"
+                                            ? "bg-green-100 text-green-800"
+                                            : job.status === "rejected"
+                                                ? "bg-red-100 text-red-800"
+                                                : "bg-yellow-100 text-yellow-800"}
+  `}
                                 >
-                                    {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                                    {(job.status ?? "pending").charAt(0).toUpperCase() + (job.status ?? "pending").slice(1)}
                                 </span>
+
                             </td>
                             <td className="p-2 border text-center">
                                 {job.status === "pending" && (
