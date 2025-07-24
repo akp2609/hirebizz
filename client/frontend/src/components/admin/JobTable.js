@@ -50,14 +50,20 @@ const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange,
                                 {job.company?.createdBy?.name}<br />
                                 <span className="text-sm text-gray-600">{job.company?.createdBy?.email}</span>
                             </td>
-                            <td className="p-2 border flex gap-2 justify-center">
-                                {["approved", "rejected"].includes(job.status) ? (
-                                    <span className={`px-2 py-1 rounded text-sm font-semibold ${job.status === "approved" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                                        }`}>
-                                        {job.status}
-                                    </span>
-                                ) : (
-                                    <>
+                            <td className="p-2 border text-center">
+                                <span
+                                    className={`px-2 py-1 rounded text-sm font-semibold
+      ${job.status === "approved" ? "bg-green-100 text-green-800" :
+                                            job.status === "rejected" ? "bg-red-100 text-red-800" :
+                                                "bg-yellow-100 text-yellow-800"}
+    `}
+                                >
+                                    {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                                </span>
+                            </td>
+                            <td className="p-2 border text-center">
+                                {job.status === "pending" && (
+                                    <div className="flex gap-2 justify-center">
                                         <button
                                             disabled={loadingJobId === job._id}
                                             onClick={() => handleJobStatus(job._id, "approved")}
@@ -72,9 +78,11 @@ const JobTable = ({ jobs, currentPage, totalPages, onPageChange, onStatusChange,
                                         >
                                             {loadingJobId === job._id ? "..." : "Reject"}
                                         </button>
-                                    </>
+                                    </div>
                                 )}
                             </td>
+
+
                         </tr>
                     ))}
                 </tbody>

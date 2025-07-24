@@ -9,9 +9,9 @@ const ReportTable = ({ reports, currentPage, totalPages, onPageChange, refreshRe
     const [selectedJob, setSelectedJob] = useState(null);
     const [loadingReportId, setLoadingReportId] = useState(null);
 
-    const handleAction = async (reportId, actionType) => {
-        const status = actionType === "dismiss" ? "dismissed" : "reviewed";
-        if (!window.confirm(`Are you sure you want to ${actionType} this report?`)) return;
+    const handleAction = async (reportId) => {
+        const status = "dismissed";
+        if (!window.confirm(`Are you sure you want to dismiss this report?`)) return;
 
         try {
             setLoadingReportId(reportId);
@@ -24,6 +24,7 @@ const ReportTable = ({ reports, currentPage, totalPages, onPageChange, refreshRe
             setLoadingReportId(null);
         }
     };
+
 
     return (
         <>
@@ -42,57 +43,72 @@ const ReportTable = ({ reports, currentPage, totalPages, onPageChange, refreshRe
                         </tr>
                     </thead>
                     <tbody>
-                        {reports.map((report, idx) => (
-                            <tr key={report._id} className="text-center">
-                                <td className="p-2 border">{idx + 1}</td>
-                                <td className="p-2 border">
-                                    <div>{report.reporter?.name}</div>
-                                    <div className="text-xs text-gray-600">{report.reporter?.email}</div>
-                                </td>
-                                <td className="p-2 border capitalize">{report.targetType}</td>
-                                <td className="p-2 border">
-                                    {report.targetType === "user" && report.reportedUser ? (
-                                        <a
-                                            href={`/admin/users/${report.reportedUser._id}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 underline text-sm"
-                                        >
-                                            {report.reportedUser.name}
-                                        </a>
-                                    ) : report.targetType === "job" && report.reportedJob ? (
-                                        <button
-                                            onClick={() => setSelectedJob(report.reportedJob)}
-                                            className="text-blue-600 underline text-sm"
-                                        >
-                                            {report.reportedJob.title}
-                                        </button>
+                        {reports.map((report, idx) => {
+                            const isDismissed = report.status === "dismissed";
+
+                            return (
+                                <tr key={report._id} className="text-center">
+                                    <td className="p-2 border">{idx + 1}</td>
+                                    <td className="p-2 border">
+                                        <div>{report.reporter?.name}</div>
+                                        <div className="text-xs text-gray-600">{report.reporter?.email}</div>
+                                    </td>
+                                    <td className="p-2 border capitalize">{report.targetType}</td>
+                                    <td className="p-2 border">
+                                        {report.targetType === "user" && report.reportedUser ? (
+                                            <a
+                                                href={`/admin/users/${report.reportedUser._id}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 underline text-sm"
+                                            >
+                                                {report.reportedUser.name}
+                                            </a>
+                                        ) : report.targetType === "job" && report.reportedJob ? (
+                                            <button
+                                                onClick={() => setSelectedJob(report.reportedJob)}
+                                                className="text-blue-600 underline text-sm"
+                                            >
+                                                {report.reportedJob.title}
+                                            </button>
+                                        ) : (
+                                            "N/A"
+                                        )}
+                                    </td>
+                                    <td className="p-2 border">{report.reason}</td>
+
+
+                                    <td className="p-2 border">
+                                        <span className={`px-2 py-1 rounded text-sm font-semibold 
+            ${report.status === "reviewed" ? "bg-green-100 text-green-800" :
+                                                report.status === "dismissed" ? "bg-red-100 text-red-800" :
+                                                    "bg-yellow-100 text-yellow-800"}
+          `}>
+                                            {report.status.charAt(0).toUpperCase() + report.status.slice(1)}
+                                        </span>
+                                    </td>
+
+                                    <td className="p-2 border">{new Date(report.createdAt).toLocaleDateString()}</td>
+
+                                    {isDismissed ? (
+                                        <td className="p-2 border text-gray-400 italic">N/A</td>
                                     ) : (
-                                        "N/A"
+                                        <td className="p-2 border flex justify-center">
+                                            <button
+                                                disabled={loadingReportId === report._id}
+                                                onClick={() => handleAction(report._id)}
+                                                className="px-2 py-1 bg-gray-400 text-white rounded text-sm disabled:opacity-50"
+                                            >
+                                                {loadingReportId === report._id ? "..." : "Dismiss"}
+                                            </button>
+                                        </td>
                                     )}
-                                </td>
-                                <td className="p-2 border">{report.reason}</td>
-                                <td className="p-2 border capitalize">{report.status}</td>
-                                <td className="p-2 border">{new Date(report.createdAt).toLocaleDateString()}</td>
-                                <td className="p-2 border flex justify-center gap-2">
-                                    <button
-                                        disabled={loadingReportId === report._id}
-                                        onClick={() => handleAction(report._id, "dismiss")}
-                                        className="px-2 py-1 bg-gray-400 text-white rounded text-sm disabled:opacity-50"
-                                    >
-                                        {loadingReportId === report._id ? "..." : "Dismiss"}
-                                    </button>
-                                    <button
-                                        disabled={loadingReportId === report._id}
-                                        onClick={() => handleAction(report._id, "delete")}
-                                        className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
-                                    >
-                                        {loadingReportId === report._id ? "..." : "Delete"}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+
+                                </tr>
+                            );
+                        })}
                     </tbody>
+
                 </table>
 
                 <div className="flex justify-between items-center mt-4">

@@ -3,37 +3,42 @@ import axios from 'axios';
 const fallbackURL = process.env.REACT_APP_FALLBACK_BASE_API_URL;
 const customDomain = process.env.REACT_APP_BASE_API_URL;
 
-let baseURL = customDomain;
+let baseURL = `${customDomain}/api`;
 
-const isBlocked = async()=>{
-    try{
-        await fetch(`${customDomain}/health`);
-        return false;
-    }catch(err){
+
+const isBlocked = async () => {
+    try {
+        const res = await fetch(`${customDomain}/health`);
+        return !res.ok; 
+    } catch {
         return true;
     }
-}
+};
 
-(async()=>{
-    if(await isBlocked()) baseURL = fallbackURL;
-})();
 
-const apiClient = axios.create({
-    baseURL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+const createApiClient = async () => {
+    const blocked = await isBlocked();
+    const finalBaseURL = blocked ? fallbackURL : `${customDomain}/api`;
 
-apiClient.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+    const instance = axios.create({
+        baseURL: finalBaseURL,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
-export default apiClient;
+    instance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
+
+    return instance;
+};
+
+export default createApiClient;
