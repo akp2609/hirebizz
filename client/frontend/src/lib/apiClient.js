@@ -5,40 +5,35 @@ const customDomain = process.env.REACT_APP_BASE_API_URL;
 
 let baseURL = `${customDomain}/api`;
 
-
-const isBlocked = async () => {
-    try {
-        const res = await fetch(`${customDomain}/health`);
-        return !res.ok; 
-    } catch {
+const isBlocked = async()=>{
+    try{
+        await fetch(`${customDomain}/health`);
+        return false;
+    }catch(err){
         return true;
     }
-};
+}
 
+(async()=>{
+    if(await isBlocked()) baseURL = `${fallbackURL}/api`;
+})();
 
-const createApiClient = async () => {
-    const blocked = await isBlocked();
-    const finalBaseURL = blocked ? fallbackURL : `${customDomain}/api`;
+const apiClient = axios.create({
+    baseURL,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
 
-    const instance = axios.create({
-        baseURL: finalBaseURL,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+apiClient.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
-    instance.interceptors.request.use(
-        (config) => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-            return config;
-        },
-        (error) => Promise.reject(error)
-    );
-
-    return instance;
-};
-
-export default createApiClient;
+export default apiClient;
