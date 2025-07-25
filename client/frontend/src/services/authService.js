@@ -31,11 +31,11 @@ export const resetUserPassword = async (userData) => {
 }
 
 export const onGoogleLogin = async(credentials)=>{
-    const res = await apiClient.post('/oauth/google',{credentials});
+    const res = await apiClient.post('/auth/oauth/google',{credentials});
     return res.data
 }
 
 export const onGithubLogin = async(code)=>{
-    const res = await apiClient.post('/oauth/github',{code});
+    const res = await apiClient.post('/auth/oauth/github',{code});
     return res.data;
 }
