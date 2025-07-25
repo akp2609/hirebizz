@@ -1,10 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from '../../context/AuthContext';
+import { onGoogleLogin } from '../../services/authService';
+import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const GoogleLoginButton = () => {
     const { login } = useContext(AuthContext);
+    const { reloadUser } = useUser();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
@@ -12,20 +16,16 @@ const GoogleLoginButton = () => {
 
         try {
             setLoading(true);
-            const decoded = jwtDecode(token);
 
-            console.log('Decoded user info:', decoded);
+            const { token: appToken, user } = await onGoogleLogin(token);
 
-            login({
-                name: decoded.name,
-                email: decoded.email,
-                picture: decoded.picture,
-                token: token,
-                provider: 'google',
-            });
+            localStorage.setItem('token', appToken);
+            login(user); 
+            await reloadUser(); 
+            navigate('/');
 
         } catch (error) {
-            console.error('Authentication error', error);
+            console.error('Google auth failed:', error.response?.data || error.message);
         }
 
         setLoading(false);
@@ -40,9 +40,9 @@ const GoogleLoginButton = () => {
             <GoogleLogin
                 onSuccess={handleGoogleLoginSuccess}
                 onError={handleGoogleLoginFailure}
-                theme='filled_black'
-                size='medium'
-                shape='pill'
+                theme="filled_black"
+                size="medium"
+                shape="pill"
                 width="100%"
             />
         </div>

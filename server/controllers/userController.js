@@ -1,6 +1,5 @@
 import User from "../models/User.js";
 import mongoose from "mongoose";
-import { basename, parse } from "path";
 import { uploadToGCS, deleteFromGCS, getSignedUrl } from "../utils/gcsUploader.js";
 import { getDbByName } from "../config/db.js";
 
@@ -28,7 +27,7 @@ export const updateUserProfile = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        const allowedFields = ['name', 'bio', 'location']; // Extend as needed
+        const allowedFields = ['name', 'bio', 'location']; 
         const updates = {};
 
         for (const field of allowedFields) {

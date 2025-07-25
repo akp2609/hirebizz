@@ -3,9 +3,11 @@ import React from 'react';
 const GithubLoginButton = () => {
   const handleGitHubLogin = () => {
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
-    const redirectUri = "http://local:3000/github/callback";
+    
+    const redirectUri = `${window.location.origin}/github/callback`;
 
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user:email`;
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+
     window.location.href = githubAuthUrl;
   };
 
@@ -21,7 +23,6 @@ const GithubLoginButton = () => {
       />
       <span>GitHub</span>
     </button>
-
   );
 };
 

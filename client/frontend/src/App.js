@@ -23,6 +23,7 @@ import AppLayout from "./components/layout/AppLayout";
 import AuthLayout from "./components/layout/AuthLayout";
 import MyApplications from "./pages/candidate/MyApplications";
 import ResetPassword from "./pages/common/ResetPassword";
+import GitHubCallback from "./pages/common/GitHubCallback";
 
 
 
@@ -68,6 +69,7 @@ function App() {
                   <Route path='/login' element={<Login />} />
                   <Route path='/signup' element={<SignUp />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/github/callback" element={<GitHubCallback />} />
                 </Route>
               </Routes>
             </div>
