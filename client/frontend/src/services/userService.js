@@ -6,7 +6,6 @@ export const uploadUserProfilePic = async (formData) => {
 }
 
 export const uploadUserResume = async (formData) => {
-    console.log('uploading file:', file, 'is File?', file instanceof File);
     const res = await apiClient.post('/user/upload-resume', formData);
     return res.data;
 }

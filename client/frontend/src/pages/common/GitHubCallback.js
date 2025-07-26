@@ -16,7 +16,6 @@ const GitHubCallback = () => {
 
         const exchangeCodeForToken = async () => {
             try {
-                console.log("github code",code)
                 const { token, user } = await onGithubLogin(code);
                 console.log("token",token)
                 localStorage.setItem('token', token);

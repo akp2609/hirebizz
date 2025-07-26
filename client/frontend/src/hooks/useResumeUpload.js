@@ -11,6 +11,7 @@ const useResumeUpload = () => {
         setUploading(true);
         setError(null);
         try {
+            console.log('uploading file:', file, 'is File?', file instanceof File);
             const formData = new FormData();
             formData.append("resume", file);
             const data = await uploadUserResume(formData);
