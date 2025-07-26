@@ -5,24 +5,21 @@ const customDomain = process.env.REACT_APP_BASE_API_URL;
 
 let baseURL = `${customDomain}/api`;
 
-const isBlocked = async()=>{
-    try{
+const isBlocked = async () => {
+    try {
         await fetch(`${customDomain}/health`);
         return false;
-    }catch(err){
+    } catch (err) {
         return true;
     }
 }
 
-(async()=>{
-    if(await isBlocked()) baseURL = `${fallbackURL}/api`;
+(async () => {
+    if (await isBlocked()) baseURL = `${fallbackURL}/api`;
 })();
 
 const apiClient = axios.create({
-    baseURL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    baseURL
 });
 
 apiClient.interceptors.request.use(
@@ -31,6 +28,12 @@ apiClient.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+
+        
+        if (!config.headers['Content-Type'] && !config.skipContentType) {
+            config.headers['Content-Type'] = 'application/json';
+        }
+
         return config;
     },
     (error) => Promise.reject(error)

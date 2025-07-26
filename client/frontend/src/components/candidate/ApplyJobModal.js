@@ -43,7 +43,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
             <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
                 <h2 className="text-lg font-semibold mb-4">Apply to this Job</h2>
 
-                {/* Resume Section */}
+                
                 <div className="mb-4">
                     {user?.resumeURL || resume ? (
                         <>
@@ -73,7 +73,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
                     {uploadError && <p className="text-xs text-red-500">{uploadError.message}</p>}
                 </div>
 
-                {/* Cover Letter */}
+                
                 <div className="mb-4">
                     <textarea
                         className="w-full border p-2 rounded text-sm"
@@ -84,7 +84,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
                     />
                 </div>
 
-                {/* Actions */}
+                
                 <div className="flex justify-end gap-2">
                     <button
                         onClick={onClose}
