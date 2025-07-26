@@ -148,7 +148,7 @@ export const googleLogin = async (req, res) => {
     try {
         const { idToken } = req.body;
 
-        if (!toke) {
+        if (!idToken) {
             return res.status(400).json({ error: 'Missing ID token' });
         }
 
