@@ -30,7 +30,10 @@ apiClient.interceptors.request.use(
         }
 
         
-        if (!config.headers['Content-Type'] && !config.skipContentType) {
+        if (
+            !(config.data instanceof FormData) &&
+            !config.headers['Content-Type']
+        ) {
             config.headers['Content-Type'] = 'application/json';
         }
 
@@ -38,5 +41,6 @@ apiClient.interceptors.request.use(
     },
     (error) => Promise.reject(error)
 );
+
 
 export default apiClient;
