@@ -30,8 +30,8 @@ export const resetUserPassword = async (userData) => {
     return res.data;
 }
 
-export const onGoogleLogin = async(credentials)=>{
-    const res = await apiClient.post('/auth/oauth/google',{credentials});
+export const onGoogleLogin = async(idToken)=>{
+    const res = await apiClient.post('/auth/oauth/google',{idToken});
     return res.data
 }
 

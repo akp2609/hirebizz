@@ -146,10 +146,14 @@ export const resetPassword = async (req, res) => {
 
 export const googleLogin = async (req, res) => {
     try {
-        const { tokenId } = req.body;
+        const { idToken } = req.body;
+
+        if (!toke) {
+            return res.status(400).json({ error: 'Missing ID token' });
+        }
 
         const ticket = await googleClient.verifyIdToken({
-            idToken: tokenId,
+            idToken: idToken,
             audience: process.env.GOOGLE_CLIENT_ID_AUTH
         });
 
@@ -192,7 +196,7 @@ export const githubLogin = async (req, res) => {
             code
         };
 
-        
+
         const tokenRes = await axios.post(
             'https://github.com/login/oauth/access_token',
             params,
@@ -208,7 +212,7 @@ export const githubLogin = async (req, res) => {
             return res.status(400).json({ message: 'Access token not received' });
         }
 
-        
+
         const { data } = await axios.get('https://api.github.com/user', {
             headers: {
                 Authorization: `Bearer ${accessToken}`
