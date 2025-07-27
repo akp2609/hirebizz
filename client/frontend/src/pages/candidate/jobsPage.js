@@ -61,7 +61,7 @@ const JobsPage = () => {
     }, []);
 
     useEffect(() => {
-        if (user && user.resumeURL) {
+        if (user && user.resumeURL && user.isPremiumUser) {
             setHasResume(true);
             getUserRelevantJobs()
                 .then(res => {
