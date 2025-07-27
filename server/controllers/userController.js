@@ -335,7 +335,7 @@ export const relevantJobs = async (req, res) => {
 
 export const updatePremium = async (req, res) => {
     try {
-        const user = await User.findById(res.user._id);
+        const user = await User.findById(req.user._id);
         const updates = {
             isPremiumUser: true
         }
