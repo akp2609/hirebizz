@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import NotificationBell from '../ui/Notification';
 
 function NavBar() {
     const { isAuthenticated, user, logout } = useContext(AuthContext);
@@ -29,6 +30,8 @@ function NavBar() {
                         <svg className="w-4 h-4 mt-1 text-white ml-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
+                        <NotificationBell/>
+                        
 
                         {isOpen && (
                             <div className="absolute right-0 overflow-hidden top-16 w-40 bg-white border rounded-md shadow-lg py-2 z-50 items-center mt-2">

@@ -14,3 +14,8 @@ export const markMessageAsSeen = async(formData)=>{
     const res = await apiClient.patch('/chat/mark-as-seen',formData);
     return res.data;
 }
+
+export const getChatThreads = async(userId)=>{
+    const res = await apiClient.get(`/chat/user-threads/${userId}`)
+    return res.data
+}
