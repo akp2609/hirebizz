@@ -72,6 +72,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Job"
     }],
+    isPremiumUser:{
+        type:Boolean,
+        default:false
+    }
 }, { timestamps: true }, { collection: "users" });
 
 userSchema.pre('save', async function (next) {

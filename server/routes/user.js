@@ -1,7 +1,7 @@
 import express from 'express';
 import upload from '../middleware/multer.js';
 import requireAuth from '../middleware/authMiddleware.js';
-import { deleteResume, uploadResume,uploadProfilePic, saveJobs, getSavedJobs, relevantJobs, updateEmployerVerified, deleteSavedJobs, getUserProfile, updateUserProfile, refreshSignedResumeURL} from '../controllers/userController.js';
+import { deleteResume, uploadResume,uploadProfilePic, saveJobs, getSavedJobs, relevantJobs, updateEmployerVerified, deleteSavedJobs, getUserProfile, updateUserProfile, refreshSignedResumeURL, updatePremium} from '../controllers/userController.js';
 import uploadPDF from '../middleware/upload.js';
 import { appendFile } from 'fs';
 import { error } from 'console';
@@ -32,5 +32,7 @@ router.get('/get-profile',requireAuth,getUserProfile);
 router.patch('/update-profile',requireAuth,updateUserProfile);
 
 router.get('/refresh-resume-url', requireAuth, refreshSignedResumeURL);
+
+router.patch('/update-account-type',requireAuth,updatePremium);
 
 export default router;

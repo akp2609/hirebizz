@@ -16,7 +16,7 @@ const bucketName = process.env.GOOGLE_BUCKET_NAME;
 
 const bucket = storage.bucket(bucketName);
 
-export const uploadToGCS = (localPath, originalName, userId) => {
+export const uploadToGCS = (localPath, originalName, userId,isPremiumUser ='false') => {
     console.log('uploadToGCS called with:', localPath, originalName);
     const uniqueName = `${userId}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}-${originalName}`;
     const file = bucket.file(uniqueName);
@@ -28,6 +28,10 @@ export const uploadToGCS = (localPath, originalName, userId) => {
                 gzip: true,
                 metadata: {
                     contentType: 'application/pdf',
+                    metadata: {
+                        userId: userId,
+                        premium: isPremiumUser ? 'true' : 'false', 
+                    }
                 },
             })
         );

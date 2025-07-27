@@ -27,7 +27,7 @@ export const updateUserProfile = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        const allowedFields = ['name', 'bio', 'location']; 
+        const allowedFields = ['name', 'bio', 'location'];
         const updates = {};
 
         for (const field of allowedFields) {
@@ -122,7 +122,7 @@ export const uploadResume = async (req, res) => {
         const localPath = req.file.path;
         const originalName = req.file.originalname;
 
-        const publicUrl = await uploadToGCS(localPath, originalName, user._id);
+        const publicUrl = await uploadToGCS(localPath, originalName, user._id, user.isPremiumUser);
 
         user.resumeURL = publicUrl.signedUrl;
         const url = new URL(publicUrl.signedUrl);
@@ -215,8 +215,9 @@ export const getSavedJobs = async (req, res) => {
     try {
 
         const savedJobs = await User.findById(req.user._id).select('savedJobs').populate({
-    path: 'savedJobs',
-    select: '-embeddings -__v'});
+            path: 'savedJobs',
+            select: '-embeddings -__v'
+        });
 
         if (!savedJobs) {
             return res.status(404).json({ message: 'User not found' });
@@ -329,5 +330,21 @@ export const relevantJobs = async (req, res) => {
     } catch (err) {
         console.error("Vector search failed:", err);
         return res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}
+
+export const updatePremium = async (req, res) => {
+    try {
+        const user = await User.findById(res.user._id);
+        const updates = {
+            isPremiumUser: true
+        }
+
+        await User.findByIdAndUpdate(user, updates, { new: true }).select('-password');
+
+        res.status(200).json({ message: 'Account type changed successfully' });
+    } catch (err) {
+        console.error("Failed to change account type", err);
+        return res.status(500).json({ message: "Failed to change account type", error: err.message });
     }
 }
