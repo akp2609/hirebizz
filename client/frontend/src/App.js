@@ -24,7 +24,7 @@ import AuthLayout from "./components/layout/AuthLayout";
 import MyApplications from "./pages/candidate/MyApplications";
 import ResetPassword from "./pages/common/ResetPassword";
 import GitHubCallback from "./pages/common/GitHubCallback";
-import { ChatNotificationProvider } from "./context/NotificationContext";
+
 
 
 
