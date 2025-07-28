@@ -13,13 +13,13 @@ const NotificationBell = ({userId}) => {
 
 
     useEffect(() => {
-        if (!user || !userId) return;
+        if (!userId) return;
         const fetchThreads = async () => {
             if (threads?.threads?.length > 0) return;
 
             dispatch(setLoading(true));
             try {
-                const data = await getChatThreads(user._id);
+                const data = await getChatThreads(userId);
                 dispatch(setThreads(data));
             } catch (err) {
                 console.error("Failed to fetch chat threads:", err);
