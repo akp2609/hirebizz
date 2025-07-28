@@ -13,6 +13,7 @@ function NavBar() {
         <nav className="bg-blue-700 text-white px-7 py-6 shadow-md flex justify-between relative z-50">
             <h1 className='text-2xl font-bold'>HireBizz</h1>
             <div className='space-x-4 flex'>
+                <NotificationBell className='mr-2'/>
                 <Link to='/' className='hover:text-cyan-300 hover:underline text-xl'>Home</Link>
                 <Link to='/about' className='hover:underline hover:text-cyan-300 text-xl'>About</Link>
 
@@ -30,7 +31,7 @@ function NavBar() {
                         <svg className="w-4 h-4 mt-1 text-white ml-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
-                        <NotificationBell/>
+                        
                         
 
                         {isOpen && (

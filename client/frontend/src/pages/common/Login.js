@@ -6,6 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, requestResetUserPassword } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
 import { useUser } from '../../context/UserContext';
+import LoadingPage from '../../components/ui/LoadingPage';
+
 
 
 const Login = () => {
@@ -18,11 +20,13 @@ const Login = () => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState('');
     const [resetStatus, setResetStatus] = useState('');
+    const [loading,setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         try {
+            setLoading(true);
             const data = await loginUser({ email, password });
             const { token, user } = data;
             localStorage.setItem("token", token);
@@ -31,8 +35,12 @@ const Login = () => {
             navigate("/");
         } catch (err) {
             setError(err?.response?.data?.message || "Login failed");
+        } finally{
+            setLoading(false)
         }
     };
+
+    if (loading) return <LoadingPage message="Signing you in..." />;
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
