@@ -9,14 +9,14 @@ import { useUnreadMessages } from "../../hooks/useUnreadMessages";
 const NotificationBell = () => {
     const dispatch = useDispatch();
     const { user } = useUser();
-    
+    const userId = user?._id;
 
     const threads = useSelector((state) => state.chat.threads);
     const loading = useSelector((state) => state.chat.loading);
 
 
     useEffect(() => {
-        if (!user || !user._id) return;
+        if (!user || !userId) return;
         const fetchThreads = async () => {
             if (threads?.threads?.length > 0) return;
 
@@ -32,9 +32,11 @@ const NotificationBell = () => {
         };
 
         fetchThreads();
-    }, [user._id]);
+    }, [userId]);
 
-    const hasUnread = useUnreadMessages(user?._id);
+    const hasUnread = useUnreadMessages(userId);
+
+    if(!userId)return null;
 
     return (
         <div className="relative">
