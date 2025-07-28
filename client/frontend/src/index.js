@@ -4,15 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AuthProvider from './context/AuthContext';
-import { ThemeProvider } from "@material-tailwind/react";
+import { store } from './redux/store';
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+  <React.StrictMode store={store}>
+    <Provider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </Provider>
+
   </React.StrictMode>
 );
 

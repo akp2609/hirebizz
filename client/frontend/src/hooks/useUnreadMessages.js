@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { ref, onValue, off } from "firebase/database";
-import { db } from '../firebase'
+import { db } from "../firebase";
+import { useSelector } from "react-redux";
 
-export const useUnreadMessages = (userId, chatIds = []) => {
+export const useUnreadMessages = (userId) => {
     const [hasUnread, setHasUnread] = useState(false);
+    const threads = useSelector((state) => state.chat.threads);
+    const chatIds = threads?.threads?.map(t => t.chatId) || [];
 
     useEffect(() => {
         if (!userId || chatIds.length === 0) return;
@@ -32,7 +35,7 @@ export const useUnreadMessages = (userId, chatIds = []) => {
         return () => {
             unsubscribers.forEach((unsub) => unsub());
         };
-    }, [userId, chatIds]);
+    }, [userId, JSON.stringify(chatIds)]); 
 
     return hasUnread;
 };

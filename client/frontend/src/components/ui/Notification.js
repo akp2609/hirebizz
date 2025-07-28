@@ -1,31 +1,38 @@
-import { useUnreadMessages } from "../../hooks/useUnreadMessages";
 import { BellIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getChatThreads } from "../../services/chatService";
 import { useUser } from "../../context/UserContext";
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading, setThreads } from "../../redux/slices/ChatSlice";
+import { useUnreadMessages } from "../../hooks/useUnreadMessages";
 
 const NotificationBell = () => {
-    const [threadIds, setThreadIds] = useState([]);
-
+    const dispatch = useDispatch();
     const { user } = useUser();
 
+    const threads = useSelector((state) => state.chat.threads);
+    const loading = useSelector((state) => state.chat.loading);
+
+    
     useEffect(() => {
         const fetchThreads = async () => {
+            if (threads?.threads?.length > 0) return;
 
-
+            dispatch(setLoading(true));
             try {
                 const data = await getChatThreads(user._id);
-                const ids = data.threads.map((t) => t.chatId);
-                setThreadIds(ids);
+                dispatch(setThreads(data));
             } catch (err) {
                 console.error("Failed to fetch chat threads:", err);
+            } finally {
+                dispatch(setLoading(false));
             }
         };
 
         fetchThreads();
     }, [user._id]);
 
-    const hasUnread = useUnreadMessages(user._id, threadIds);
+    const hasUnread = useUnreadMessages(user._id);
 
     return (
         <div className="relative">

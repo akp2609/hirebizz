@@ -20,7 +20,7 @@ const Login = () => {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState('');
     const [resetStatus, setResetStatus] = useState('');
-    const [loading,setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,12 +35,12 @@ const Login = () => {
             navigate("/");
         } catch (err) {
             setError(err?.response?.data?.message || "Login failed");
-        } finally{
+        } finally {
             setLoading(false)
         }
     };
 
-    if (loading) return <LoadingPage message="Signing you in..." />;
+
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
