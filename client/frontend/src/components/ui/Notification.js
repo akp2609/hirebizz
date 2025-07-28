@@ -9,6 +9,7 @@ import { useUnreadMessages } from "../../hooks/useUnreadMessages";
 const NotificationBell = () => {
     const dispatch = useDispatch();
     const { user } = useUser();
+    if (!user?._id) return null;
 
     const threads = useSelector((state) => state.chat.threads);
     const loading = useSelector((state) => state.chat.loading);

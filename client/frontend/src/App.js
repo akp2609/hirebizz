@@ -37,6 +37,15 @@ const PrivateRoute = ({ children }) => {
 
 
 function App() {
+  const { loading } = useAuth(); 
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center text-xl">
+        Loading...
+      </div>
+    );
+  }
   return (
 
     <GoogleOAuthProvider clientId={clientId}>
