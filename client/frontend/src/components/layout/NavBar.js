@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import NotificationBell from '../ui/Notification';
+import { useUser } from '../../context/UserContext';
 
 function NavBar() {
     const { isAuthenticated, user, logout } = useContext(AuthContext);
@@ -13,7 +14,7 @@ function NavBar() {
         <nav className="bg-blue-700 text-white px-7 py-6 shadow-md flex justify-between relative z-50">
             <h1 className='text-2xl font-bold'>HireBizz</h1>
             <div className='space-x-4 flex'>
-                <NotificationBell className='mr-2'/>
+                <NotificationBell className='mr-2' userId={user._id}/>
                 <Link to='/' className='hover:text-cyan-300 hover:underline text-xl'>Home</Link>
                 <Link to='/about' className='hover:underline hover:text-cyan-300 text-xl'>About</Link>
 
