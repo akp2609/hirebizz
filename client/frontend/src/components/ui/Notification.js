@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getChatThreads } from "../../services/chatService";
 import { useUser } from "../../context/UserContext";
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading, setThreads } from "../../redux/slices/ChatSlice";
+import { setLoading,setThreads } from "../../redux/slices/ChatSlice";
 import { useUnreadMessages } from "../../hooks/useUnreadMessages";
 
 const NotificationBell = () => {
