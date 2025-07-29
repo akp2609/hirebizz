@@ -12,11 +12,12 @@ const ChatThreads = () => {
     const loading = useSelector((state) => state.chat.loading);
 
     useEffect(() => {
-        if (!userId) return; 
+        if (!user || !userId) return; 
 
         const fetchThreads = async () => {
             dispatch(setLoading(true));
             try {
+                console.log('user id :',userId);
                 const data = await getChatThreads(userId); 
                 console.log("Fetched threads:", data);
                 dispatch(setThreads(data));
