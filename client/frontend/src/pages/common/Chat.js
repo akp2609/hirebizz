@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getChatThreads } from "../../services/chatService";
 import { setThreads, setLoading } from "../../redux/slices/ChatSlice";
+import { useUser } from "../../context/UserContext";
 
-const ChatThreads = ({ userId }) => {
+const ChatThreads = () => {
     const dispatch = useDispatch();
+    const {user} = useUser();
+    const userId = user._id;
     const threads = useSelector((state) => state.chat.threads || []);
     const loading = useSelector((state) => state.chat.loading);
 
