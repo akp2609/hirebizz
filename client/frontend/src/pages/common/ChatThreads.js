@@ -1,49 +1,49 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { useUser } from "../../context/UserContext";
+// ChatThreads.js
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getChatThreads } from "../../services/chatService"; // Your service file
+import { setThreads, setLoading } from "../../redux/slices/ChatSlice";
 
-const ChatThreadsList = ({ onSelectThread }) => {
-    const { user } = useUser();
-    const threads = useSelector((state) => state.chat.threads);
+const ChatThreads = () => {
+    const dispatch = useDispatch();
+    const threads = useSelector((state) => state.chat.threads || []);
     const loading = useSelector((state) => state.chat.loading);
 
-    if (loading) return <div>Loading chats...</div>;
-    if (!threads || threads.length === 0) return <div>No chats yet.</div>;
+    useEffect(() => {
+        const fetchThreads = async () => {
+            dispatch(setLoading(true));
+            try {
+                const data = await getChatThreads();
+                console.log("Fetched threads:", data);
+                dispatch(setThreads(data));
+            } catch (error) {
+                console.error("Error fetching threads:", error);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
+        fetchThreads();
+    }, [dispatch]);
+
+    if (loading) return <div>Loading...</div>;
+    if (!Array.isArray(threads) || threads.length === 0) return <div>No chats available</div>;
 
     return (
-        <div className="divide-y divide-gray-200">
-            {threads.map((thread) => {
-
-                const otherUser = thread.participant;
-                const hasUnread = thread.unreadCount && thread.unreadCount[user._id] > 0;
-
-                return (
-                    <div
-                        key={thread.chatId}
-                        className="flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer transition-all"
-                        onClick={() => onSelectThread(thread)}
-                    >
-                        <div className="flex items-center gap-3">
-                            <img
-                                src={otherUser?.profilePicture || "/default-avatar.png"}
-                                alt={otherUser?.name}
-                                className="w-10 h-10 rounded-full object-cover"
-                            />
-                            <div>
-                                <div className="font-medium text-gray-900">{otherUser?.name}</div>
-                                <div className="text-sm text-gray-500 truncate w-40">
-                                    {thread?.latestMessage?.message || "Start the conversation"}
-                                </div>
-                            </div>
-                        </div>
-                        {hasUnread && (
-                            <span className="w-3 h-3 rounded-full bg-blue-500 shadow-md" />
-                        )}
+        <div className="chat-threads">
+            {threads.map((thread) => (
+                <div key={thread._id} className="thread-card">
+                    <img src={thread.participant?.profilePic} alt="" className="avatar" />
+                    <div className="details">
+                        <div className="name">{thread.participant?.name}</div>
+                        <div className="last-message">{thread.lastMessage}</div>
                     </div>
-                );
-            })}
+                    {thread.unseenCount > 0 && (
+                        <div className="unseen-count">{thread.unseenCount}</div>
+                    )}
+                </div>
+            ))}
         </div>
     );
 };
 
-export default ChatThreadsList;
+export default ChatThreads;
