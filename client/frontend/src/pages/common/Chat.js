@@ -6,20 +6,18 @@ import { useUser } from "../../context/UserContext";
 
 const ChatThreads = () => {
     const dispatch = useDispatch();
-    const {user} = useUser();
+    const { user } = useUser();
     const userId = user._id;
     const threads = useSelector((state) => state.chat.threads || []);
     const loading = useSelector((state) => state.chat.loading);
 
     useEffect(() => {
-        if (!user || !userId) return; 
+        if (!user || !user._id) return;  // ✅ extra safety
 
         const fetchThreads = async () => {
             dispatch(setLoading(true));
             try {
-                console.log('user id :',userId);
-                const data = await getChatThreads(userId); 
-                console.log("Fetched threads:", data);
+                const data = await getChatThreads(user._id);
                 dispatch(setThreads(data));
             } catch (error) {
                 console.error("Error fetching threads:", error);
@@ -29,8 +27,7 @@ const ChatThreads = () => {
         };
 
         fetchThreads();
-    }, [dispatch, userId]);
-
+    }, [user?._id]);
     if (loading) return <div>Loading...</div>;
     if (!Array.isArray(threads) || threads.length === 0) return <div>No chats available</div>;
 
