@@ -18,13 +18,13 @@ function NavBar() {
 
                 {isAuthenticated && user ? (
                     <div
-                        className="inline-flex items-center cursor-pointer"
+                        className="inline-flex items-center cursor-pointer gap-4"
                         onMouseEnter={() => setIsOpen(true)}
                         onClick={() => setIsOpen(!isOpen)}
                     >
-                     <NotificationBell className='mr-2' userId={user._id}/>
-                     <Link to='/' className='hover:text-cyan-300 hover:underline text-xl'>Home</Link>
-                     <Link to='/about' className='hover:underline hover:text-cyan-300 text-xl'>About</Link>
+                        <NotificationBell className='mr-6' userId={user._id}/>
+                        <Link to='/' className='hover:text-cyan-300 hover:underline text-xl'>Home</Link>
+                        <Link to='/about' className='hover:underline hover:text-cyan-300 text-xl'>About</Link>
                         <img
                             src={user.picture || defaultProfilePic}
                             alt="Profile"
@@ -33,8 +33,8 @@ function NavBar() {
                         <svg className="w-4 h-4 mt-1 text-white ml-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
-                        
-                        
+
+
 
                         {isOpen && (
                             <div className="absolute right-0 overflow-hidden top-16 w-40 bg-white border rounded-md shadow-lg py-2 z-50 items-center mt-2">
@@ -57,6 +57,8 @@ function NavBar() {
                                 )}
                                 <hr style={{ border: '1px solid gray' }} className='mt-2' />
                                 <Link to='/setting' className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Setting</Link>
+                                <hr style={{ border: '1px solid gray' }} className='mt-2' />
+                                <Link to='/chats' className='text-black flex justify-center items-center mt-2 hover:bg-gray-100'>Chats</Link>
                                 <hr style={{ border: '1px solid gray' }} className='mt-2' />
                                 <button
                                     onClick={logout}
