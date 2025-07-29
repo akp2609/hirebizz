@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setThreads } from "../../redux/slices/ChatSlice";
 import { useUnreadMessages } from "../../hooks/useUnreadMessages";
 
-const NotificationBell = ({userId}) => {
+const NotificationBell = ({ userId }) => {
     const dispatch = useDispatch();
 
     const threads = useSelector((state) => state.chat.threads);
@@ -14,8 +14,9 @@ const NotificationBell = ({userId}) => {
 
     useEffect(() => {
         if (!userId) return;
+
         const fetchThreads = async () => {
-            if (threads?.threads?.length > 0) return;
+            if (threads?.length > 0) return; 
 
             dispatch(setLoading(true));
             try {
@@ -33,7 +34,7 @@ const NotificationBell = ({userId}) => {
 
     const hasUnread = useUnreadMessages(userId);
 
-    if(!userId)return null;
+    if (!userId) return null;
 
     return (
         <div className="relative">

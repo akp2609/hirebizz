@@ -4,16 +4,16 @@ import { useUser } from "../../context/UserContext";
 
 const ChatThreadsList = ({ onSelectThread }) => {
     const { user } = useUser();
-    const threads = useSelector((state) => state.chat.threads || []);
+    const threads = useSelector((state) => state.chat.threads);
     const loading = useSelector((state) => state.chat.loading);
 
-    if (loading) return <div className="text-center py-4 text-gray-500">Loading chats...</div>;
-    if (!threads.length) return <div className="text-center py-4 text-gray-500">No chats yet.</div>;
+    if (loading) return <div>Loading chats...</div>;
+    if (!threads || threads.length === 0) return <div>No chats yet.</div>;
 
     return (
         <div className="divide-y divide-gray-200">
             {threads.map((thread) => {
-                
+
                 const otherUser = thread.participant;
                 const hasUnread = thread.unreadCount && thread.unreadCount[user._id] > 0;
 
