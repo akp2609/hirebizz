@@ -22,7 +22,7 @@ function NavBar() {
                         onMouseEnter={() => setIsOpen(true)}
                         onClick={() => setIsOpen(!isOpen)}
                     >
-                        <NotificationBell className='mr-6' userId={user._id}/>
+                        <NotificationBell userId={user._id}/>
                         <Link to='/' className='hover:text-cyan-300 hover:underline text-xl'>Home</Link>
                         <Link to='/about' className='hover:underline hover:text-cyan-300 text-xl'>About</Link>
                         <img
