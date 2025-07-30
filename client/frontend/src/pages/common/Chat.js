@@ -52,7 +52,7 @@ const ChatPage = () => {
 
             <div className="flex items-center px-4 py-3 bg-white shadow">
                 <img
-                    src={profilePicture || fallback}
+                    src={profilePicture}
                     alt="User"
                     className="w-10 h-10 rounded-full"
                 />
