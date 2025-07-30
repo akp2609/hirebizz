@@ -10,7 +10,7 @@ const NotificationBell = ({ userId }) => {
 
     const threads = useSelector((state) => state.chat.threads);
     const loading = useSelector((state) => state.chat.loading);
-
+    const hasUnread = useUnreadMessages(userId);
 
     useEffect(() => {
         if (!userId || threads?.length > 0) return;
@@ -29,8 +29,6 @@ const NotificationBell = ({ userId }) => {
 
         fetchThreads();
     }, [userId]);
-
-    const hasUnread = useUnreadMessages(userId);
 
     if (!userId) return null;
 

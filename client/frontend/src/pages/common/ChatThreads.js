@@ -1,20 +1,23 @@
-// ChatThreads.js
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getChatThreads } from "../../services/chatService"; // Your service file
+import { getChatThreads } from "../../services/chatService";
 import { setThreads, setLoading } from "../../redux/slices/ChatSlice";
+import { useUser } from "../../context/UserContext";
 
 const ChatThreads = () => {
     const dispatch = useDispatch();
+    const { user } = useUser();
+    const userId = user?._id; 
     const threads = useSelector((state) => state.chat.threads || []);
     const loading = useSelector((state) => state.chat.loading);
 
     useEffect(() => {
+        if (!userId) return; 
+
         const fetchThreads = async () => {
             dispatch(setLoading(true));
             try {
-                const data = await getChatThreads();
-                console.log("Fetched threads:", data);
+                const data = await getChatThreads(userId);
                 dispatch(setThreads(data));
             } catch (error) {
                 console.error("Error fetching threads:", error);
@@ -22,8 +25,9 @@ const ChatThreads = () => {
                 dispatch(setLoading(false));
             }
         };
+
         fetchThreads();
-    }, [dispatch]);
+    }, [dispatch, userId]); 
 
     if (loading) return <div>Loading...</div>;
     if (!Array.isArray(threads) || threads.length === 0) return <div>No chats available</div>;
