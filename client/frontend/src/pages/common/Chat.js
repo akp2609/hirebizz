@@ -51,7 +51,7 @@ const ChatPage = () => {
 
 
 
-    const handleSend = async () => {
+    const handleSendMessage = async () => {
         const trimmed = newMsg.trim();
         if (!trimmed) return;
 
