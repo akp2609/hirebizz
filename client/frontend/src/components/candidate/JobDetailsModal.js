@@ -62,7 +62,7 @@ const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
                 <ApplyJobModal
                     isOpen={applyOpen}
                     onClose={() => setApplyOpen(false)}
-                    jobId={job._id}
+                    jobId={job?._id}
                 />
             )}
         </>

@@ -108,6 +108,7 @@ const JobsPage = () => {
     };
 
     const openJobDetails = (job) => {
+        console.log('Opening job modal with:', job._id);
         setSelectedJob(job);
         setShowDetailsModal(true);
     };
@@ -169,7 +170,9 @@ const JobsPage = () => {
 
             <Pagination page={filters.page} totalPages={totalPages} onPageChange={handlePageChange} />
 
-            <JobDetailsModal job={selectedJob} isOpen={showDetailsModal} onClose={closeJobDetails} />
+            {selectedJob && (
+                <JobDetailsModal job={selectedJob} isOpen={showDetailsModal} onClose={closeJobDetails} />
+            )}
         </div>
     );
 };
