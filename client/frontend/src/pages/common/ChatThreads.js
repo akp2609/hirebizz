@@ -24,6 +24,7 @@ const ChatThreads = () => {
                 console.error("Error fetching threads:", error);
             } finally {
                 dispatch(setLoading(false));
+                setLoading(false)
             }
         };
 
