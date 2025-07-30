@@ -72,6 +72,7 @@ function App() {
                   <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
                   <Route path="/my-applications" element={<PrivateRoute><MyApplications /></PrivateRoute>} />
                   <Route path="/chats" element={<PrivateRoute><ChatThreads/></PrivateRoute>}/>
+                  <Route path="/messages/:userId" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/login" />} />

@@ -16,10 +16,6 @@ export const markMessageAsSeen = async (formData) => {
 }
 
 export const getChatThreads = async (userId) => {
-    if (!userId) {
-        console.warn("🚨 Called getChatThreads with undefined userId");
-        return [];
-    }
     const res = await apiClient.get(`/chat/user-threads/${userId}`)
     return res.data
 }

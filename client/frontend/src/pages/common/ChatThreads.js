@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getChatThreads } from "../../services/chatService";
-import { setThreads, setLoading } from "../../redux/slices/ChatSlice";
+import { setThreads,setLoading } from "../../redux/slices/ChatSlice";
 import { useUser } from "../../context/UserContext";
+import { useNavigate} from "react-router-dom";
+
 
 const ChatThreads = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { user } = useUser();
     const userId = user?._id;
@@ -56,6 +59,7 @@ const ChatThreads = () => {
                     <div
                         key={thread.chatId}
                         className="flex items-center p-4 bg-white rounded-2xl shadow hover:shadow-md transition cursor-pointer border hover:border-blue-500"
+                        onClick={()=>navigate(`/messages/${participant._id}`)}
                     >
                         <img
                             src={profilePicture}
