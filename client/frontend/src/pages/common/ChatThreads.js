@@ -19,7 +19,7 @@ const ChatThreads = () => {
             try {
                 const data = await getChatThreads(userId);
                 console.log(data)
-                dispatch(setThreads(data));
+                dispatch(setThreads(data.threads));
             } catch (error) {
                 console.error("Error fetching threads:", error);
             } finally {
