@@ -25,6 +25,7 @@ import MyApplications from "./pages/candidate/MyApplications";
 import ResetPassword from "./pages/common/ResetPassword";
 import GitHubCallback from "./pages/common/GitHubCallback";
 import ChatThreads from "./pages/common/ChatThreads";
+import ChatPage from "./pages/common/Chat";
 
 
 
