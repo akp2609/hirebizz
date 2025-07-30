@@ -27,7 +27,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
             return;
         }
 
-        const result = await postNewApplication({ jobId, coverletter: coverLetter });
+        const result = await postNewApplication({ jobId, coverLetter: coverLetter });
 
         if (result) {
             toast.success("Applied successfully!");

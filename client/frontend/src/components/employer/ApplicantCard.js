@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import ApplicantModal from './ApplicantModal';
+import { useNavigate } from "react-router-dom";
 
 const ApplicantCard = ({ application }) => {
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
     if (!application || typeof application !== 'object') {
         console.warn("Invalid application object:", application);
@@ -18,6 +20,11 @@ const ApplicantCard = ({ application }) => {
 
     const name = applicant.name ?? "Unknown";
     const email = applicant.email ?? "No email";
+
+     const handleMessageClick = () => {
+        const applicantId = application.applicant;
+        navigate(`/chat/${applicantId}`); 
+    };
 
     return (
         <>
@@ -41,6 +48,15 @@ const ApplicantCard = ({ application }) => {
                 >
                     View Details
                 </button>
+
+                {application.status === "accepted" && (
+                <button
+                    onClick={handleMessageClick}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                    Message Applicant
+                </button>
+            )}
             </div>
 
             {open && (
