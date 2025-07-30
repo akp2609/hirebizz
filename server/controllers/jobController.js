@@ -190,7 +190,7 @@ export const closeJob = async (req,res) => {
             throw new Error('job not found');
         }
 
-        return job;
+        return res.status(200).json('Job closed succesfully');
     }
     catch (err) {
         console.error('Failed to update job status', err);
