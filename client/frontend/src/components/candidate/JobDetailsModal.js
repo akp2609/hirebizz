@@ -58,7 +58,7 @@ const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
             </ModalWrapper>
 
 
-            {!isAdminView && (
+            {!isAdminView && job && job._id &&(
                 <ApplyJobModal
                     isOpen={applyOpen}
                     onClose={() => setApplyOpen(false)}
