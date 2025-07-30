@@ -5,7 +5,7 @@ import { useApplication } from "../../hooks/useApplication";
 import { toast } from "react-hot-toast";
 
 const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
-    console.log("Received jobId in modal:", jobId);
+    
     const { user } = useUser();
     const { resume, uploadNewResume, uploading, error: uploadError } = useResumeUpload();
     const { postNewApplication, applying } = useApplication();
@@ -29,6 +29,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
         }
 
         try {
+            console.log("Sending jobId to apply API:", jobId);
             const result = await postNewApplication(jobId, { coverLetter });
 
             if (result) {
