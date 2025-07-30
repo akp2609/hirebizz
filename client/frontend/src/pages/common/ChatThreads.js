@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getChatThreads } from "../../services/chatService";
-import { setThreads,setLoading } from "../../redux/slices/ChatSlice";
+import { setThreads, setLoading } from "../../redux/slices/ChatSlice";
 import { useUser } from "../../context/UserContext";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const ChatThreads = () => {
@@ -59,15 +59,20 @@ const ChatThreads = () => {
                     <div
                         key={thread.chatId}
                         className="flex items-center p-4 bg-white rounded-2xl shadow hover:shadow-md transition cursor-pointer border hover:border-blue-500"
-                        onClick={()=>navigate(`/messages/${participant._id}`)}
+                        onClick={() => navigate(`/messages/${participant._id}`, {
+                            state: {
+                                name: participant.name,
+                                profilePicture: participant.profilePicture,
+                            },
+                        })}
                     >
                         <img
                             src={profilePicture}
                             alt={name}
                             className="w-12 h-12 rounded-full object-cover border"
                             onError={(e) =>
-                                (e.target.src =
-                                    "https://ui-avatars.com/api/?name=" + name)
+                            (e.target.src =
+                                "https://ui-avatars.com/api/?name=" + name)
                             }
                         />
                         <div className="flex-1 ml-4">

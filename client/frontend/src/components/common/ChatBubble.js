@@ -1,4 +1,3 @@
-// components/ChatBubble.js
 import React from "react";
 
 const isLink = (text) => {

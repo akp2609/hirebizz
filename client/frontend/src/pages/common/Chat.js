@@ -4,13 +4,19 @@ import ChatBubble from "../../components/common/ChatBubble";
 import { useUser } from "../../context/UserContext";
 import { getMessages } from "../../services/chatService";
 import { ArrowDown, Send } from "lucide-react";
+import { useLocation, useParams } from "react-router-dom";
 
-const ChatPage = ({ chatUserId }) => {
+
+
+const ChatPage = () => {
+    const { chatUserId } = useParams();
     const { user } = useUser();
     const messagesEndRef = useRef(null);
     const containerRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [newMsg, setNewMsg] = useState("");
+    const { state } = useLocation();
+    const { name, profilePicture } = state || {};
     const [showScrollDown, setShowScrollDown] = useState(false);
 
     const fetchMessages = async () => {
@@ -46,14 +52,14 @@ const ChatPage = ({ chatUserId }) => {
 
             <div className="flex items-center px-4 py-3 bg-white shadow">
                 <img
-                    src={`https://ui-avatars.com/api/?name=Chat+User`}
+                    src={profilePicture || fallback}
                     alt="User"
                     className="w-10 h-10 rounded-full"
                 />
-                <h2 className="ml-3 font-semibold text-gray-800">Chat User</h2>
+                <h2 className="ml-3 font-semibold text-gray-800">{name || "Chat User"}</h2>
             </div>
 
-            
+
             <div
                 className="flex-1 overflow-y-auto p-4 space-y-1"
                 onScroll={handleScroll}
@@ -69,7 +75,7 @@ const ChatPage = ({ chatUserId }) => {
                 <div ref={messagesEndRef} />
             </div>
 
-            
+
             {showScrollDown && (
                 <button
                     className="absolute bottom-20 right-5 bg-blue-600 text-white p-2 rounded-full shadow"
