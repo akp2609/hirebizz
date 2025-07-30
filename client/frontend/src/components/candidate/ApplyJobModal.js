@@ -3,12 +3,13 @@ import { useUser } from "../../context/UserContext";
 import useResumeUpload from "../../hooks/useResumeUpload";
 import { useApplication } from "../../hooks/useApplication";
 import { toast } from "react-hot-toast";
+import { postApplication } from "../../services/applicationService";
 
 const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
     
     const { user } = useUser();
     const { resume, uploadNewResume, uploading, error: uploadError } = useResumeUpload();
-    const { postNewApplication, applying } = useApplication();
+    const { applying } = useApplication();
 
     const [coverLetter, setCoverLetter] = useState("");
 
@@ -30,7 +31,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
 
         try {
             console.log("Sending jobId to apply API:", jobId);
-            const result = await postNewApplication(jobId, { coverLetter });
+            const result = await postApplication(jobId, { coverLetter });
 
             if (result) {
                 toast.success("Application submitted!");
