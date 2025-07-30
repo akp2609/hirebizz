@@ -49,23 +49,23 @@ const ChatPage = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    const handleSendMessage = async () => {
-        if (!newMsg.trim()) return;
 
-        const formData = {
-            senderId: user._id,
-            receiverId: chatUserId,
-            content: newMsg,
-        };
+
+    const handleSend = async () => {
+        const trimmed = newMsg.trim();
+        if (!trimmed) return;
 
         try {
-            const res = await sendMessage(formData);
-            setMessages((prev) => [...prev, { ...res, id: res._id }]);
-            setNewMsg("");
-            await fetchMessages();
-            scrollToBottom();
-        } catch (err) {
-            console.error("Send message failed:", err);
+            await sendMessage({
+                senderId: user._id,
+                receiverId: chatUserId,
+                message: trimmed,  
+            });
+
+            setNewMsg("");     
+            fetchMessages();   
+        } catch (error) {
+            console.error("Error sending message:", error);
         }
     };
 
