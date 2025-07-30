@@ -18,6 +18,7 @@ const ChatThreads = () => {
             dispatch(setLoading(true));
             try {
                 const data = await getChatThreads(userId);
+                console.log(data)
                 dispatch(setThreads(data));
             } catch (error) {
                 console.error("Error fetching threads:", error);
