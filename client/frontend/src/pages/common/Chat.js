@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ChatBubble from "../../components/common/ChatBubble";
 import { useUser } from "../../context/UserContext";
-import { getMessages } from "../../services/chatService";
+import { getMessages, sendMessage, markMessageAsSeen } from "../../services/chatService";
 import { ArrowDown, Send } from "lucide-react";
 import { useLocation, useParams } from "react-router-dom";
 
 
 
 const ChatPage = () => {
-    const {  userId: chatUserId } = useParams();
+    const { userId: chatUserId } = useParams();
     const { user } = useUser();
     const messagesEndRef = useRef(null);
     const containerRef = useRef(null);
@@ -26,6 +26,8 @@ const ChatPage = () => {
             .map(([id, msg]) => ({ id, ...msg }))
             .sort((a, b) => a.timestamp - b.timestamp);
         setMessages(sorted);
+
+        await markMessageAsSeen({ senderId: chatUserId, receiverId: user._id });
     };
 
     useEffect(() => {
@@ -47,8 +49,29 @@ const ChatPage = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    const handleSendMessage = async () => {
+        if (!newMsg.trim()) return;
+
+        const formData = {
+            senderId: user._id,
+            receiverId: chatUserId,
+            content: newMsg,
+        };
+
+        try {
+            const res = await sendMessage(formData);
+            setMessages((prev) => [...prev, { ...res, id: res._id }]);
+            setNewMsg("");
+            await fetchMessages();
+            scrollToBottom();
+        } catch (err) {
+            console.error("Send message failed:", err);
+        }
+    };
+
+
     return (
-        <div className="flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-screen bg-white">
 
             <div className="flex items-center px-4 py-3 bg-white shadow">
                 <img
@@ -91,10 +114,12 @@ const ChatPage = () => {
                     type="text"
                     value={newMsg}
                     onChange={(e) => setNewMsg(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                     placeholder="Type a message"
                     className="flex-1 border border-gray-300 rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring"
                 />
-                <button className="ml-3 p-2 bg-blue-500 rounded-full text-white">
+                <button className="ml-3 p-2 bg-blue-500 rounded-full text-white"
+                    onClick={handleSendMessage}>
                     <Send size={18} />
                 </button>
             </div>

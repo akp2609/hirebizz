@@ -25,6 +25,8 @@ const ChatBubble = ({ message, isSender }) => {
 
     const alignment = isSender ? "justify-end" : "justify-start";
 
+    const timestampColor = isSender ? "text-white" : "text-gray-500";
+
     return (
         <div className={`flex ${alignment} mb-2`}>
             <div className={`${baseStyle} ${bgStyle}`}>
@@ -37,7 +39,7 @@ const ChatBubble = ({ message, isSender }) => {
                         message.message
                     )}
                 </div>
-                <div className="text-[10px] text-gray-500 text-right mt-1">
+                <div className={`text-[10px] ${timestampColor} text-right mt-1`}>
                     {formatTimestamp(message.timestamp)}
                 </div>
             </div>
