@@ -6,7 +6,8 @@ export const sendMessage = async (formData) => {
 }
 
 export const getMessages = async (userId1, userId2) => {
-    const res = await apiClient.get(`/chat/${userId1}/${userId2}`);
+    console.log("get Message requested with",userId1,userId2)
+    const res = await apiClient.get(`/chat/thread/${userId1}/${userId2}`);
     return res.data;
 }
 
