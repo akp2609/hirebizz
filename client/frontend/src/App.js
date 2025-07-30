@@ -24,7 +24,8 @@ import AuthLayout from "./components/layout/AuthLayout";
 import MyApplications from "./pages/candidate/MyApplications";
 import ResetPassword from "./pages/common/ResetPassword";
 import GitHubCallback from "./pages/common/GitHubCallback";
-import ChatThreadsList from "./pages/common/ChatThreads";
+import ChatThreads from "./pages/common/ChatThreads";
+
 
 
 
@@ -70,7 +71,7 @@ function App() {
                   <Route path='/employer/job/:jobId/applications' element={<PrivateRoute><Applications /></PrivateRoute>} />
                   <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
                   <Route path="/my-applications" element={<PrivateRoute><MyApplications /></PrivateRoute>} />
-                  <Route path="/chats" element={<PrivateRoute><ChatThreadsList/></PrivateRoute>}/>
+                  <Route path="/chats" element={<PrivateRoute><ChatThreads/></PrivateRoute>}/>
                 </Route>
 
                 <Route path="*" element={<Navigate to="/login" />} />
