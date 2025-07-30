@@ -20,6 +20,7 @@ const ChatPage = () => {
     const [showScrollDown, setShowScrollDown] = useState(false);
 
     const fetchMessages = async () => {
+        console.log(user._id);
         if (!user?._id || !chatUserId) return;
         const data = await getMessages(user._id, chatUserId);
         const sorted = Object.entries(data)
