@@ -9,7 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 
 const ChatPage = () => {
-    const { chatUserId } = useParams();
+    const {  userId: chatUserId } = useParams();
     const { user } = useUser();
     const messagesEndRef = useRef(null);
     const containerRef = useRef(null);
