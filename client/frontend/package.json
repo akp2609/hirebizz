@@ -27,6 +27,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.3",
     "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
     "tailwind-variants": "^1.0.0",
     "tailwindcss-animate": "^1.0.7",
     "tw-elements": "^2.0.0",

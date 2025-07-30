@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import useResumeUpload from "../../hooks/useResumeUpload";
-import {useApplication} from "../../hooks/useApplication";
+import { useApplication } from "../../hooks/useApplication";
 import { toast } from "react-hot-toast";
 
 const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
@@ -22,19 +22,21 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
     };
 
     const handleApply = async () => {
-        if (!user?.resumeURL && !resume) {
+        if (!user?.resumeURL) {
             toast.error("Please upload a resume first.");
             return;
         }
 
-        const result = await postNewApplication({ jobId, coverLetter: coverLetter });
+        try {
+            const result = await postNewApplication(jobId, { coverLetter });
 
-        if (result) {
-            toast.success("Applied successfully!");
-            onClose();
-            setCoverLetter("");
-        } else {
-            toast.error("Application failed.");
+            if (result) {
+                toast.success("Application submitted!");
+                onClose();
+                setCoverLetter("");
+            }
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Something went wrong.");
         }
     };
 
@@ -43,7 +45,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
             <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
                 <h2 className="text-lg font-semibold mb-4">Apply to this Job</h2>
 
-                
+
                 <div className="mb-4">
                     {user?.resumeURL || resume ? (
                         <>
@@ -73,7 +75,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
                     {uploadError && <p className="text-xs text-red-500">{uploadError.message}</p>}
                 </div>
 
-                
+
                 <div className="mb-4">
                     <textarea
                         className="w-full border p-2 rounded text-sm"
@@ -84,7 +86,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
                     />
                 </div>
 
-                
+
                 <div className="flex justify-end gap-2">
                     <button
                         onClick={onClose}
