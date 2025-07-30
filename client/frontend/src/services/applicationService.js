@@ -1,6 +1,7 @@
 import apiClient from "../lib/apiClient";
 
 export const postApplication = async(jobId,applicationData)=>{
+    console.log("from apply service",jobId)
     const res = await apiClient.post(`/applications/apply/${jobId}`,applicationData);
     return res.data;
 }
