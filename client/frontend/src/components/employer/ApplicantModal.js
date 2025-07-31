@@ -1,27 +1,26 @@
 import { getRefreshedResumeUrl, updateApplicationStatus } from "../../services/applicationService";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
 const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, onStatusChange }) => {
     const [loading, setLoading] = useState(false);
-    const [resumeURL,setResume] = useState('')
+    const [resumeURL, setResume] = useState('')
 
-    useEffect(()=>{
-        const getApplicantResumeUrl = async()=>{
+    useEffect(() => {
+        const getApplicantResumeUrl = async () => {
             setLoading(true);
-            try{
+            try {
                 const res = await getRefreshedResumeUrl(applicationId);
                 setResume(res);
-            }catch(err)
-            {
-                console.error('Failed to fetch applicant refreshed resume',err);
-            }finally{
+            } catch (err) {
+                console.error('Failed to fetch applicant refreshed resume', err);
+            } finally {
                 setLoading(false);
             }
         }
 
         getApplicantResumeUrl()
-    },[])
+    }, [])
 
 
     if (!application || typeof application !== 'object') return null;
@@ -32,7 +31,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
         try {
             setLoading(true);
             const data = await updateApplicationStatus(applicationId, { status: newStatus });
-            onStatusChange?.(data.application); 
+            onStatusChange?.(data.application);
             onClose();
         } catch (err) {
             console.error(err);
@@ -41,7 +40,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
         }
     };
 
-    
+
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded-lg max-w-md w-full">
@@ -69,34 +68,35 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
                 </div>
 
                 <div className="mt-6 flex justify-end gap-2">
-                    {status === 'pending'|'reviewed' ? (
+                    {status === 'pending' | 'reviewed' ? (
                         <div>
                             <button
-                        onClick={() => handleStatusUpdate("accepted")}
-                        disabled={loading}
-                        className="px-4 py-2 bg-green-600 text-white rounded"
-                    >
-                        Accept
-                    </button>
-                    <button
-                        onClick={() => handleStatusUpdate("rejected")}
-                        disabled={loading}
-                        className="px-4 py-2 bg-red-600 text-white rounded"
-                    >
-                        Reject
-                    </button>
+                                onClick={() => handleStatusUpdate("accepted")}
+                                disabled={loading}
+                                className="px-4 py-2 bg-green-600 text-white rounded"
+                            >
+                                Accept
+                            </button>
+                            <button
+                                onClick={() => handleStatusUpdate("rejected")}
+                                disabled={loading}
+                                className="px-4 py-2 bg-red-600 text-white rounded"
+                            >
+                                Reject
+                            </button>
+
+                        </div>
+                    ) : (
+                        <div>
+                            <p>{status}</p>
+                        </div>
+                    )}
                     <button
                         onClick={onClose}
                         className="px-4 py-2 bg-gray-300 rounded"
                     >
                         Close
                     </button>
-                        </div>
-                    ):(
-                        <div>
-                            <p>{status}</p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
