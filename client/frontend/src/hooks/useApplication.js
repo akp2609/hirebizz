@@ -10,10 +10,8 @@ export const useApplication = () => {
         setApplying(true);
         setError(null);
         try {
-            const applicationData = new FormData(); 
-            applicationData.append("coverLetter", coverletter);
-
-            const data = await postApplication(jobId, applicationData); 
+           
+            const data = await postApplication(jobId, {coverletter}); 
             setApplication(data);
             return data;
         } catch (err) {
