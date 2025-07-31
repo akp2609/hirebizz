@@ -57,7 +57,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
                         View Resume
                     </a>
                 ) : (
-                    <p className="text-sm text-gray-400 italic">No resume available.</p>
+                    <p className="text-sm text-gray-400 italic">loading resume...</p>
                 )}
 
                 <div className="mt-4">
@@ -88,7 +88,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
                         </div>
                     ) : (
                         <div>
-                            <p className={status === 'accepted' ? 'bg-green-600 text-white ' : 'bg-red-600 text-white '}>{status}</p>
+                            <p className={`text-white mt-2 ${status.toLowerCase() === 'accepted' ? 'bg-green-600' : 'bg-red-600'}`}>{status}</p>
                         </div>
                     )}
 
