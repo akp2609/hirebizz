@@ -7,20 +7,24 @@ export const useApplication = () => {
     const [application, setApplication] = useState(null);
 
     const postNewApplication = useCallback(async ({ jobId, coverletter }) => {
-    setApplying(true);
-    setError(null);
-    try {
-        const data = await postApplication(jobId, { coverLetter: coverletter }); 
-        setApplication(data);
-        return data;
-    } catch (err) {
-        console.log('Error applying for the job');
-        setError(err);
-        return null;
-    } finally {
-        setApplying(false);
-    }
-}, []);
+        setApplying(true);
+        setError(null);
+        try {
+            const applicationData = new FormData(); 
+            applicationData.append("coverLetter", coverletter);
+
+            const data = await postApplication(jobId, applicationData); 
+            setApplication(data);
+            return data;
+        } catch (err) {
+            console.log('Error applying for the job', err);
+            setError(err);
+            return null;
+        } finally {
+            setApplying(false);
+        }
+    }, []);
+
 
 
     return {
