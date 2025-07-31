@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRefreshedResumeUrl } from '../../services/applicationService';
+import { withdrawJobApplication } from '../../services/applicationService';
 
 const ApplicationCard = ({ application }) => {
     const { job, coverLetter, status, appliedAt, resumeObject, _id: applicationId } = application;
@@ -7,6 +8,7 @@ const ApplicationCard = ({ application }) => {
     const [showFull, setShowFull] = useState(false);
     const [resumeURL, setResumeURL] = useState(null);
     const [loadingResume, setLoadingResume] = useState(false);
+    const [withdrawing, setWithdrawing] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -34,6 +36,20 @@ const ApplicationCard = ({ application }) => {
         };
     }, [applicationId, resumeObject]);
 
+    const handleWithdraw = async () => {
+        if (!window.confirm("Are you sure you want to withdraw this application?")) return;
+
+        setWithdrawing(true);
+        try {
+            await withdrawJobApplication(applicationId);
+            alert("Application withdrawn successfully.");
+        } catch (err) {
+            console.error(err);
+            alert("Failed to withdraw application.");
+        } finally {
+            setWithdrawing(false);
+        }
+    };
 
     if (!job || !job.title) {
         return (
@@ -77,10 +93,20 @@ const ApplicationCard = ({ application }) => {
                 )}
             </div>
 
-            <div className="mt-2 flex items-center justify-between">
-                <p className="text-xs text-gray-500">
-                    Applied: {new Date(appliedAt).toLocaleDateString()}
-                </p>
+            <div className="mt-3 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <p className="text-xs text-gray-500">
+                        Applied: {new Date(appliedAt).toLocaleDateString()}
+                    </p>
+
+                    <button
+                        onClick={handleWithdraw}
+                        disabled={withdrawing}
+                        className="text-xs text-red-600 bg-red-100 px-3 py-1 rounded hover:bg-red-200 transition disabled:opacity-50"
+                    >
+                        {withdrawing ? "Withdrawing..." : "Withdraw Application"}
+                    </button>
+                </div>
 
                 {loadingResume ? (
                     <p className="text-xs text-gray-400 italic">Loading resume...</p>
