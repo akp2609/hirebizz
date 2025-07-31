@@ -1,13 +1,29 @@
 import { useLocation, useParams } from 'react-router-dom';
 import ApplicantCard from '../../components/employer/ApplicantCard.js';
 import { useApplications } from '../../hooks/useApplication.js';
+import { useEffect, useState } from 'react';
 
 const Applications = () => {
     const { jobId } = useParams();
     const { applications, loading, error } = useApplications(jobId);
     const location = useLocation();
     const jobTitle = location.state?.jobTitle;
-    const hasApplicants = applications && applications.length > 0;
+
+    const [localApps, setLocalApps] = useState([]);
+
+    useEffect(() => {
+        if (applications) {
+            setLocalApps(applications);
+        }
+    }, [applications]);
+
+    const handleStatusChange = (updatedApp) => {
+        setLocalApps((prev) =>
+            prev.map((app) =>
+                app._id === updatedApp._id ? updatedApp : app
+            )
+        );
+    };
 
     return (
         <div className="max-w-5xl mx-auto p-6">
@@ -21,10 +37,14 @@ const Applications = () => {
                 <p>Loading applicants...</p>
             ) : error ? (
                 <p className="text-red-500">Something went wrong while fetching applicants.</p>
-            ) : hasApplicants ? (
+            ) : localApps.length > 0 ? (
                 <div className="grid gap-4">
-                    {applications.map((application) => (
-                        <ApplicantCard key={application._id} application={application} />
+                    {localApps.map((application) => (
+                        <ApplicantCard
+                            key={application._id}
+                            application={application}
+                            onStatusChange={handleStatusChange}
+                        />
                     ))}
                 </div>
             ) : (

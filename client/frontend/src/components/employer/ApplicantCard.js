@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ApplicantModal from './ApplicantModal';
 import { useNavigate } from "react-router-dom";
 
-const ApplicantCard = ({ application }) => {
+const ApplicantCard = ({ application,onStatusChange }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -65,6 +65,7 @@ const ApplicantCard = ({ application }) => {
                     applicantEmail={email}
                     application={application}
                     onClose={() => setOpen(false)}
+                    onStatusChange={onStatusChange}
                 />
             )}
         </>

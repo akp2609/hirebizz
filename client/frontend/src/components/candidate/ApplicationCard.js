@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getRefreshedResumeUrl } from '../../services/applicationService';
 import { withdrawJobApplication } from '../../services/applicationService';
+import { toast } from 'react-hot-toast';
 
-const ApplicationCard = ({ application }) => {
+const ApplicationCard = ({ application, onWithdraw }) => {
     const { job, coverLetter, status, appliedAt, resumeObject, _id: applicationId } = application;
 
     const [showFull, setShowFull] = useState(false);
@@ -38,14 +39,14 @@ const ApplicationCard = ({ application }) => {
 
     const handleWithdraw = async () => {
         if (!window.confirm("Are you sure you want to withdraw this application?")) return;
-
         setWithdrawing(true);
         try {
             await withdrawJobApplication(applicationId);
-            alert("Application withdrawn successfully.");
+            toast.success("Application withdrawn");
+            onWithdraw?.(applicationId); // Optionally notify parent
         } catch (err) {
+            toast.error("Failed to withdraw");
             console.error(err);
-            alert("Failed to withdraw application.");
         } finally {
             setWithdrawing(false);
         }
@@ -60,7 +61,7 @@ const ApplicationCard = ({ application }) => {
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition">
+        <div className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition space-y-2">
             <div className="flex justify-between">
                 <div>
                     <h2 className="text-lg font-bold">{job.title}</h2>
@@ -78,11 +79,10 @@ const ApplicationCard = ({ application }) => {
                 </span>
             </div>
 
-            <div className="mt-2">
+            <div>
                 <p className={!showFull ? 'line-clamp-2' : ''}>
                     <strong>Cover Letter:</strong> {coverLetter}
                 </p>
-
                 {coverLetter?.length > 120 && (
                     <button
                         onClick={() => setShowFull(!showFull)}
@@ -93,34 +93,32 @@ const ApplicationCard = ({ application }) => {
                 )}
             </div>
 
-            <div className="mt-3 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <p className="text-xs text-gray-500">
-                        Applied: {new Date(appliedAt).toLocaleDateString()}
-                    </p>
-
+            <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center gap-2">
                     <button
                         onClick={handleWithdraw}
                         disabled={withdrawing}
-                        className="text-xs text-red-600 bg-red-100 px-3 py-1 rounded hover:bg-red-200 transition disabled:opacity-50"
+                        className="text-red-600 bg-red-100 hover:bg-red-200 px-2 py-1 rounded text-xs font-medium"
                     >
-                        {withdrawing ? "Withdrawing..." : "Withdraw Application"}
+                        {withdrawing ? "Withdrawing..." : "Withdraw"}
                     </button>
+
+                    <span>Applied: {new Date(appliedAt).toLocaleDateString()}</span>
                 </div>
 
                 {loadingResume ? (
-                    <p className="text-xs text-gray-400 italic">Loading resume...</p>
+                    <p className="italic text-gray-400">Loading resume...</p>
                 ) : resumeURL ? (
                     <a
                         href={resumeURL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 text-sm underline"
+                        className="text-blue-600 underline"
                     >
                         View Resume
                     </a>
                 ) : (
-                    <p className="text-xs text-red-500 italic">Resume not available</p>
+                    <p className="text-red-500 italic">Resume not available</p>
                 )}
             </div>
         </div>
