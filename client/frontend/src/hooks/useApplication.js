@@ -6,12 +6,12 @@ export const useApplication = () => {
     const [applying, setApplying] = useState(false);
     const [application, setApplication] = useState(null);
 
-    const postNewApplication = useCallback(async ({ jobId, coverletter }) => {
+    const postNewApplication = useCallback(async ({ jobId, coverLetter }) => {
         setApplying(true);
         setError(null);
         try {
            
-            const data = await postApplication(jobId, {coverletter}); 
+            const data = await postApplication(jobId, {coverLetter}); 
             setApplication(data);
             return data;
         } catch (err) {
