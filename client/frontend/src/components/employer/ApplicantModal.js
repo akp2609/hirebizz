@@ -6,6 +6,24 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
     const [loading, setLoading] = useState(false);
     const [resumeURL,setResume] = useState('')
 
+    useEffect(()=>{
+        const getApplicantResumeUrl = async()=>{
+            setLoading(true);
+            try{
+                const res = await getRefreshedResumeUrl(applicationId);
+                setResume(res);
+            }catch(err)
+            {
+                console.error('Failed to fetch applicant refreshed resume',err);
+            }finally{
+                setLoading(false);
+            }
+        }
+
+        getApplicantResumeUrl()
+    },[])
+
+
     if (!application || typeof application !== 'object') return null;
 
     const { _id: applicationId, resumeObject, coverLetter, status } = application;
@@ -23,21 +41,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
         }
     };
 
-    useEffect(()=>{
-        const getApplicantResumeUrl = async()=>{
-            setLoading(true);
-            try{
-                const res = await getRefreshedResumeUrl(applicationId);
-                setResume(res);
-            }catch(err)
-            {
-                console.error('Failed to fetch applicant refreshed resume',err);
-            }finally{
-                setLoading(false);
-            }
-        }
-    },[])
-
+    
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded-lg max-w-md w-full">
