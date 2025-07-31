@@ -30,7 +30,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose }) => {
 
         try {
             console.log("Sending jobId to apply API:", jobId);
-            const result = await postNewApplication({ jobId, coverletter: coverLetter }); 
+            const result = await postNewApplication({ jobId, coverletter: coverLetter });
 
             if (result) {
                 toast.success("Application submitted!");
