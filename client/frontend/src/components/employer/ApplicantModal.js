@@ -88,16 +88,17 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
                         </div>
                     ) : (
                         <div>
-                            <p>{status}</p>
+                            <p className={status === 'accepted' ? 'bg-green-600 text-white ' : 'bg-red-600 text-white '}>{status}</p>
                         </div>
                     )}
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 bg-gray-300 rounded"
-                    >
-                        Close
-                    </button>
+
                 </div>
+                <button
+                    onClick={onClose}
+                    className="px-4 py-2 bg-gray-300 rounded"
+                >
+                    Close
+                </button>
             </div>
         </div>
     );
