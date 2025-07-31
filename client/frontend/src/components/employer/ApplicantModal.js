@@ -1,28 +1,42 @@
-import { updateApplicationStatus } from "../../services/applicationService";
+import { getRefreshedResumeUrl, updateApplicationStatus } from "../../services/applicationService";
 import { toast } from "react-toastify"; 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, onStatusChange }) => {
     const [loading, setLoading] = useState(false);
+    const [resumeURL,setResume] = useState('')
 
     if (!application || typeof application !== 'object') return null;
 
-    const { _id: applicationId, resumeURL, coverLetter, status } = application;
+    const { _id: applicationId, resumeObject, coverLetter, status } = application;
 
     const handleStatusUpdate = async (newStatus) => {
         try {
             setLoading(true);
             const data = await updateApplicationStatus(applicationId, { status: newStatus });
-            toast.success(`Application ${newStatus}`);
             onStatusChange?.(data.application); 
             onClose();
         } catch (err) {
             console.error(err);
-            toast.error("Failed to update application");
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(()=>{
+        const getApplicantResumeUrl = async()=>{
+            setLoading(true);
+            try{
+                const res = await getRefreshedResumeUrl(applicationId);
+                setResume(res);
+            }catch(err)
+            {
+                console.error('Failed to fetch applicant refreshed resume',err);
+            }finally{
+                setLoading(false);
+            }
+        }
+    },[])
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
@@ -51,7 +65,9 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
                 </div>
 
                 <div className="mt-6 flex justify-end gap-2">
-                    <button
+                    {status === 'pending'|'reviewed' ? (
+                        <div>
+                            <button
                         onClick={() => handleStatusUpdate("accepted")}
                         disabled={loading}
                         className="px-4 py-2 bg-green-600 text-white rounded"
@@ -71,6 +87,12 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
                     >
                         Close
                     </button>
+                        </div>
+                    ):(
+                        <div>
+                            <p>{status}</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
