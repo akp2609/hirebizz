@@ -37,7 +37,7 @@ const JobFilters = ({ filters, onChange }) => {
         onChange({
             location: '',
             skills: [],
-            isActive: '',
+            isActive: 'true',
             minComp: '',
             sortBy: '',
             search: '',

@@ -17,14 +17,7 @@ const Applications = () => {
         }
     }, [applications]);
 
-    const handleStatusChange = (updatedApp) => {
-        setLocalApps((prev) =>
-            prev.map((app) =>
-                app._id === updatedApp._id ? updatedApp : app
-            )
-        );
-    };
-
+    
     return (
         <div className="max-w-5xl mx-auto p-6">
             {!loading && (
@@ -43,7 +36,6 @@ const Applications = () => {
                         <ApplicantCard
                             key={application._id}
                             application={application}
-                            onStatusChange={handleStatusChange}
                         />
                     ))}
                 </div>

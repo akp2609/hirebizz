@@ -11,7 +11,7 @@ import JobDetailsModal from '../../components/candidate/JobDetailsModal';
 const defaultFilters = {
     location: '',
     skills: [],
-    isActive: '',
+    isActive: 'true',
     minComp: '',
     sortBy: '',
     search: '',
