@@ -2,7 +2,7 @@ import { getRefreshedResumeUrl, updateApplicationStatus } from "../../services/a
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
-const ApplicantModal = ({ applicantName, applicantEmail, application, onClose}) => {
+const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, onStatusChange }) => {
     const [loading, setLoading] = useState(false);
     const [resumeURL, setResume] = useState('')
 
@@ -31,6 +31,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose}) 
         try {
             setLoading(true);
             const data = await updateApplicationStatus(applicationId, { status: newStatus });
+            onStatusChange?.()
             onClose();
         } catch (err) {
             console.error(err);

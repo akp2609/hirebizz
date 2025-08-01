@@ -4,12 +4,14 @@ import { useApplications } from '../../hooks/useApplication.js';
 import { useEffect, useState } from 'react';
 
 const Applications = () => {
+    const [refreshKey, setRefreshKey] = useState(0);
     const { jobId } = useParams();
-    const { applications, loading, error } = useApplications(jobId);
+    const { applications, loading, error } = useApplications(jobId, refreshKey);
     const location = useLocation();
     const jobTitle = location.state?.jobTitle;
 
     const [localApps, setLocalApps] = useState([]);
+    const handleRefresh = () => setRefreshKey((prev) => prev + 1);
 
     useEffect(() => {
         if (applications) {
@@ -17,7 +19,7 @@ const Applications = () => {
         }
     }, [applications]);
 
-    
+
     return (
         <div className="max-w-5xl mx-auto p-6">
             {!loading && (
@@ -36,6 +38,7 @@ const Applications = () => {
                         <ApplicantCard
                             key={application._id}
                             application={application}
+                            onStatusChange={handleRefresh}
                         />
                     ))}
                 </div>

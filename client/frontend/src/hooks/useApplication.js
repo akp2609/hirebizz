@@ -33,7 +33,7 @@ export const useApplication = () => {
     }
 }
 
-export const useApplications = (jobId) => {
+export const useApplications = (jobId, refreshKey = 0) => {
     console.log('Entered hook');
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ export const useApplications = (jobId) => {
         };
 
         if (jobId) getData();
-    }, [jobId]);
+    }, [jobId,refreshKey]);
     console.log('From hook', applications);
     return { applications, loading, error };
 };
