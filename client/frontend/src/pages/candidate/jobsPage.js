@@ -156,9 +156,7 @@ const JobsPage = () => {
 
             <h2 className="text-xl font-bold mb-3">All Jobs Posted</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {jobs
-                    .filter(job => !user?.appliedJobs?.includes(job._id.toString()))
-                    .map(job => (
+                {jobs.map(job => (
                         <JobCard
                             key={job._id}
                             job={job}

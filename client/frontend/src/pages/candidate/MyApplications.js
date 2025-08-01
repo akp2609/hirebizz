@@ -76,7 +76,7 @@ const MyApplications = () => {
                 <p className="text-gray-600">You have not applied to any jobs yet.</p>
             ) : (
                 applications.map((application) => (
-                    <ApplicationCard key={application._id} application={application} />
+                    <ApplicationCard id={application._id} key={application._id} application={application} />
                 ))
             )}
         </div>

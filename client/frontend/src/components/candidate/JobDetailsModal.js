@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import ModalWrapper from "../common/ModalWrapper";
 import ApplyJobModal from "./ApplyJobModal";
+import { useUser } from "../../context/UserContext";
 
 const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
     const [applyOpen, setApplyOpen] = useState(false);
+    const {user} = useUser()
 
     if (!isOpen || !job) return null;
 
@@ -44,21 +46,26 @@ const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
                     <p className="text-sm">₹{job.compensation}</p>
                 </div>
 
-                
+
                 {!isAdminView && (
                     <div className="flex justify-end mt-6">
-                        <button
-                            onClick={() => setApplyOpen(true)}
-                            className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 text-sm"
-                        >
-                            Apply
-                        </button>
+                        {user?.appliedJobs?.includes(job._id.toString()) ? (
+                            <p className="text-sm text-gray-500">Already applied</p>
+                        ) : (
+                            <button
+                                onClick={() => setApplyOpen(true)}
+                                className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 text-sm"
+                            >
+                                Apply
+                            </button>
+                        )}
                     </div>
                 )}
+
             </ModalWrapper>
 
 
-            {!isAdminView && job && job._id &&(
+            {!isAdminView && job && job._id && (
                 <ApplyJobModal
                     isOpen={applyOpen}
                     onClose={() => setApplyOpen(false)}

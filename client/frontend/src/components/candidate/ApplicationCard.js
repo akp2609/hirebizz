@@ -3,7 +3,7 @@ import { getRefreshedResumeUrl } from '../../services/applicationService';
 import { withdrawJobApplication } from '../../services/applicationService';
 import { toast } from 'react-hot-toast';
 
-const ApplicationCard = ({ application, onWithdraw }) => {
+const ApplicationCard = ({id, application, onWithdraw }) => {
     const { job, coverLetter, status, appliedAt, resumeObject, _id: applicationId } = application;
 
     const [showFull, setShowFull] = useState(false);
@@ -41,9 +41,9 @@ const ApplicationCard = ({ application, onWithdraw }) => {
         if (!window.confirm("Are you sure you want to withdraw this application?")) return;
         setWithdrawing(true);
         try {
-            await withdrawJobApplication(applicationId);
+            await withdrawJobApplication(id);
             toast.success("Application withdrawn");
-            onWithdraw?.(applicationId); // Optionally notify parent
+            onWithdraw?.(id); 
         } catch (err) {
             toast.error("Failed to withdraw");
             console.error(err);
