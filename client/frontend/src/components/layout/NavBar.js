@@ -2,15 +2,15 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import NotificationBell from '../ui/Notification';
+import { useUser } from '../../context/UserContext';
 
 function NavBar() {
     const { isAuthenticated, user, logout, loading } = useContext(AuthContext);
+    const { loadingUser } = useUser();
     const [isOpen, setIsOpen] = useState(false);
     const defaultProfilePic = "https://www.w3schools.com/howto/img_avatar.png";
 
     if (loading) return null;
-
-    const { loadingUser } = useUser();
 
     if (loadingUser) return null;
 
