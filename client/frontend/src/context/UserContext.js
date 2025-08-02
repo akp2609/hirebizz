@@ -14,6 +14,7 @@ export const UserProvider = ({ children }) => {
     const loadUser = async () => {
         try {
             const data = await getUserProfile();
+            console.log("USER PROFILE FETCHED", data);
 
             let updatedUser = data.user;
 
@@ -30,7 +31,7 @@ export const UserProvider = ({ children }) => {
             }
 
             setUser(updatedUser);
-            
+
             localStorage.setItem("user", JSON.stringify(updatedUser));
         } catch (err) {
             console.error("Failed to load user: ", err);

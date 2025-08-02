@@ -8,7 +8,11 @@ function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
     const defaultProfilePic = "https://www.w3schools.com/howto/img_avatar.png";
 
-    if (loading) return null; 
+    if (loading) return null;
+
+    const { loadingUser } = useUser();
+
+    if (loadingUser) return null;
 
     return (
         <nav className="bg-blue-700 text-white px-7 py-6 shadow-md flex justify-between relative z-50">
