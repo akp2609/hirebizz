@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import EditProfileModal from './EditProfileModal'; 
 
-const UserProfileCard = ({ user,resumeURL}) => {
+const UserProfileCard = ({ user, resumeURL }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [profileUser, setProfileUser] = useState(user); 
+
+    const handleProfileUpdate = () => {
+        window.location.reload(); 
+    };
+
     if (!user) return null;
 
     const {
@@ -10,17 +18,12 @@ const UserProfileCard = ({ user,resumeURL}) => {
         location,
         role,
         profilePicture,
-        company,
         isVerified,
-        authProvider
-    } = user;
-
-    console.log(resumeURL)
+    } = profileUser;
 
     return (
-
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200">
-            
+
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 <img
                     src={profilePicture}
@@ -35,10 +38,8 @@ const UserProfileCard = ({ user,resumeURL}) => {
                 </div>
             </div>
 
-            
             <hr className="my-6" />
 
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-1">Location</h3>
@@ -50,21 +51,18 @@ const UserProfileCard = ({ user,resumeURL}) => {
                     <p className="text-gray-700">{bio || "No bio available"}</p>
                 </div>
 
-                {role === 'candidate'?(<div>
-                    <h3 className="text-sm font-semibold text-gray-500 mb-1">Resume</h3>
-                    {resumeURL ? (
-                        <a
-                            href={resumeURL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline"
-                        >
-                            View Resume
-                        </a>
-                    ) : (
-                        <p className="text-red-500">Not uploaded</p>
-                    )}
-                </div>):(<></>)}
+                {role === 'candidate' && (
+                    <div>
+                        <h3 className="text-sm font-semibold text-gray-500 mb-1">Resume</h3>
+                        {resumeURL ? (
+                            <a href={resumeURL} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                View Resume
+                            </a>
+                        ) : (
+                            <p className="text-red-500">Not uploaded</p>
+                        )}
+                    </div>
+                )}
 
                 <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-1">Verification</h3>
@@ -74,10 +72,21 @@ const UserProfileCard = ({ user,resumeURL}) => {
                 </div>
             </div>
 
-            
             <div className="mt-6 flex justify-end">
-                <button className="btn btn-outline btn-sm">Edit Profile</button>
+                <button
+                    className="btn btn-outline btn-sm"
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    Edit Profile
+                </button>
             </div>
+
+            <EditProfileModal
+                isOpen={isModalOpen}
+                closeModal={() => setIsModalOpen(false)}
+                user={profileUser}
+                onProfileUpdated={handleProfileUpdate}
+            />
         </div>
     );
 };

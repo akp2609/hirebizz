@@ -26,8 +26,8 @@ import ResetPassword from "./pages/common/ResetPassword";
 import GitHubCallback from "./pages/common/GitHubCallback";
 import ChatThreads from "./pages/common/ChatThreads";
 import ChatPage from "./pages/common/Chat";
-
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -40,7 +40,7 @@ const PrivateRoute = ({ children }) => {
 
 
 function App() {
-  const { loading } = useAuth(); 
+  const { loading } = useAuth();
 
   if (loading) {
     return (
@@ -72,7 +72,7 @@ function App() {
                   <Route path='/employer/job/:jobId/applications' element={<PrivateRoute><Applications /></PrivateRoute>} />
                   <Route path="/saved-jobs" element={<PrivateRoute><SavedJobs /></PrivateRoute>} />
                   <Route path="/my-applications" element={<PrivateRoute><MyApplications /></PrivateRoute>} />
-                  <Route path="/chats" element={<PrivateRoute><ChatThreads/></PrivateRoute>}/>
+                  <Route path="/chats" element={<PrivateRoute><ChatThreads /></PrivateRoute>} />
                   <Route path="/messages/:userId" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
                 </Route>
 
@@ -89,7 +89,7 @@ function App() {
               </Routes>
             </div>
 
-
+            <ToastContainer position="top-center" />
 
           </UserProvider>
 
