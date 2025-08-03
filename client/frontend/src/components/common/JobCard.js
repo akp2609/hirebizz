@@ -72,14 +72,14 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                     <div className="flex items-center gap-2">
                         <div>
                             <p>{new Date(createdAt).toLocaleDateString()}</p>
-                            {/* {user?.role === 'candidate' && (
+                            {user?.role === 'candidate' && (
                                 <button
                                     onClick={() => setShowReportModal(true)}
                                     className="p-1 rounded hover:bg-gray-200"
                                 >
                                     <EllipsisVerticalIcon className="h-5 w-5 text-gray-600" />
                                 </button>
-                            )} */}
+                            )}
                             <p className={isActive ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
                                 {isActive ? 'Active' : 'Closed'}
                             </p>
