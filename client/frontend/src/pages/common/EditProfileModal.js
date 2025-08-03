@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
-import { updateUserProfile, uploadUserProfilePic } from '../services/userService'; // adjust path
+import { updateUserProfile, uploadUserProfilePic } from '../../services/userService';
 import { toast } from 'react-toastify';
 
 const EditProfileModal = ({ isOpen, closeModal, user, onProfileUpdated }) => {
