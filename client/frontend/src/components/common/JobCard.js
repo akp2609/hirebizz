@@ -24,6 +24,7 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
     const [loadingSave, setLoadingSave] = useState(false);
     const { user } = useUser();
     const [showMenu, setShowMenu] = useState(false);
+    const [showReportModal,setShowReportModal] = useState(false);
     const toggleMenu = () => setShowMenu(prev => !prev);
 
     useEffect(() => {
