@@ -10,6 +10,7 @@ const UserProfileCard = ({ user, resumeURL }) => {
     const handleProfileUpdate = () => {
         window.location.reload();
     };
+    const handleVerify = () => {}
 
     if (!user) return null;
 
@@ -97,7 +98,7 @@ const UserProfileCard = ({ user, resumeURL }) => {
                 onProfileUpdated={handleProfileUpdate}
             />
 
-            <VerificationModal
+            <VerifyEmailModal
                 isOpen={showVerifyModal}
                 onClose={() => setShowVerifyModal(false)}
                 email={email}
