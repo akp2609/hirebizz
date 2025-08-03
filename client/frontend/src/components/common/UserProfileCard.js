@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EditProfileModal from './EditProfileModal'; 
+import EditProfileModal from '../../pages/common/EditProfileModal';
 
 const UserProfileCard = ({ user, resumeURL }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
