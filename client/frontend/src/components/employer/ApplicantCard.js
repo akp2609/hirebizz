@@ -30,6 +30,10 @@ const ApplicantCard = ({ application, onStatusChange }) => {
         navigate(`/chat/${applicantId}`);
     };
 
+    const handleReportSubmit = ()=>{
+
+    }
+    
     return (
         <>
             <div
@@ -89,8 +93,9 @@ const ApplicantCard = ({ application, onStatusChange }) => {
 
             {reportOpen && (
                 <ReportModal
-                    type="applicant"
-                    reportedId={application?.applicant}
+                    
+                    isOpen={reportOpen}
+                    onSubmit={handleReportSubmit}
                     onClose={() => setReportOpen(false)}
                 />
             )}

@@ -86,28 +86,6 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                             </p>
                         </div>
 
-                        {user?.role === "candidate" && (
-                            <div className="relative">
-                                <button onClick={toggleMenu} className="p-1 rounded-full hover:bg-gray-200">
-                                    <MoreHorizontal size={18} />
-                                </button>
-
-                                {showMenu && (
-                                    <div className="absolute right-0 top-6 bg-white shadow-lg rounded-md border text-sm z-10">
-                                        <button
-                                            onClick={() => {
-                                                setShowMenu(false);
-
-                                                alert("Report clicked");
-                                            }}
-                                            className="px-4 py-2 hover:bg-gray-100 w-full text-left"
-                                        >
-                                            Report
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
                     </div>
                 </div>
 
