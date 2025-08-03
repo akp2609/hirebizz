@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EditProfileModal from '../../pages/common/EditProfileModal';
+import EditProfileModal from './EditProfileModal';
 import VerifyEmailModal from './VerifyEmailModal';
 
 const UserProfileCard = ({ user, resumeURL }) => {
@@ -75,7 +75,7 @@ const UserProfileCard = ({ user, resumeURL }) => {
                             onClick={() => setShowVerifyModal(true)}
                             className="text-yellow-600 underline text-sm"
                         >
-                            Not Verified (Click to verify)
+                            employer? (Click to verify)
                         </button>
                     )}
                 </div>

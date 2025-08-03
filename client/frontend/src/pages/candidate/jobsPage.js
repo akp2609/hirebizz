@@ -73,7 +73,7 @@ const JobsPage = () => {
                     console.error("Failed to fetch relevant jobs:", err);
                 });
         }
-    }, [user]);
+    }, [user?.resumeURL, user?.isPremiumUser]);
 
     const loadJobs = async (appliedFilters) => {
         try {

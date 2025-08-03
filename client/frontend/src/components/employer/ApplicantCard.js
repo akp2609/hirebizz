@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import ApplicantModal from './ApplicantModal';
 import { useNavigate } from "react-router-dom";
+import ReportModal from '../common/ReportModal';
 
-const ApplicantCard = ({ application,onStatusChange }) => {
+
+const ApplicantCard = ({ application, onStatusChange }) => {
     const [open, setOpen] = useState(false);
+    const [reportOpen, setReportOpen] = useState(false);
     const navigate = useNavigate();
 
     if (!application || typeof application !== 'object') {
@@ -21,17 +24,30 @@ const ApplicantCard = ({ application,onStatusChange }) => {
     const name = applicant.name ?? "Unknown";
     const email = applicant.email ?? "No email";
 
-     const handleMessageClick = () => {
+    const handleMessageClick = (e) => {
+        e.stopPropagation();
         const applicantId = application.applicant;
-        navigate(`/chat/${applicantId}`); 
+        navigate(`/chat/${applicantId}`);
     };
 
     return (
         <>
             <div
-                className="p-4 bg-white rounded-xl shadow hover:shadow-md cursor-pointer transition"
+                className="relative p-4 bg-white rounded-xl shadow hover:shadow-md cursor-pointer transition"
                 onClick={() => setOpen(true)}
             >
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setReportOpen(true);
+                    }}
+                    className="absolute top-2 right-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200 transition"
+                >
+                    Report
+                </button>
+
+
                 <h3 className="text-lg font-semibold">{name}</h3>
                 <p className="text-sm text-gray-600">{email}</p>
                 <p className="text-xs text-gray-500">
@@ -41,7 +57,7 @@ const ApplicantCard = ({ application,onStatusChange }) => {
 
                 <button
                     onClick={(e) => {
-                        e.stopPropagation(); 
+                        e.stopPropagation();
                         setOpen(true);
                     }}
                     className="mt-3 inline-block text-sm text-blue-600 hover:underline"
@@ -49,15 +65,16 @@ const ApplicantCard = ({ application,onStatusChange }) => {
                     View Details
                 </button>
 
-                {application.status === "accepted" && (
-                <button
-                    onClick={handleMessageClick}
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition ml-4 "
-                >
-                    Message Applicant
-                </button>
-            )}
+                {status === "accepted" && (
+                    <button
+                        onClick={handleMessageClick}
+                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition ml-4"
+                    >
+                        Message Applicant
+                    </button>
+                )}
             </div>
+
 
             {open && (
                 <ApplicantModal
@@ -66,6 +83,15 @@ const ApplicantCard = ({ application,onStatusChange }) => {
                     application={application}
                     onClose={() => setOpen(false)}
                     onStatusChange={onStatusChange}
+                />
+            )}
+
+
+            {reportOpen && (
+                <ReportModal
+                    type="applicant"
+                    reportedId={application?.applicant}
+                    onClose={() => setReportOpen(false)}
                 />
             )}
         </>

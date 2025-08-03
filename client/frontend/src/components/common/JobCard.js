@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import BookmarkIcon from './BookmarkIcon';
 import { saveJob, deleteUserSavedJob } from '../../services/userService';
+import { MoreHorizontal } from 'lucide-react';
+import { useUser } from '../../context/UserContext';
+import ReportModal from './ReportModal';
+import { EllipsisVerticalIcon } from '@heroicons/react/24/solid';
 
 const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
     const {
@@ -18,6 +22,9 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
 
     const [isSaved, setIsSaved] = useState(initiallySaved);
     const [loadingSave, setLoadingSave] = useState(false);
+    const { user } = useUser();
+    const [showMenu, setShowMenu] = useState(false);
+    const toggleMenu = () => setShowMenu(prev => !prev);
 
     useEffect(() => {
         setIsSaved(initiallySaved);
@@ -40,6 +47,12 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
         }
     };
 
+    const handleReportSubmit = async ({ reason, details }) => {
+        console.log("Submitting report:", { jobId: _id, reason, details });
+        // Call your backend API here
+        // await reportJob({ jobId: _id, reason, details });
+    };
+
     return (
         <div className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition duration-300 h-full flex flex-col justify-between">
 
@@ -53,12 +66,50 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                         {(company?.name || 'Unknown Company')} — {location}
                     </p>
                 </div>
-                <div className="text-right text-xs text-gray-500 min-w-max">
-                    <p>{new Date(createdAt).toLocaleDateString()}</p>
-                    <p className={isActive ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
-                        {isActive ? 'Active' : 'Closed'}
-                    </p>
+
+
+                <div className="relative text-right text-xs text-gray-500 min-w-max flex flex-col items-end">
+                    <div className="flex items-center gap-2">
+                        <div>
+                            <p>{new Date(createdAt).toLocaleDateString()}</p>
+                            {user?.role === 'candidate' && (
+                                <button
+                                    onClick={() => setShowReportModal(true)}
+                                    className="p-1 rounded hover:bg-gray-200"
+                                >
+                                    <EllipsisVerticalIcon className="h-5 w-5 text-gray-600" />
+                                </button>
+                            )}
+                            <p className={isActive ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
+                                {isActive ? 'Active' : 'Closed'}
+                            </p>
+                        </div>
+
+                        {user?.role === "candidate" && (
+                            <div className="relative">
+                                <button onClick={toggleMenu} className="p-1 rounded-full hover:bg-gray-200">
+                                    <MoreHorizontal size={18} />
+                                </button>
+
+                                {showMenu && (
+                                    <div className="absolute right-0 top-6 bg-white shadow-lg rounded-md border text-sm z-10">
+                                        <button
+                                            onClick={() => {
+                                                setShowMenu(false);
+
+                                                alert("Report clicked");
+                                            }}
+                                            className="px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                        >
+                                            Report
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
+
             </div>
 
 
@@ -84,7 +135,6 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                     ))}
             </div>
 
-            {/* Relevancy */}
             {relevancy && (
                 <p className="text-sm font-bold text-green-600 mb-2">
                     Relevancy: {Math.round(relevancy)}%
@@ -104,6 +154,12 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                     This Job has been closed.
                 </p>
             )}
+
+            <ReportModal
+                isOpen={showReportModal}
+                onClose={() => setShowReportModal(false)}
+                onSubmit={handleReportSubmit}
+            />
         </div>
     );
 };

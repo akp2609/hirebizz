@@ -11,7 +11,7 @@ const VerifyEmailModal = ({ isOpen, onClose, email, onSubmit }) => {
             <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
                 <h2 className="text-lg font-semibold mb-4 text-gray-800">Verify Your Email</h2>
                 <p className="text-sm text-gray-600 mb-4">
-                    Please confirm your email to begin verification.
+                    Please confirm your corporate email to begin verification.
                 </p>
                 <input
                     type="email"
