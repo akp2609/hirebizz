@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import EditProfileModal from '../../pages/common/EditProfileModal';
-import VerifyEmailModal from './VerifyEmailModal'; // 👈 create this separately or inline
+import VerifyEmailModal from '../../pages/common/VerifyEmailModal';
 
 const UserProfileCard = ({ user, resumeURL }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
