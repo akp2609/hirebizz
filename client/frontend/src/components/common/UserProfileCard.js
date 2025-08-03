@@ -6,7 +6,7 @@ const UserProfileCard = ({ user, resumeURL }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [verifyModalOpen, setVerifyModalOpen] = useState(false);
     const [profileUser, setProfileUser] = useState(user);
-
+    const [showVerifyModal, setShowVerifyModal] = useState(false);
     const handleProfileUpdate = () => {
         window.location.reload();
     };
@@ -71,13 +71,14 @@ const UserProfileCard = ({ user, resumeURL }) => {
                         <p className="text-green-600">Verified</p>
                     ) : (
                         <button
-                            className="text-yellow-600 underline"
-                            onClick={() => setVerifyModalOpen(true)}
+                            onClick={() => setShowVerifyModal(true)}
+                            className="text-yellow-600 underline text-sm"
                         >
-                            Not Verified (Click to Verify)
+                            Not Verified (Click to verify)
                         </button>
                     )}
                 </div>
+
             </div>
 
             <div className="mt-6 flex justify-end">
@@ -96,12 +97,13 @@ const UserProfileCard = ({ user, resumeURL }) => {
                 onProfileUpdated={handleProfileUpdate}
             />
 
-            
-            <VerifyEmailModal
-                isOpen={verifyModalOpen}
-                closeModal={() => setVerifyModalOpen(false)}
+            <VerificationModal
+                isOpen={showVerifyModal}
+                onClose={() => setShowVerifyModal(false)}
                 email={email}
+                onSubmit={handleVerify}
             />
+
         </div>
     );
 };
