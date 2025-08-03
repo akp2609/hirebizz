@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import EditProfileModal from '../../pages/common/EditProfileModal';
+import VerifyEmailModal from './VerifyEmailModal'; // 👈 create this separately or inline
 
 const UserProfileCard = ({ user, resumeURL }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [profileUser, setProfileUser] = useState(user); 
+    const [verifyModalOpen, setVerifyModalOpen] = useState(false);
+    const [profileUser, setProfileUser] = useState(user);
 
     const handleProfileUpdate = () => {
-        window.location.reload(); 
+        window.location.reload();
     };
 
     if (!user) return null;
@@ -23,7 +25,6 @@ const UserProfileCard = ({ user, resumeURL }) => {
 
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200">
-
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 <img
                     src={profilePicture}
@@ -66,9 +67,16 @@ const UserProfileCard = ({ user, resumeURL }) => {
 
                 <div>
                     <h3 className="text-sm font-semibold text-gray-500 mb-1">Verification</h3>
-                    <p className={isVerified ? "text-green-600" : "text-yellow-600"}>
-                        {isVerified ? "Verified" : "Not Verified"}
-                    </p>
+                    {isVerified ? (
+                        <p className="text-green-600">Verified</p>
+                    ) : (
+                        <button
+                            className="text-yellow-600 underline"
+                            onClick={() => setVerifyModalOpen(true)}
+                        >
+                            Not Verified (Click to Verify)
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -86,6 +94,13 @@ const UserProfileCard = ({ user, resumeURL }) => {
                 closeModal={() => setIsModalOpen(false)}
                 user={profileUser}
                 onProfileUpdated={handleProfileUpdate}
+            />
+
+            
+            <VerifyEmailModal
+                isOpen={verifyModalOpen}
+                closeModal={() => setVerifyModalOpen(false)}
+                email={email}
             />
         </div>
     );
