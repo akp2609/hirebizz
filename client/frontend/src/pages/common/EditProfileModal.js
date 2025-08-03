@@ -26,7 +26,7 @@ const EditProfileModal = ({ isOpen, closeModal, user, onProfileUpdated }) => {
         setLoading(true);
 
         try {
-           
+
             if (profilePicFile) {
                 const picData = new FormData();
                 picData.append('profilePic', profilePicFile);
@@ -35,7 +35,7 @@ const EditProfileModal = ({ isOpen, closeModal, user, onProfileUpdated }) => {
 
             await updateUserProfile(formData);
             toast.success('Profile updated successfully');
-            onProfileUpdated(); 
+            onProfileUpdated();
             closeModal();
         } catch (err) {
             console.error(err);

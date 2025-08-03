@@ -1,7 +1,9 @@
 import apiClient from "../lib/apiClient";
 
 export const uploadUserProfilePic = async (formData) => {
-    const res = await apiClient.post('/user/upload-profile-pic', formData);
+    const res = await apiClient.post('/user/upload-profile-pic', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
 }
 
