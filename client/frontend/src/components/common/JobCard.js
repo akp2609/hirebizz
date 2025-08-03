@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BookmarkIcon from './BookmarkIcon';
 import { saveJob, deleteUserSavedJob } from '../../services/userService';
-import { MoreHorizontal } from 'lucide-react';
 import { useUser } from '../../context/UserContext';
 import ReportModal from './ReportModal';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid';
