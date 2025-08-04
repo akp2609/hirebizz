@@ -78,7 +78,7 @@ const JobsPage = () => {
                 });
 
         }
-    }, [user]);
+    }, [user?.resumeURL, user?.isPremiumUser]);
 
     const loadJobs = async (appliedFilters) => {
         try {
