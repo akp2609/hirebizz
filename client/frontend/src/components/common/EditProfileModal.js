@@ -29,7 +29,7 @@ const EditProfileModal = ({ isOpen, closeModal, user, onProfileUpdated }) => {
 
             if (profilePicFile) {
                 const picData = new FormData();
-                picData.append('profilePic', profilePicFile);
+                picData.append('image', profilePicFile);
                 await uploadUserProfilePic(picData);
             }
 
