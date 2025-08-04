@@ -6,12 +6,15 @@ const isLink = (text) => {
 };
 
 const formatTimestamp = (timestamp) => {
+    if (!timestamp || isNaN(timestamp)) return "";
     const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return "";
     return new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
     }).format(date);
 };
+
 
 const ChatBubble = ({ message, isSender }) => {
     const link = isLink(message.message);
