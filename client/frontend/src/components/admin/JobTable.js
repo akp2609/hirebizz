@@ -41,7 +41,6 @@ const JobTable = ({
                 </thead>
                 <tbody>
                     {jobs.map((job, idx) => {
-                        const normalizedStatus = job.status === 'Pending'? 'pending' : job.status;
 
                         return (
                             <tr key={job._id} className="text-center">
@@ -68,28 +67,28 @@ const JobTable = ({
 
                                 <td className="p-2 border text-center">
                                     <span
-                                        className={`px-2 py-1 rounded text-sm font-semibold ${normalizedStatus === "approved"
-                                                ? "bg-green-100 text-green-800"
-                                                : normalizedStatus === "rejected"
-                                                    ? "bg-red-100 text-red-800"
-                                                    : "bg-yellow-100 text-yellow-800"
+                                        className={`px-2 py-1 rounded text-sm font-semibold ${job.status === "approved"
+                                            ? "bg-green-100 text-green-800"
+                                            : job.status === "rejected"
+                                                ? "bg-red-100 text-red-800"
+                                                : "bg-yellow-100 text-yellow-800"
                                             }`}
                                     >
-                                        {normalizedStatus}
+                                        {job.status}
                                     </span>
                                 </td>
 
                                 <td className="p-2 border text-center">
-                                    {normalizedStatus === "pending" ? (
+                                    {job.status === "pending" || "Pending" ? (
                                         <div className="flex gap-2 justify-center">
                                             <button
                                                 onClick={() => handleJobStatus(job._id, "approved")}
                                                 className="px-2 py-1 bg-green-500 text-white rounded text-sm disabled:opacity-50"
                                             >
-                                                 "Approve"
+                                                "Approve"
                                             </button>
                                             <button
-                                               
+
                                                 onClick={() => handleJobStatus(job._id, "rejected")}
                                                 className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
                                             >
@@ -106,7 +105,7 @@ const JobTable = ({
                 </tbody>
             </table>
 
-            
+
             <div className="flex justify-between items-center mt-4">
                 <button
                     className="px-3 py-1 border rounded disabled:opacity-50"
