@@ -24,10 +24,14 @@ export const getAllJobs = async(page=1,limit=10)=>{
     return res.data;
 };
 
-export const updateJobStatus = async(formData)=>{
-    const res = await apiClient.patch('/admin/update-job-status',formData);
+export const updateJobStatus = async(jobId,status)=>{
+    const res = await apiClient.patch('/admin/update-job-status',{
+        jobId,
+        status,
+    });
     return res.data;
 }
+   
 
 export const deleteUser = async(formData)=>{
     const res = await apiClient.delete('/admin/delete-user',{data:formData});

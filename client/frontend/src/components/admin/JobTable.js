@@ -15,7 +15,7 @@ const JobTable = ({
     const handleJobStatus = async (jobId, status) => {
         try {
             setLoadingJobId(jobId);
-            await updateJobStatus({ jobId, status });
+            await updateJobStatus( jobId, status );
             refreshJobs();
         } catch (err) {
             console.error("Failed to update job status:", err);
