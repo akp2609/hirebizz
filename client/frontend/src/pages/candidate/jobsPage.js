@@ -61,9 +61,12 @@ const JobsPage = () => {
     }, []);
 
     useEffect(() => {
+        console.log("user:", user);
+        console.log("user.resumeURL:", user?.resumeURL);
+        console.log("user.isPremiumUser:", user?.isPremiumUser);
         if (user && user.resumeURL && user.isPremiumUser) {
             setHasResume(true);
-            console.log('User has a resume:', user.resumeURL);
+
             getUserRelevantJobs()
                 .then(res => {
                     if (res?.success && Array.isArray(res.relevantJobs)) {
@@ -73,9 +76,9 @@ const JobsPage = () => {
                 .catch(err => {
                     console.error("Failed to fetch relevant jobs:", err);
                 });
-            console.log('Relevant jobs fetched:', relevantJobs);
+
         }
-    }, [user?.resumeURL, user?.isPremiumUser]);
+    }, [user]);
 
     const loadJobs = async (appliedFilters) => {
         try {
@@ -159,13 +162,13 @@ const JobsPage = () => {
             <h2 className="text-xl font-bold mb-3">All Jobs Posted</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {jobs.map(job => (
-                        <JobCard
-                            key={job._id}
-                            job={job}
-                            onClick={() => openJobDetails(job)}
-                            isSaved={savedJobIds.includes(job._id.toString())}
-                        />
-                    ))}
+                    <JobCard
+                        key={job._id}
+                        job={job}
+                        onClick={() => openJobDetails(job)}
+                        isSaved={savedJobIds.includes(job._id.toString())}
+                    />
+                ))}
             </div>
 
             <Pagination page={filters.page} totalPages={totalPages} onPageChange={handlePageChange} />
