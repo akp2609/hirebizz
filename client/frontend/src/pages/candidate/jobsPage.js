@@ -62,9 +62,9 @@ const JobsPage = () => {
 
     useEffect(() => {
         console.log("user:", user);
-        console.log("user.resumeURL:", user?.resumeURL);
+        console.log("user.resumeURL:", user?.objectName);
         console.log("user.isPremiumUser:", user?.isPremiumUser);
-        if (user && user.resumeURL && user.isPremiumUser) {
+        if (user && user.objectName && user.isPremiumUser) {
             setHasResume(true);
 
             getUserRelevantJobs()
@@ -78,7 +78,7 @@ const JobsPage = () => {
                 });
 
         }
-    }, [user?.resumeURL, user?.isPremiumUser]);
+    }, [user?.objectName, user?.isPremiumUser]);
 
     const loadJobs = async (appliedFilters) => {
         try {
