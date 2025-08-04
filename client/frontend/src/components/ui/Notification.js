@@ -4,6 +4,7 @@ import { getChatThreads } from "../../services/chatService";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setThreads } from "../../redux/slices/ChatSlice";
 import { useUnreadMessages } from "../../hooks/useUnreadMessages";
+import { Link } from "react-router-dom";
 
 const NotificationBell = ({ userId }) => {
     const dispatch = useDispatch();
@@ -34,10 +35,12 @@ const NotificationBell = ({ userId }) => {
 
     return (
         <div className="relative">
-            <BellIcon size={24} />
-            {hasUnread && (
-                <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
-            )}
+            <Link to={"/chats"}>
+                <BellIcon size={24} />
+                {hasUnread && (
+                    <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
+                )}
+            </Link>
         </div>
     );
 };
