@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
 import EditProfileModal from './EditProfileModal';
 import VerifyEmailModal from './VerifyEmailModal';
+import { verifyEmployer } from '../../services/userService';
+import { AuthContext } from '../../context/AuthContext';
+
+
 
 const UserProfileCard = ({ user, resumeURL }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [verifyModalOpen, setVerifyModalOpen] = useState(false);
     const [profileUser, setProfileUser] = useState(user);
     const [showVerifyModal, setShowVerifyModal] = useState(false);
+    const {logout} = useContext(AuthContext);
     const handleProfileUpdate = () => {
         window.location.reload();
     };
-    const handleVerify = () => {}
+    const handleVerify = async() => 
+    {
+        try{
+            await verifyEmployer()
+            alert("Verification request sent successfully. Please login again to see the changes."); 
+            logout();
+        }catch(err)
+        {
+            console.error("Verification failed:", err);
+            alert("Verification failed. Please try again later.");
+        }
+    }
 
     if (!user) return null;
 
