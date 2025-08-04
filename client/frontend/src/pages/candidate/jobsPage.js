@@ -64,7 +64,8 @@ const JobsPage = () => {
         console.log("user:", user);
         console.log("user.resumeURL:", user?.objectName);
         console.log("user.isPremiumUser:", user?.isPremiumUser);
-        if (user && user.objectName && user.isPremiumUser) {
+        if (user.objectName && user.isPremiumUser) {
+            console.log("Fetching relevant jobs");
             setHasResume(true);
 
             getUserRelevantJobs()
