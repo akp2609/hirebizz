@@ -41,7 +41,7 @@ const JobTable = ({
                 </thead>
                 <tbody>
                     {jobs.map((job, idx) => {
-                        const normalizedStatus =  job.status.toLowerCase();
+                        const normalizedStatus = job.status === 'Pending'? 'pending' : job.status;
 
                         return (
                             <tr key={job._id} className="text-center">
