@@ -34,7 +34,7 @@ export const getUserRelevantJobs = async () => {
 }
 
 export const verifyEmployer = async () => {
-    const res = await apiClient.patch('/user/verify-employer');
+    const res = await apiClient.post('/user/verify-employer');
     return res.data;
 }
 
