@@ -28,6 +28,8 @@ import ChatThreads from "./pages/common/ChatThreads";
 import ChatPage from "./pages/common/Chat";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DownloadApkPrompt from "./components/common/DownloadApkPrompt";
+
 
 
 
@@ -90,6 +92,8 @@ function App() {
             </div>
 
             <ToastContainer position="top-center" />
+
+            <DownloadApkPrompt/>
 
           </UserProvider>
 
