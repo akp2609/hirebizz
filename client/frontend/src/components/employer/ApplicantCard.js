@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ApplicantModal from './ApplicantModal';
 import { useNavigate } from "react-router-dom";
 import ReportModal from '../common/ReportModal';
+import { postReport } from '../../services/reportService';
 
 
 const ApplicantCard = ({ application, onStatusChange }) => {
@@ -26,14 +27,26 @@ const ApplicantCard = ({ application, onStatusChange }) => {
 
     const handleMessageClick = (e) => {
         e.stopPropagation();
-        const applicantId = application.applicant;
+        const applicantId = application.applicant._id;
         navigate(`/chat/${applicantId}`);
     };
 
-    const handleReportSubmit = ()=>{
-
+    const handleReportSubmit = async() => {
+        try {
+            const formData = {
+                targetId: application.applicant._id,
+                targetType: 'user',
+                reason,
+                details,
+            }
+            await postReport(formData);
+            setShowReportModal(false);
+            alert("✅ Report submitted successfully!");
+        } catch (err) {
+            console.error("❌ Report submission failed:", err.message);
+        }
     }
-    
+
     return (
         <>
             <div
@@ -93,7 +106,7 @@ const ApplicantCard = ({ application, onStatusChange }) => {
 
             {reportOpen && (
                 <ReportModal
-                    
+
                     isOpen={reportOpen}
                     onSubmit={handleReportSubmit}
                     onClose={() => setReportOpen(false)}

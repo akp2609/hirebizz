@@ -4,6 +4,7 @@ import { saveJob, deleteUserSavedJob } from '../../services/userService';
 import { useUser } from '../../context/UserContext';
 import ReportModal from './ReportModal';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/solid';
+import { postReport } from '../../services/reportService';
 
 const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
     const {
@@ -23,7 +24,7 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
     const [loadingSave, setLoadingSave] = useState(false);
     const { user } = useUser();
     const [showMenu, setShowMenu] = useState(false);
-    const [showReportModal,setShowReportModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const toggleMenu = () => setShowMenu(prev => !prev);
 
     useEffect(() => {
@@ -48,9 +49,20 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
     };
 
     const handleReportSubmit = async ({ reason, details }) => {
-        console.log("Submitting report:", { jobId: _id, reason, details });
-        // Call your backend API here
-        // await reportJob({ jobId: _id, reason, details });
+        try{
+            const formData = {
+                targetId: _id,
+                targetType: 'job',
+                reason,
+                details,
+            }
+            await postReport(formData);
+            setShowReportModal(false);
+            alert("✅ Report submitted successfully!");
+        }catch(err){
+            console.error("❌ Report submission failed:", err.message);
+        }
+        
     };
 
     return (
@@ -72,6 +84,12 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                     <div className="flex items-center gap-2">
                         <div>
                             <p>{new Date(createdAt).toLocaleDateString()}</p>
+
+                            <p className={isActive ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
+                                {isActive ? 'Active' : 'Closed'}
+                            </p>
+                        </div>
+                        <div>
                             {user?.role === 'candidate' && (
                                 <button
                                     onClick={() => setShowReportModal(true)}
@@ -80,9 +98,6 @@ const JobCard = ({ job, onClick, isSaved: initiallySaved = false }) => {
                                     <EllipsisVerticalIcon className="h-5 w-5 text-gray-600" />
                                 </button>
                             )}
-                            <p className={isActive ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
-                                {isActive ? 'Active' : 'Closed'}
-                            </p>
                         </div>
 
                     </div>
