@@ -41,7 +41,7 @@ const JobTable = ({
                 </thead>
                 <tbody>
                     {jobs.map((job, idx) => {
-                        const normalizedStatus = job.status ? job.status.toLowerCase() : "";
+                        const normalizedStatus =  job.status.toLowerCase();
 
                         return (
                             <tr key={job._id} className="text-center">
@@ -75,8 +75,7 @@ const JobTable = ({
                                                     : "bg-yellow-100 text-yellow-800"
                                             }`}
                                     >
-                                        {normalizedStatus.charAt(0).toUpperCase() +
-                                            normalizedStatus.slice(1)}
+                                        {normalizedStatus}
                                     </span>
                                 </td>
 
@@ -84,18 +83,17 @@ const JobTable = ({
                                     {normalizedStatus === "pending" ? (
                                         <div className="flex gap-2 justify-center">
                                             <button
-                                                disabled={loadingJobId === job._id}
                                                 onClick={() => handleJobStatus(job._id, "approved")}
                                                 className="px-2 py-1 bg-green-500 text-white rounded text-sm disabled:opacity-50"
                                             >
-                                                {loadingJobId === job._id ? "..." : "Approve"}
+                                                 "Approve"
                                             </button>
                                             <button
-                                                disabled={loadingJobId === job._id}
+                                               
                                                 onClick={() => handleJobStatus(job._id, "rejected")}
                                                 className="px-2 py-1 bg-red-500 text-white rounded text-sm disabled:opacity-50"
                                             >
-                                                {loadingJobId === job._id ? "..." : "Reject"}
+                                                "Reject"
                                             </button>
                                         </div>
                                     ) : (
