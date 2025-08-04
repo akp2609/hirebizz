@@ -61,6 +61,7 @@ const JobsPage = () => {
     }, []);
 
     useEffect(() => {
+        console.log("Resume relevancy triggered");
         if (user && user.resumeURL && user.isPremiumUser) {
             setHasResume(true);
             getUserRelevantJobs()
