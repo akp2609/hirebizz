@@ -31,7 +31,7 @@ const ApplicantCard = ({ application, onStatusChange }) => {
         navigate(`/chat/${applicantId}`);
     };
 
-    const handleReportSubmit = async() => {
+    const handleReportSubmit = async({ reason, details }) => {
         try {
             const formData = {
                 targetId: application.applicant._id,
@@ -40,7 +40,7 @@ const ApplicantCard = ({ application, onStatusChange }) => {
                 details,
             }
             await postReport(formData);
-            setShowReportModal(false);
+            setReportOpen(false);
             alert("✅ Report submitted successfully!");
         } catch (err) {
             console.error("❌ Report submission failed:", err.message);
