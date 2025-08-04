@@ -15,7 +15,7 @@ const JobTable = ({
     const handleJobStatus = async (jobId, status) => {
         try {
             setLoadingJobId(jobId);
-            await updateJobStatus( jobId, status );
+            await updateJobStatus(jobId, status);
             refreshJobs();
         } catch (err) {
             console.error("Failed to update job status:", err);
@@ -24,13 +24,6 @@ const JobTable = ({
             setLoadingJobId(null);
         }
     };
-
-
-    const jobsPerPage = 10;
-    const paginatedJobs = jobs.slice(
-        (currentPage - 1) * jobsPerPage,
-        currentPage * jobsPerPage
-    );
 
     return (
         <div className="overflow-x-auto">
@@ -47,21 +40,24 @@ const JobTable = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {paginatedJobs.map((job, idx) => {
-                        const normalizedStatus = (job.status ?? "pending").toLowerCase();
+                    {jobs.map((job, idx) => {
+                        const normalizedStatus = job.status ? job.status.toLowerCase() : "";
+
                         return (
                             <tr key={job._id} className="text-center">
-                                <td className="p-2 border">
-                                    {(currentPage - 1) * jobsPerPage + idx + 1}
-                                </td>
+                                <td className="p-2 border">{(currentPage - 1) * 10 + idx + 1}</td>
+
                                 <td
                                     className="p-2 border text-blue-600 hover:underline cursor-pointer"
                                     onClick={() => onTitleClick(job)}
                                 >
                                     {job.title}
                                 </td>
+
                                 <td className="p-2 border">{job.location}</td>
+
                                 <td className="p-2 border">{job.company?.name || "N/A"}</td>
+
                                 <td className="p-2 border">
                                     {job.company?.createdBy?.name}
                                     <br />
@@ -69,19 +65,21 @@ const JobTable = ({
                                         {job.company?.createdBy?.email}
                                     </span>
                                 </td>
+
                                 <td className="p-2 border text-center">
                                     <span
                                         className={`px-2 py-1 rounded text-sm font-semibold ${normalizedStatus === "approved"
-                                            ? "bg-green-100 text-green-800"
-                                            : normalizedStatus === "rejected"
-                                                ? "bg-red-100 text-red-800"
-                                                : "bg-yellow-100 text-yellow-800"
+                                                ? "bg-green-100 text-green-800"
+                                                : normalizedStatus === "rejected"
+                                                    ? "bg-red-100 text-red-800"
+                                                    : "bg-yellow-100 text-yellow-800"
                                             }`}
                                     >
                                         {normalizedStatus.charAt(0).toUpperCase() +
                                             normalizedStatus.slice(1)}
                                     </span>
                                 </td>
+
                                 <td className="p-2 border text-center">
                                     {normalizedStatus === "pending" ? (
                                         <div className="flex gap-2 justify-center">
@@ -110,7 +108,7 @@ const JobTable = ({
                 </tbody>
             </table>
 
-
+            
             <div className="flex justify-between items-center mt-4">
                 <button
                     className="px-3 py-1 border rounded disabled:opacity-50"
@@ -120,12 +118,12 @@ const JobTable = ({
                     Prev
                 </button>
                 <span>
-                    Page {currentPage} of {Math.ceil(jobs.length / jobsPerPage)}
+                    Page {currentPage} of {totalPages}
                 </span>
                 <button
                     className="px-3 py-1 border rounded disabled:opacity-50"
                     onClick={() => onPageChange(currentPage + 1)}
-                    disabled={currentPage >= Math.ceil(jobs.length / jobsPerPage)}
+                    disabled={currentPage >= totalPages}
                 >
                     Next
                 </button>
