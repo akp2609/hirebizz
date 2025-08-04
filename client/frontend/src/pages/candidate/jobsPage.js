@@ -61,9 +61,9 @@ const JobsPage = () => {
     }, []);
 
     useEffect(() => {
-        console.log("Resume relevancy triggered");
         if (user && user.resumeURL && user.isPremiumUser) {
             setHasResume(true);
+            console.log('User has a resume:', user.resumeURL);
             getUserRelevantJobs()
                 .then(res => {
                     if (res?.success && Array.isArray(res.relevantJobs)) {
@@ -73,6 +73,7 @@ const JobsPage = () => {
                 .catch(err => {
                     console.error("Failed to fetch relevant jobs:", err);
                 });
+            console.log('Relevant jobs fetched:', relevantJobs);
         }
     }, [user?.resumeURL, user?.isPremiumUser]);
 
