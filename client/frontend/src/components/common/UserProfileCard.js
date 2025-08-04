@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import EditProfileModal from './EditProfileModal';
 import VerifyEmailModal from './VerifyEmailModal';
 import { verifyEmployer } from '../../services/userService';
