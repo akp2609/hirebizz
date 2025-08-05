@@ -29,6 +29,8 @@ import ChatPage from "./pages/common/Chat";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DownloadApkPrompt from "./components/common/DownloadApkPrompt";
+import AndroidDownloadBanner from "./components/common/AndroidDownloadBanner";
+import DownloadAPKPage from "./pages/common/DownloadAPKPage";
 
 
 
@@ -87,6 +89,7 @@ function App() {
                   <Route path='/signup' element={<SignUp />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/github/callback" element={<GitHubCallback />} />
+                  <Route path="/download" element={<DownloadAPKPage />} />
                 </Route>
               </Routes>
             </div>
@@ -94,6 +97,7 @@ function App() {
             <ToastContainer position="top-center" />
 
             <DownloadApkPrompt/>
+            <AndroidDownloadBanner/>
 
           </UserProvider>
 

@@ -1,8 +1,10 @@
 
 import React, { useEffect, useState } from "react";
 import { isAndroidBrowser } from "../../utils/deviceUtils";
+import { useNavigate } from "react-router-dom";
 
-const APK_LINK = "https://your-public-link.com/app-release.apk"; 
+
+const APK_LINK = "https://storage.googleapis.com/hirebizz-mobile/hirebizz.apk";
 const DownloadApkPrompt = () => {
     const [shouldShow, setShouldShow] = useState(false);
 
@@ -13,11 +15,25 @@ const DownloadApkPrompt = () => {
         }
     }, []);
 
+    const navigate = useNavigate();
+
     const handleDownload = () => {
-        window.open(APK_LINK, "_blank");
+
+        const link = document.createElement("a");
+        link.href = APK_LINK;
+        link.setAttribute("download", "hirebizz.apk");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+        navigate("/download");
+
+
         setShouldShow(false);
         localStorage.setItem("apkPromptDismissed", "true");
     };
+
 
     const handleDismiss = () => {
         setShouldShow(false);
