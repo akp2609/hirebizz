@@ -4,6 +4,8 @@ import { AuthContext } from '../../context/AuthContext';
 import { onGoogleLogin } from '../../services/authService';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const GoogleLoginButton = () => {
     const { login } = useContext(AuthContext);
@@ -20,8 +22,12 @@ const GoogleLoginButton = () => {
             const { token: appToken, user } = await onGoogleLogin(token);
 
             localStorage.setItem('token', appToken);
-            login(user); 
-            await reloadUser(); 
+            login(user);
+            const firebaseToken = user.firebaseToken;
+            if (firebaseToken) {
+                await signInWithCustomToken(auth, firebaseToken);
+            }
+            await reloadUser();
             navigate('/');
 
         } catch (error) {

@@ -7,6 +7,8 @@ import { loginUser, requestResetUserPassword } from '../../services/authService'
 import { useAuth } from '../../context/AuthContext';
 import { useUser } from '../../context/UserContext';
 import LoadingPage from '../../components/ui/LoadingPage';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 
 
@@ -31,6 +33,10 @@ const Login = () => {
             const { token, user } = data;
             localStorage.setItem("token", token);
             login(user);
+            const firebaseToken = data.firebaseToken;
+            if (firebaseToken) {
+                await signInWithCustomToken(auth,firebaseToken);
+            }
             await reloadUser();
             navigate("/");
         } catch (err) {

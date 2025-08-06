@@ -4,6 +4,8 @@ import { useUser } from '../../context/UserContext';
 import { githubLogin, onGithubLogin } from '../../services/authService';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const GitHubCallback = () => {
     const navigate = useNavigate();
@@ -17,9 +19,13 @@ const GitHubCallback = () => {
         const exchangeCodeForToken = async () => {
             try {
                 const { token, user } = await onGithubLogin(code);
-                console.log("token",token)
+                console.log("token", token)
                 localStorage.setItem('token', token);
                 login(user);
+                const firebaseToken = user.firebaseToken;
+                if (firebaseToken) {
+                    await signInWithCustomToken(auth, firebaseToken);
+                }
                 await reloadUser();
 
                 navigate('/');
