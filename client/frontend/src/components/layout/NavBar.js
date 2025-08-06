@@ -16,7 +16,15 @@ function NavBar() {
 
     return (
         <nav className="bg-blue-700 text-white px-7 py-6 shadow-md flex justify-between relative z-50">
-            <h1 className='text-2xl font-bold'>HireBizz</h1>
+
+            <div className="flex items-center space-x-3">
+                <img
+                    src="https://res.cloudinary.com/dmcnrrfxo/image/upload/v1754482525/hirebizz-logo_pjmqr9.png"
+                    alt="HireBizz Logo"
+                    className="w-10 h-10 rounded-full object-cover"
+                />
+                <h1 className="text-2xl font-bold">HireBizz</h1>
+            </div>
             <div className='space-x-4 flex'>
                 {isAuthenticated && user ? (
                     <div

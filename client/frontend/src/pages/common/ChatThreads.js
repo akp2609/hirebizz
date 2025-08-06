@@ -58,36 +58,52 @@ const ChatThreads = () => {
                 return (
                     <div
                         key={thread.chatId}
-                        className="flex items-center p-4 bg-white rounded-2xl shadow hover:shadow-md transition cursor-pointer border hover:border-blue-500"
-                        onClick={() => navigate(`/messages/${participant._id}`, {
-                            state: {
-                                name: participant.name,
-                                profilePicture: participant.profilePicture,
-                            },
-                        })}
+                        className={`flex items-center p-4 bg-white rounded-2xl shadow transition cursor-pointer border
+      ${thread.latestMessage.seen === false
+                                ? 'border-[#4B9EFF] shadow-[0_0_0_3px_rgba(75,158,255,0.3)]'
+                                : 'hover:border-blue-500'}
+    `}
+                        onClick={() =>
+                            navigate(`/messages/${participant._id}`, {
+                                state: {
+                                    name: participant.name,
+                                    profilePicture: participant.profilePicture,
+                                },
+                            })
+                        }
                     >
-                        <img
-                            src={profilePicture}
-                            alt={name}
-                            className="w-12 h-12 rounded-full object-cover border"
-                            onError={(e) =>
-                            (e.target.src =
-                                "https://ui-avatars.com/api/?name=" + name)
-                            }
-                        />
+                        <div className="relative">
+
+                            {thread.latestMessage.seen === false && (
+                                <span className="absolute -left-2 top-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                            )}
+                            <img
+                                src={profilePicture}
+                                alt={name}
+                                className="w-12 h-12 rounded-full object-cover border"
+                                onError={(e) =>
+                                (e.target.src =
+                                    "https://ui-avatars.com/api/?name=" + name)
+                                }
+                            />
+                        </div>
+
                         <div className="flex-1 ml-4">
                             <div className="font-medium text-gray-800">{name}</div>
-                            <div className="text-sm text-gray-500 truncate max-w-[230px]">
+                            <div
+                                className={`text-sm truncate max-w-[230px] ${thread.latestMessage.seen === false
+                                    ? "text-gray-900 font-semibold"
+                                    : "text-gray-500"
+                                    }`}
+                            >
                                 {thread.latestMessage?.message || "No messages yet"}
                             </div>
                         </div>
-                        {thread.unseenCount > 0 && (
-                            <div className="ml-3 bg-blue-500 text-white rounded-full text-xs px-2 py-1 font-semibold">
-                                {thread.unseenCount}
-                            </div>
-                        )}
+
+                        
                     </div>
                 );
+
             })}
         </div>
     );

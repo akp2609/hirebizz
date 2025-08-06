@@ -24,29 +24,29 @@ const ChatPage = () => {
 
 
     useEffect(() => {
-    const chatRef = ref(db, chatId);
-    const unsubscribe = onValue(chatRef, async (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return setMessages([]);
+        const chatRef = ref(db, chatId);
+        const unsubscribe = onValue(chatRef, async (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return setMessages([]);
 
-        const parsed = Object.entries(data)
-            .map(([id, msg]) => {
-                const safeTimestamp = typeof msg.timestamp === "number" ? msg.timestamp : 0;
-                return { id, ...msg, timestamp: safeTimestamp };
-            })
-            .sort((a, b) => a.timestamp - b.timestamp);
+            const parsed = Object.entries(data)
+                .map(([id, msg]) => {
+                    const safeTimestamp = typeof msg.timestamp === "number" ? msg.timestamp : 0;
+                    return { id, ...msg, timestamp: safeTimestamp };
+                })
+                .sort((a, b) => a.timestamp - b.timestamp);
 
-        setMessages(parsed);
+            setMessages(parsed);
 
-        parsed.forEach(async (msg) => {
-            if (!msg.seen && msg.receiverId === user._id) {
-                await markMessageAsSeen({ chatId, messageId: msg.id });
-            }
+            parsed.forEach(async (msg) => {
+                if (!msg.seen && msg.receiverId === user._id) {
+                    await markMessageAsSeen({ chatId, messageId: msg.id });
+                }
+            });
         });
-    });
 
-    return () => unsubscribe();
-}, [chatId, user._id]);
+        return () => unsubscribe();
+    }, [chatId, user._id]);
 
 
     useEffect(() => {

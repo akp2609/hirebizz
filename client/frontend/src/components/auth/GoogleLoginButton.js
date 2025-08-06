@@ -6,6 +6,7 @@ import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
+import LoadingPage from '../ui/LoadingPage';
 
 const GoogleLoginButton = () => {
     const { login } = useContext(AuthContext);
@@ -32,14 +33,16 @@ const GoogleLoginButton = () => {
 
         } catch (error) {
             console.error('Google auth failed:', error.response?.data || error.message);
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     const handleGoogleLoginFailure = (error) => {
         console.error('Google login failed:', error);
     };
+
+    { loading && <LoadingPage message='signin you in...' /> }
 
     return (
         <div className="flex-1 min-w-[150px] flex justify-center bg-black rounded-2xl">

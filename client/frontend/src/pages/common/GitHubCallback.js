@@ -6,17 +6,20 @@ import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
+import LoadingPage from '../../components/ui/LoadingPage';
 
 const GitHubCallback = () => {
     const navigate = useNavigate();
     const { login } = useContext(AuthContext);
     const { reloadUser } = useUser();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
         const exchangeCodeForToken = async () => {
+            setLoading(true);
             try {
                 const { token, user } = await onGithubLogin(code);
                 console.log("token", token)
@@ -32,6 +35,8 @@ const GitHubCallback = () => {
             } catch (error) {
                 console.error('GitHub OAuth failed', error);
                 navigate('/login');
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -41,6 +46,8 @@ const GitHubCallback = () => {
             navigate('/login');
         }
     }, [login, reloadUser, navigate]);
+
+    { loading && <LoadingPage message='signin you in...' /> }
 
     return (
         <div className="text-center py-10 text-gray-600">
