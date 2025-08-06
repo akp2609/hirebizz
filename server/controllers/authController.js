@@ -4,6 +4,8 @@ import User from '../models/User.js';
 import { sendResetPasswordEmail, sendVerificationEmail } from '../utils/mailer.js';
 import { OAuth2Client } from 'google-auth-library';
 import axios from 'axios';
+import { generateFirebaseCustomToken } from '../utils/generateFirebaseToken.js';
+
 
 const createToken = (userId, expiresIn = '1h', jwt_secret = process.env.JWT_SECRET) => {
     return jwt.sign({ id: userId }, jwt_secret, { expiresIn });
@@ -70,8 +72,6 @@ export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        console.log(password);
-
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
@@ -89,11 +89,16 @@ export const loginUser = async (req, res) => {
         }
 
         const token = createToken(user._id, '7d');
+        const firebaseToken = await generateFirebaseCustomToken(user._id.toString(), {
+            email: user.email,
+            role: user.role
+        });
 
         const { password: pwd, ...userWithoutPassword } = user.toObject();
 
         res.status(200).json({
             user: userWithoutPassword,
+            firebaseToken,
             token
         });
     } catch (err) {
