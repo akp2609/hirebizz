@@ -35,7 +35,7 @@ const Login = () => {
             login(user);
             const firebaseToken = data.firebaseToken;
             if (firebaseToken) {
-                await signInWithCustomToken(auth,firebaseToken);
+                await signInWithCustomToken(auth, firebaseToken);
             }
             await reloadUser();
             navigate("/");
@@ -46,13 +46,26 @@ const Login = () => {
         }
     };
 
-    
+
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
-            {loading && <LoadingPage message='signin you in...'/>}
+            {loading && <LoadingPage message='signin you in...' />}
 
             <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-500 p-4 min-h-screen'>
+                
+                <img
+                    src="https://res.cloudinary.com/dmcnrrfxo/image/upload/v1754482525/hirebizz-logo_pjmqr9.png"
+                    alt="App Logo"
+                    className="absolute opacity-10 blur-sm object-contain w-3/4 max-w-lg lg:max-w-xl xl:max-w-2xl"
+                    style={{
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 0,
+                    }}
+                />
+
                 <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
                     <h1 className='font-robotoMono text-black font-semibold text-center mb-4 text-3xl'>Login</h1>
                     <form onSubmit={handleSubmit}>
@@ -85,7 +98,7 @@ const Login = () => {
 
                     <div className='mt-4 flex flex-col sm:flex-row gap-4 w-full justify-center'>
                         <GoogleLoginButton loading={loading} setLoading={setLoading} />
-                        <GithubLoginButton loading={loading} setLoading={setLoading}/>
+                        <GithubLoginButton loading={loading} setLoading={setLoading} />
                     </div>
 
                     <div className='text-center mt-4'>
