@@ -53,20 +53,21 @@ const Login = () => {
             {loading && <LoadingPage message='signin you in...' />}
 
             <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-500 p-4 min-h-screen'>
-                
-                <img
-                    src="https://res.cloudinary.com/dmcnrrfxo/image/upload/v1754482525/hirebizz-logo_pjmqr9.png"
-                    alt="App Logo"
-                    className="absolute opacity-10 blur-sm object-contain w-3/4 max-w-lg lg:max-w-xl xl:max-w-2xl"
-                    style={{
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        zIndex: 0,
-                    }}
-                />
+
+
 
                 <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>
+                    <img
+                        src="https://res.cloudinary.com/dmcnrrfxo/image/upload/v1754482525/hirebizz-logo_pjmqr9.png"
+                        alt="App Logo"
+                        className="absolute opacity-10 blur-sm object-contain w-3/4 max-w-lg lg:max-w-xl xl:max-w-2xl"
+                        style={{
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 0,
+                        }}
+                    />
                     <h1 className='font-robotoMono text-black font-semibold text-center mb-4 text-3xl'>Login</h1>
                     <form onSubmit={handleSubmit}>
                         <input
