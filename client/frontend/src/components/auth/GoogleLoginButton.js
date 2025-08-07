@@ -42,10 +42,11 @@ const GoogleLoginButton = () => {
         console.error('Google login failed:', error);
     };
 
-    { loading && <LoadingPage message='signin you in...' /> }
+    
 
     return (
         <div className="flex-1 min-w-[150px] flex justify-center bg-black rounded-2xl">
+            { loading && <LoadingPage message='signin you in...' /> }
             <GoogleLogin
                 onSuccess={handleGoogleLoginSuccess}
                 onError={handleGoogleLoginFailure}

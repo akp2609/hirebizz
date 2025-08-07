@@ -47,10 +47,11 @@ const GitHubCallback = () => {
         }
     }, [login, reloadUser, navigate]);
 
-    { loading && <LoadingPage message='signin you in...' /> }
+    
 
     return (
         <div className="text-center py-10 text-gray-600">
+            { loading && <LoadingPage message='signin you in...' /> }
             Logging you in via GitHub...
         </div>
     );

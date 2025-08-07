@@ -46,10 +46,11 @@ const Login = () => {
         }
     };
 
-    {loading && <LoadingPage message='signin you in...'/>}
+    
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full'>
+            {loading && <LoadingPage message='signin you in...'/>}
 
             <div className='w-full lg:w-1/2 flex items-center justify-center bg-blue-500 p-4 min-h-screen'>
                 <div className='bg-white/80 p-6 sm:p-8 md:p-10 backdrop-blur-md rounded-lg shadow-md w-full max-w-md'>

@@ -40,7 +40,7 @@ const ChatPage = () => {
 
             parsed.forEach(async (msg) => {
                 if (!msg.seen && msg.receiverId === user._id) {
-                    await markMessageAsSeen({ chatId, messageId: msg.id });
+                    await markMessageAsSeen({ chatId, messageKey: msg.id });
                 }
             });
         });
