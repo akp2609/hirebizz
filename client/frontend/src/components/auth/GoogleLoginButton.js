@@ -8,11 +8,11 @@ import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
 import LoadingPage from '../ui/LoadingPage';
 
-const GoogleLoginButton = () => {
+const GoogleLoginButton = ({loading,setLoading}) => {
     const { login } = useContext(AuthContext);
     const { reloadUser } = useUser();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    //const [loading, setLoading] = useState(false);
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
@@ -46,7 +46,7 @@ const GoogleLoginButton = () => {
 
     return (
         <div className="flex-1 min-w-[150px] flex justify-center bg-black rounded-2xl">
-            { loading && <LoadingPage message='signin you in...' /> }
+            {/* { loading && <LoadingPage message='signin you in...' /> } */}
             <GoogleLogin
                 onSuccess={handleGoogleLoginSuccess}
                 onError={handleGoogleLoginFailure}

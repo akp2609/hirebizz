@@ -59,7 +59,7 @@ const ChatThreads = () => {
                     <div
                         key={thread.chatId}
                         className={`flex items-center p-4 bg-white rounded-2xl shadow transition cursor-pointer border
-      ${thread.latestMessage.seen === false
+      ${thread.latestMessage.seen === false && thread.latestMessage.receiverId === user._id
                                 ? 'border-[#4B9EFF] shadow-[0_0_0_3px_rgba(75,158,255,0.3)]'
                                 : 'hover:border-blue-500'}
     `}
@@ -74,7 +74,7 @@ const ChatThreads = () => {
                     >
                         <div className="relative">
 
-                            {thread.latestMessage.seen === false && (
+                            {thread.latestMessage.seen === false && thread.latestMessage.receiverId === user._id && (
                                 <span className="absolute -left-2 top-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                             )}
                             <img

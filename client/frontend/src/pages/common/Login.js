@@ -84,8 +84,8 @@ const Login = () => {
 
 
                     <div className='mt-4 flex flex-col sm:flex-row gap-4 w-full justify-center'>
-                        <GoogleLoginButton />
-                        <GithubLoginButton />
+                        <GoogleLoginButton loading={loading} setLoading={setLoading} />
+                        <GithubLoginButton loading={loading} setLoading={setLoading}/>
                     </div>
 
                     <div className='text-center mt-4'>

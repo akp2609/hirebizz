@@ -1,7 +1,8 @@
 import React from 'react';
 
-const GithubLoginButton = () => {
+const GithubLoginButton = ({loading,setLoading}) => {
   const handleGitHubLogin = () => {
+    setLoading(true);
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
     
     const redirectUri = `${window.location.origin}/github/callback`;
@@ -9,6 +10,7 @@ const GithubLoginButton = () => {
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
 
     window.location.href = githubAuthUrl;
+    setLoading(false);
   };
 
   return (
