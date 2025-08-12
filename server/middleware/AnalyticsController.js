@@ -165,22 +165,25 @@ export const analyticsRecordFailedLogin = async (userId, ipaddress, reason) => {
 
 export const recordHourlyActiveUser = async (userId) => {
     const now = dayjs().utc();
-    const hourkey = `active_users:${now.format('YYYY-MM-DD:HH')}`;
+    const hourKey = `active_users:${now.format("YYYY-MM-DD:HH")}`;
 
-    await redisClient.sAdd(hourkey, userId.toString());
+    await redisClient.sAdd(hourKey, userId.toString());
+    await redisClient.expire(hourKey, 48 * 60 * 60);
+};
 
-    await redisClient.expire(hourkey, 48 * 60 * 60);
-}
-
-export const getHourlyActiveCount = async (req,res) => {
+export const getHourlyActiveCount = async (req, res) => {
     const roles = req.user.roles || [];
-    if (!roles.includes('Hourly.Read')) {
-        return res.status(403).send({ message: 'Insufficient permission' });
+    if (!roles.includes("Hourly.Read")) {
+        return res.status(403).send({ message: "Insufficient permission" });
     }
+
     const dateTime = req.query.dateTime ? new Date(req.query.dateTime) : new Date();
     if (isNaN(dateTime.getTime())) {
-        return res.status(400).send({ message: 'Invalid dateTime parameter' });
+        return res.status(400).send({ message: "Invalid dateTime parameter" });
     }
+
     const hourKey = `active_users:${dayjs(dateTime).utc().format("YYYY-MM-DD:HH")}`;
-    return await redisClient.sCard(hourKey);
+    const count = await redisClient.sCard(hourKey);
+
+    return res.json({ count });
 };
