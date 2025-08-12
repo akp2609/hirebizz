@@ -11,7 +11,31 @@ const jobSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     createdAt: { type: Date, default: Date.now },
-    status:{type:String, default: "Pending"}
+    status: { type: String, default: "Pending" },
+
+    views: { type: Number, default: 0 },
+    downloads: { type: Number, default: 0 },
+
+    weeklyStats: {                                     
+        type: [
+            {
+                weekStart: Date,
+                views: { type: Number, default: 0 },
+                downloads: { type: Number, default: 0 }
+            }
+        ],
+        default: []
+    },
+    monthlyStats: {                                    
+        type: [
+            {
+                month: String, 
+                views: { type: Number, default: 0 },
+                downloads: { type: Number, default: 0 }
+            }
+        ],
+        default: []
+    }
 });
 
 export default mongoose.model("Job", jobSchema);

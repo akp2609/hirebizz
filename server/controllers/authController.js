@@ -5,6 +5,7 @@ import { sendResetPasswordEmail, sendVerificationEmail } from '../utils/mailer.j
 import { OAuth2Client } from 'google-auth-library';
 import axios from 'axios';
 import { generateFirebaseCustomToken } from '../utils/generateFirebaseToken.js';
+import { analyticsRecordFailedLogin, recordHourlyActiveUser } from '../middleware/AnalyticsController.js';
 
 
 const createToken = (userId, expiresIn = '1h', jwt_secret = process.env.JWT_SECRET) => {
@@ -80,11 +81,13 @@ export const loginUser = async (req, res) => {
         if (!user.isEmailVerified) {
             const token = createToken(user._id);
             await sendVerificationEmail(email, token);
+            await analyticsRecordFailedLogin(user._id, req.ip,reason = 'Email not verified');
             return res.status(400).json({ message: 'email not verified. Email verification link resent to your email please verify and login' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            await analyticsRecordFailedLogin(user._id, req.ip,reason = 'Incorrect password');
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
@@ -95,6 +98,8 @@ export const loginUser = async (req, res) => {
         });
 
         const { password: pwd, ...userWithoutPassword } = user.toObject();
+
+        await recordHourlyActiveUser(user._id);
 
         res.status(200).json({
             user: userWithoutPassword,

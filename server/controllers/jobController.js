@@ -181,9 +181,9 @@ export const getJobById = async (req, res) => {
     }
 }
 
-export const closeJob = async (req,res) => {
+export const closeJob = async (req, res) => {
     try {
-        const {jobId} = req.params;
+        const { jobId } = req.params;
         const job = await Job.findByIdAndUpdate({ _id: jobId }, { isActive: false }, { new: true });
 
         if (!job) {
@@ -197,24 +197,81 @@ export const closeJob = async (req,res) => {
     }
 }
 
-export const getEmployerJob = async(req,res)=>{
-    try{
+export const getEmployerJob = async (req, res) => {
+    try {
         const user = await User.findById(req.user._id);
-        if(!user){
-            return res.status(404).json({message: 'Useer not found'});
+        if (!user) {
+            return res.status(404).json({ message: 'Useer not found' });
         }
-        const jobs = await Job.find({createdBy:req.user._id}).select('-embeddings').populate('company');
+        const jobs = await Job.find({ createdBy: req.user._id }).select('-embeddings').populate('company');
 
-        if(!jobs){
-            return res.status(401).json({message: 'No jobs by this user'});
+        if (!jobs) {
+            return res.status(401).json({ message: 'No jobs by this user' });
         }
 
         return res.status(200).json({
             success: true,
             jobs
         });
-    }catch(err){
-        console.log('Failed to get employers job postings',err);
-        return res.status(500).json({message: 'Failed to get employers jobs postings',error:err.message});
+    } catch (err) {
+        console.log('Failed to get employers job postings', err);
+        return res.status(500).json({ message: 'Failed to get employers jobs postings', error: err.message });
+    }
+}
+
+export const updateJobStats = async (req, res) => {
+    try {
+        const { jobId } = req.params;
+        const { action } = req.body;
+
+        if (!['view', 'download'].includes(action)) {
+            return res.status(400).json({ message: 'Invalid action' });
+        }
+
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        if (action === 'view') {
+            job.views += 1;
+        } else if (action === 'download') {
+            job.downloads += 1;
+        }
+
+        const thisWeekStart = startifISOWeek(new Date());
+        let weeklyEntry = job.weeklyStats.find(stat => stat.weekStart.toISOString() === thisWeekStart.toISOString());
+
+        if (!weeklyEntry) {
+            weeklyEntry = { weekStart: thisWeekStart, views: 0, downloads: 0 };
+            job.weeklyStats.push(weeklyEntry);
+        }
+
+        if (action === 'view') {
+            weeklyEntry.views += 1;
+        } else if (action === 'download') {
+            weeklyEntry.downloads += 1;
+        }
+
+        const thisMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        let monthlyEntry = job.monthlyStats.find(m => m.month === thisMonth);
+
+        if (!monthlyEntry) {
+            monthlyEntry = { month: thisMonth, views: 0, downloads: 0 };
+            job.monthlyStats.push(monthlyEntry);
+        }       
+
+        if (action === 'view') {
+            monthlyEntry.views += 1;
+        }  else if (action === 'download') {
+            monthlyEntry.downloads += 1;
+        }
+
+        await job.save();
+
+        return res.status(200).json({ success: true, message: 'Job stats updated successfully' });
+    }catch (err) {
+        console.error('Failed to update job stats', err);
+        return res.status(500).json({ message: 'Failed to update job stats', error: err.message });
     }
 }
