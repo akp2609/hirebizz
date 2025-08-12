@@ -168,8 +168,8 @@ export const recordHourlyActiveUser = async (userId) => {
     const hourKey = `active_users:${now.format("YYYY-MM-DD:HH")}`;
 
     await redisClient.sAdd(hourKey, userId.toString());
-    await redisClient.expire(hourKey, 48 * 60 * 60);
-};
+    await redisClient.expire(hourKey, 48 * 60 * 60); 
+}
 
 export const getHourlyActiveCount = async (req, res) => {
     const roles = req.user.roles || [];
