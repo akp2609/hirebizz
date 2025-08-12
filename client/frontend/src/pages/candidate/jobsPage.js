@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import JobCard from '../../components/common/JobCard';
 import JobFilters from '../../components/common/JobFilters';
 import Pagination from '../../components/common/Pagination';
-import { fetchJobs } from '../../services/jobService';
+import { fetchJobs, updateJobStats } from '../../services/jobService';
 import { getUserRelevantJobs, getUserSavedJobs } from '../../services/userService';
 import { useUser } from '../../context/UserContext';
 import JobDetailsModal from '../../components/candidate/JobDetailsModal';
@@ -110,8 +110,16 @@ const JobsPage = () => {
         updateFilters(updated);
     };
 
+    const jobStatsUpdate = async (jobId) => {
+        if (jobId && user) {
+            const res = await updateJobStats(jobId, "view");
+            console.log("Job stats updated:", res);
+        }
+    }
+
+
     const openJobDetails = (job) => {
-        console.log('Opening job modal with:', job._id);
+        jobStatsUpdate(job._id);
         setSelectedJob(job);
         setShowDetailsModal(true);
     };
