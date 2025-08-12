@@ -9,6 +9,7 @@ import { useUser } from '../../context/UserContext';
 import LoadingPage from '../../components/ui/LoadingPage';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { analyticsRecordLogin } from '../../services/analyticsService';
 
 
 

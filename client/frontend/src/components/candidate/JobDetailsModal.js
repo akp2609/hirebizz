@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ModalWrapper from "../common/ModalWrapper";
 import ApplyJobModal from "./ApplyJobModal";
 import { useUser } from "../../context/UserContext";
+import { updateJobStats } from "../../services/jobService";
 
 const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
     const [applyOpen, setApplyOpen] = useState(false);
@@ -17,9 +18,7 @@ const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
     }
 
     useEffect(() => {
-        if (isOpen) {
-            jobStatsUpdate();
-        }
+        jobStatsUpdate();
     }, [])
 
     return (
