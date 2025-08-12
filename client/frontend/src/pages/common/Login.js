@@ -31,6 +31,13 @@ const Login = () => {
             setLoading(true);
             const data = await loginUser({ email, password });
             const { token, user } = data;
+            if (!token) {
+                throw new Error('No token received');
+            }
+            if (!user) {
+                throw new Error('No user data received');
+            }
+            await analyticsRecordLogin('web', user._id);
             localStorage.setItem("token", token);
             login(user);
             const firebaseToken = data.firebaseToken;
@@ -60,7 +67,7 @@ const Login = () => {
                     <img
                         src="https://res.cloudinary.com/dmcnrrfxo/image/upload/v1754482525/hirebizz-logo_pjmqr9.png"
                         alt="App Logo"
-                        className="absolute opacity-10 blur-sm object-contain w-3/4 max-w-lg lg:max-w-xl xl:max-w-2xl"
+                        className="absolute opacity-10 blur-sm object-contain w-3/4 max-w-lg lg:max-w-xl xl:max-w-2xl pointer-events-none"
                         style={{
                             top: '50%',
                             left: '50%',
@@ -68,6 +75,7 @@ const Login = () => {
                             zIndex: 0,
                         }}
                     />
+
                     <h1 className='font-robotoMono text-black font-semibold text-center mb-4 text-3xl'>Login</h1>
                     <form onSubmit={handleSubmit}>
                         <input

@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalWrapper from "../common/ModalWrapper";
 import ApplyJobModal from "./ApplyJobModal";
 import { useUser } from "../../context/UserContext";
 
 const JobDetailsModal = ({ job, isOpen, onClose, isAdminView = false }) => {
     const [applyOpen, setApplyOpen] = useState(false);
-    const {user} = useUser()
+    const { user } = useUser()
 
     if (!isOpen || !job) return null;
+
+    const jobStatsUpdate = async () => {
+        if (job._id && user) {
+            const res = await updateJobStats(job._id, "view");
+            console.log("Job stats updated:", res);
+        }
+    }
+
+    useEffect(() => {
+        if (isOpen) {
+            jobStatsUpdate();
+        }
+    }, [])
 
     return (
         <>

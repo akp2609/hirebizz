@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { isAndroidBrowser } from "../../utils/deviceUtils";
 import { Download } from "lucide-react";
+import { analyticsRecordDownload } from "../../services/analyticsService";
 
 const APK_LINK = "https://storage.googleapis.com/hirebizz-mobile/hirebizz.apk";
 
@@ -15,6 +16,7 @@ const AndroidDownloadBanner = () => {
     }, []);
 
     const handleDownload = () => {
+        { async () => { analyticsRecordDownload() } }
         window.open(APK_LINK, "_blank");
     };
 

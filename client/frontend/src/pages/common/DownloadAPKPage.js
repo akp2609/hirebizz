@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaGithub } from 'react-icons/fa';
+import { analyticsRecordDownload } from '../../services/analyticsService';
 
 const DownloadAPKPage = () => {
     return (
@@ -13,6 +14,7 @@ const DownloadAPKPage = () => {
                 <a
                     href="https://storage.googleapis.com/hirebizz-chat.firebasestorage.app/hirebizz.apk"
                     className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all mb-8"
+                    onClick={()=>async()=>{analyticsRecordDownload()}}
                     download
                 >
                     ⬇️ Download APK (76 MB)

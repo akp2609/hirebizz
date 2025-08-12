@@ -1,4 +1,4 @@
-import AnalyticsData from "../models/AnalyticsData"
+import AnalyticsData from "../models/AnalyticsData.js";
 import dayjs from "dayjs";
 import redisClient from "../utils/redis";
 

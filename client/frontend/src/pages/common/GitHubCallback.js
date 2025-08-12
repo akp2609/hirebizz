@@ -7,6 +7,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
 import LoadingPage from '../../components/ui/LoadingPage';
+import { analyticsRecordLogin } from '../../services/analyticsService';
 
 const GitHubCallback = () => {
     const navigate = useNavigate();
@@ -22,6 +23,13 @@ const GitHubCallback = () => {
             setLoading(true);
             try {
                 const { token, user } = await onGithubLogin(code);
+                if (!token) {
+                    throw new Error('No token received');
+                }   
+                if (!user) {
+                    throw new Error('No user data received');
+                }
+                await analyticsRecordLogin('web', user._id);
                 console.log("token", token)
                 localStorage.setItem('token', token);
                 login(user);

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getUserProfile } from '../services/userService';
+import { analyticsRecordLogout } from '../services/analyticsService';
 
 export const AuthContext = createContext();
 
@@ -22,11 +23,12 @@ const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
     };
 
-    const logout = () => {
+    const logout = async() => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
         setIsAuthenticated(false);
+        await analyticsRecordLogout();
     };
 
     useEffect(() => {

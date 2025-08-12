@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
 import LoadingPage from '../ui/LoadingPage';
+import { analyticsRecordLogin } from '../../services/analyticsService';
 
 const GoogleLoginButton = ({loading,setLoading}) => {
     const { login } = useContext(AuthContext);
@@ -21,6 +22,16 @@ const GoogleLoginButton = ({loading,setLoading}) => {
             setLoading(true);
 
             const { token: appToken, user } = await onGoogleLogin(token);
+
+            if (!appToken) {
+                throw new Error('No token received');
+            }   
+
+            if (!user) {
+                throw new Error('No user data received');
+            }
+
+            await analyticsRecordLogin('web', user._id);
 
             localStorage.setItem('token', appToken);
             login(user);
