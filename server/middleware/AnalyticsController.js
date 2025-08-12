@@ -1,6 +1,6 @@
 import AnalyticsData from "../models/AnalyticsData.js";
 import dayjs from "dayjs";
-import redisClient from "../utils/redis";
+import redisClient from "../utils/redis.js";
 
 export const analyticsDataUpdateDownloads = async (req, res) => {
     try {
