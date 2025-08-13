@@ -22,8 +22,7 @@ export async function initRedis() {
         password,
         socket: {
             host,
-            port,
-            tls: true
+            port
         }
     });
 
