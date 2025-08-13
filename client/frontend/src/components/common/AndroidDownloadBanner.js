@@ -17,7 +17,7 @@ const AndroidDownloadBanner = () => {
 
 
     const handleDownload = async () => {
-        analyticsRecordDownload()
+        await analyticsRecordDownload()
         window.open(APK_LINK, "_blank");
     };
 

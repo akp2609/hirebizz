@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { isAndroidBrowser } from "../../utils/deviceUtils";
 import { useNavigate } from "react-router-dom";
+import { analyticsRecordDownload } from "../../services/analyticsService";
+
 
 
 const APK_LINK = "https://storage.googleapis.com/hirebizz-mobile/hirebizz.apk";
@@ -17,7 +19,7 @@ const DownloadApkPrompt = () => {
 
     const navigate = useNavigate();
 
-    const handleDownload = () => {
+    const handleDownload = async() => {
 
         const link = document.createElement("a");
         link.href = APK_LINK;
@@ -26,7 +28,7 @@ const DownloadApkPrompt = () => {
         link.click();
         document.body.removeChild(link);
 
-
+        await analyticsRecordDownload();
         navigate("/download");
 
 
