@@ -2,8 +2,8 @@ import AnalyticsData from "../models/AnalyticsData.js";
 import dayjs from "dayjs";
 import {getRedisClient} from "../utils/redis.js";
 import utc from "dayjs/plugin/utc.js"; 
-import isSame from "dayjs/plugin/isSame";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter"; 
+import isSame from "dayjs/plugin/isSame.js";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js"; 
 
 dayjs.extend(utc);
 dayjs.extend(isSame);
