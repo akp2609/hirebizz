@@ -81,13 +81,13 @@ export const loginUser = async (req, res) => {
         if (!user.isEmailVerified) {
             const token = createToken(user._id);
             await sendVerificationEmail(email, token);
-            await analyticsRecordFailedLogin(user._id, req.ip,reason = 'Email not verified');
+            await analyticsRecordFailedLogin(user._id, req.ip,'Email not verified');
             return res.status(400).json({ message: 'email not verified. Email verification link resent to your email please verify and login' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            await analyticsRecordFailedLogin(user._id, req.ip,reason = 'Incorrect password');
+            await analyticsRecordFailedLogin(user._id, req.ip,'Incorrect password');
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 

@@ -24,11 +24,11 @@ const AuthProvider = ({ children }) => {
     };
 
     const logout = async() => {
+        await analyticsRecordLogout();
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
         setIsAuthenticated(false);
-        await analyticsRecordLogout();
     };
 
     useEffect(() => {
