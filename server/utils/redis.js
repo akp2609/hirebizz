@@ -8,6 +8,8 @@ export async function initRedis() {
     const port = Number(process.env.REDIS_PORT);
     const password = process.env.REDIS_PASSWORD;
 
+    console.log("redis host: ",host)
+
     if (!host || !port || !password) {
         throw new Error(`Missing Redis environment variables:
             REDIS_HOST=${host}
