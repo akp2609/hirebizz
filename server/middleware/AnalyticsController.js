@@ -1,13 +1,9 @@
 import AnalyticsData from "../models/AnalyticsData.js";
 import dayjs from "dayjs";
-import {getRedisClient} from "../utils/redis.js";
-import utc from "dayjs/plugin/utc.js"; 
-import isSame from "dayjs/plugin/isSame.js";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js"; 
+import { getRedisClient } from "../utils/redis.js";
+import utc from "dayjs/plugin/utc.js";
 
 dayjs.extend(utc);
-dayjs.extend(isSame);
-dayjs.extend(isSameOrAfter);
 
 export const analyticsDataUpdateDownloads = async (req, res) => {
     try {
@@ -88,7 +84,10 @@ export const analyticsRecordLogin = async (req, res) => {
 
 
         let dailyStat = analytics.dailyStats.find(
-            d => dayjs(d.date).isSame(today, "day")
+            d => {
+                const dDate = dayjs(d.date).startOf("day").toDate().getTime();
+                return dDate === today.getTime();
+            }
         );
         if (!dailyStat) {
             analytics.dailyStats.push({ date: today, activeUsers: 1, downloads: 0 });
@@ -176,7 +175,7 @@ export const recordHourlyActiveUser = async (userId) => {
     const hourKey = `active_users:${now.format("YYYY-MM-DD:HH")}`;
 
     await redisClient.sAdd(hourKey, userId.toString());
-    await redisClient.expire(hourKey, 48 * 60 * 60); 
+    await redisClient.expire(hourKey, 48 * 60 * 60);
 }
 
 export const getHourlyActiveCount = async (req, res) => {
