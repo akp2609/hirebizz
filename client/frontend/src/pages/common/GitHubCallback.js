@@ -29,10 +29,11 @@ const GitHubCallback = () => {
                 if (!user) {
                     throw new Error('No user data received');
                 }
-                await analyticsRecordLogin('web', user._id);
+                
                 console.log("token", token)
                 localStorage.setItem('token', token);
                 login(user);
+                await analyticsRecordLogin('web', user._id);
                 const firebaseToken = user.firebaseToken;
                 if (firebaseToken) {
                     await signInWithCustomToken(auth, firebaseToken);

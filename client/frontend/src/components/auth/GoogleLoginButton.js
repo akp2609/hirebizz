@@ -13,7 +13,7 @@ const GoogleLoginButton = ({loading,setLoading}) => {
     const { login } = useContext(AuthContext);
     const { reloadUser } = useUser();
     const navigate = useNavigate();
-    //const [loading, setLoading] = useState(false);
+   
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
@@ -31,10 +31,11 @@ const GoogleLoginButton = ({loading,setLoading}) => {
                 throw new Error('No user data received');
             }
 
-            await analyticsRecordLogin('web', user._id);
+            
 
             localStorage.setItem('token', appToken);
             login(user);
+            await analyticsRecordLogin('web', user._id);
             const firebaseToken = user.firebaseToken;
             if (firebaseToken) {
                 await signInWithCustomToken(auth, firebaseToken);

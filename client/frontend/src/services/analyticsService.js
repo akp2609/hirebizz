@@ -17,7 +17,7 @@ export const analyticsRecordLogin = async (platform, userId) => {
 export const analyticsRecordLogout = async () => {
     const token = localStorage.getItem("token");
     const res = await apiClient.post('/analytics/record-logout',
-        {},
+          {},
         { headers: { Authorization: `Bearer ${token}` } }
     );
     return res.data;
