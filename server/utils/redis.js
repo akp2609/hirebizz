@@ -1,21 +1,39 @@
+// redisClient.js
 import { createClient } from 'redis';
 
-const redisClient = createClient({
+let redisClient;
 
-    username: 'default',
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
-        tls: true
+export async function initRedis() {
+    const host = process.env.REDIS_HOST;
+    const port = Number(process.env.REDIS_PORT);
+    const password = process.env.REDIS_PASSWORD;
+
+    if (!host || !port || !password) {
+        throw new Error(`Missing Redis environment variables:
+            REDIS_HOST=${host}
+            REDIS_PORT=${port}
+            REDIS_PASSWORD=${password ? '***' : 'undefined'}`);
     }
-});
 
-redisClient.on('error', err => console.log('Redis Client Error', err));
+    redisClient = createClient({
+        username: 'default',
+        password,
+        socket: {
+            host,
+            port,
+            tls: true
+        }
+    });
 
-console.log("REDIS_HOST:", process.env.REDIS_HOST);
-console.log("REDIS_PORT:", process.env.REDIS_PORT);
+    redisClient.on('error', err => console.error('Redis Client Error', err));
 
-await redisClient.connect();
+    await redisClient.connect();
+    console.log('✅ Redis connected successfully');
+}
 
-export default redisClient;
+export function getRedisClient() {
+    if (!redisClient) {
+        throw new Error('Redis client not initialized. Call initRedis() first.');
+    }
+    return redisClient;
+}

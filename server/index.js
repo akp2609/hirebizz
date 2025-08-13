@@ -13,6 +13,7 @@ import reportRoutes from './routes/reportRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import cors from 'cors';
 import { authLimiter, generalLimiter } from './utils/authLimiter.js';
+import { initRedis } from './utils/redis.js';
 import { scheduleRemindersMessage } from './cron/scheduler.js';
 
 
@@ -20,6 +21,10 @@ console.log("Environment loaded:", process.env.NODE_ENV)
 
 const app = express();
 connectDB();
+(async () => {
+    await initRedis(); 
+    app.listen(8080, () => console.log('Server running on port 8080'));
+})();
 
 app.use(express.json());
 
@@ -62,7 +67,7 @@ app.use('/api/job', jobRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/report', reportRoutes);
-app.use('/api/analytics',analyticsRoutes)
+app.use('/api/analytics', analyticsRoutes)
 
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));
