@@ -1,4 +1,3 @@
-// redisClient.js
 import { createClient } from 'redis';
 
 let redisClient;
@@ -22,7 +21,7 @@ export async function initRedis() {
         password,
         socket: {
             host,
-            port
+            port,
         }
     });
 

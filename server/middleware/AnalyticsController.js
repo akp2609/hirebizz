@@ -1,6 +1,13 @@
 import AnalyticsData from "../models/AnalyticsData.js";
 import dayjs from "dayjs";
 import {getRedisClient} from "../utils/redis.js";
+import utc from "dayjs/plugin/utc.js"; 
+import isSame from "dayjs/plugin/isSame";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"; 
+
+dayjs.extend(utc);
+dayjs.extend(isSame);
+dayjs.extend(isSameOrAfter);
 
 export const analyticsDataUpdateDownloads = async (req, res) => {
     try {
@@ -61,7 +68,7 @@ export const analyticsDataUpdateDownloads = async (req, res) => {
 export const analyticsRecordLogin = async (req, res) => {
     try {
         const { platform, userId } = req.body;
-        const now = dayjs();
+        const now = dayjs().utc();
         const year = now.year();
         const month = now.month() + 1;
         const today = now.startOf("day").toDate();
