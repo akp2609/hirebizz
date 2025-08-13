@@ -144,7 +144,7 @@ export const analyticsRecordLogout = async (req, res) => {
     }
 };
 
-export const analyticsRecordFailedLogin = async (userId, ipaddress, reason) => {
+export const analyticsRecordFailedLogin = async (userId, ipaddress, reason = "internal server error") => {
     try {
 
         const failedLogin = {
