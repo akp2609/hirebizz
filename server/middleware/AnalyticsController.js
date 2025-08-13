@@ -1,6 +1,6 @@
 import AnalyticsData from "../models/AnalyticsData.js";
 import dayjs from "dayjs";
-import redisClient from "../utils/redis.js";
+import {getRedisClient} from "../utils/redis.js";
 
 export const analyticsDataUpdateDownloads = async (req, res) => {
     try {
@@ -164,6 +164,7 @@ export const analyticsRecordFailedLogin = async (userId, ipaddress, reason) => {
 }
 
 export const recordHourlyActiveUser = async (userId) => {
+    const redisClient = getRedisClient();
     const now = dayjs().utc();
     const hourKey = `active_users:${now.format("YYYY-MM-DD:HH")}`;
 
@@ -172,6 +173,7 @@ export const recordHourlyActiveUser = async (userId) => {
 }
 
 export const getHourlyActiveCount = async (req, res) => {
+    const redisClient = getRedisClient();
     const roles = req.user.roles || [];
     if (!roles.includes("Hourly.Read")) {
         return res.status(403).send({ message: "Insufficient permission" });
