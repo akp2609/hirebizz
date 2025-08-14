@@ -100,6 +100,7 @@ const ApplicantCard = ({ application, onStatusChange }) => {
                     application={application}
                     onClose={() => setOpen(false)}
                     onStatusChange={onStatusChange}
+                    jobId={application.job}
                 />
             )}
 

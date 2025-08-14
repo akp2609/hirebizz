@@ -1,8 +1,9 @@
 import { getRefreshedResumeUrl, updateApplicationStatus } from "../../services/applicationService";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
+import { updateJobStats } from "../../services/jobService";
 
-const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, onStatusChange }) => {
+const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, onStatusChange, jobId }) => {
     const [loading, setLoading] = useState(false);
     const [resumeURL, setResume] = useState('')
 
@@ -40,6 +41,17 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
         }
     };
 
+    const handleResumeDownload = async (e) => {
+        e.preventDefault();
+        if (!resumeURL) {
+            toast.error("No resume available for download");
+            return;
+        }
+
+        updateJobStats(jobId, "download")
+        window.open(resumeURL, "_blank", "noopener,noreferrer");
+    }
+
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
@@ -49,7 +61,7 @@ const ApplicantModal = ({ applicantName, applicantEmail, application, onClose, o
 
                 {resumeURL ? (
                     <a
-                        href={resumeURL}
+                        onClick={handleResumeDownload}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 underline text-sm"

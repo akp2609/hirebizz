@@ -31,7 +31,7 @@ export const fetchJobs = async (filters = {}) => {
 
 export const fetchJobById = async (jobId) => {
     const res = await apiClient.get(`/job/${jobId}`);
-    return res.data;
+    return res.data; 
 }
 
 export const closeJobRequest = async (jobId) => {
@@ -45,6 +45,6 @@ export const fetchEmployerJobs = async()=>{
 }
 
 export const updateJobStats = async (jobId, stats) => {
-    const res = await apiClient.post(`/job-stats/${jobId}`, stats);
+    const res = await apiClient.post(`/job/job-stats/${jobId}`, stats);
     return res.data;
 }

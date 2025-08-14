@@ -2,6 +2,7 @@ import Job from "../models/Job.js";
 import Company from "../models/Company.js";
 import User from "../models/User.js";
 import OpenAI from "openai";
+import { startOfISOWeek } from 'date-fns';
 
 const client = new OpenAI();
 
