@@ -245,7 +245,6 @@ export const updateJobStats = async (req, res) => {
 
         if (!weeklyEntry) {
             weeklyEntry = { weekStart: thisWeekStart, views: 0, downloads: 0 };
-            job.weeklyStats.push(weeklyEntry);
         }
 
         if (action === 'view') {
@@ -254,24 +253,27 @@ export const updateJobStats = async (req, res) => {
             weeklyEntry.downloads += 1;
         }
 
+        job.weeklyStats.push(weeklyEntry);
+
         const thisMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
         let monthlyEntry = job.monthlyStats.find(m => m.month === thisMonth);
 
         if (!monthlyEntry) {
             monthlyEntry = { month: thisMonth, views: 0, downloads: 0 };
-            job.monthlyStats.push(monthlyEntry);
-        }       
+        }
 
         if (action === 'view') {
             monthlyEntry.views += 1;
-        }  else if (action === 'download') {
+        } else if (action === 'download') {
             monthlyEntry.downloads += 1;
         }
+
+        job.monthlyStats.push(monthlyEntry);
 
         await job.save();
 
         return res.status(200).json({ success: true, message: 'Job stats updated successfully' });
-    }catch (err) {
+    } catch (err) {
         console.error('Failed to update job stats', err);
         return res.status(500).json({ message: 'Failed to update job stats', error: err.message });
     }
