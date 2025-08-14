@@ -44,7 +44,7 @@ export const fetchEmployerJobs = async()=>{
     return res.data;
 }
 
-export const updateJobStats = async (jobId, stats) => {
-    const res = await apiClient.post(`/job/job-stats/${jobId}`, stats);
+export const updateJobStats = async (jobId, action) => {
+    const res = await apiClient.post(`/job/job-stats/${jobId}`, {action});
     return res.data;
 }

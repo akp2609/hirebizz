@@ -240,7 +240,7 @@ export const updateJobStats = async (req, res) => {
             job.downloads += 1;
         }
 
-        const thisWeekStart = startifISOWeek(new Date());
+        const thisWeekStart = startOfISOWeek(new Date());
         let weeklyEntry = job.weeklyStats.find(stat => stat.weekStart.toISOString() === thisWeekStart.toISOString());
 
         if (!weeklyEntry) {
