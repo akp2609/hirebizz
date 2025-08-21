@@ -20,7 +20,6 @@ jobs:
 
             - name: Install dependencies
               run: npm install
-              working-directory: ./server
             
             - name: Run Azure Auth workflow
               run: node server/workflows/azureAuthWorkflow.js
