@@ -11,7 +11,7 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/setup-node@v3
+              uses: actions/Checkout@v3
 
             - name: Set up Node.js
               uses: actions/setup-node@v3
@@ -20,9 +20,11 @@ jobs:
 
             - name: Install dependencies
               run: npm install
+              working-directory: server
 
             - name: Run Azure Auth workflow
-              run: node server/workflows/azureAuthWorkflow.js
+              run: node workflows/azureAuthWorkflow.js
+              working-directory: server
 
             - name: Debug environment
               run: |
