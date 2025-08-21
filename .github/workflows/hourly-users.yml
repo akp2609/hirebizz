@@ -1,0 +1,31 @@
+name: Hourly Active Users Trigger
+
+on:
+    schedule:
+        - cron: '0 * * * *'
+    workflow_dispatch: 
+
+jobs:
+    run-hourly-script:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/setup-node@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
+
+            - name: Install dependencies
+              run: npm install
+              working-directory: server
+            
+            - name: Run Azure Auth workflow
+              run: node server/workflows/azureAuthWorkflow.js
+              env:
+                AZURE_API_CLIENT_ID: ${{ secrets.AZURE_API_CLIENT_ID }}
+                AZURE_CLIENT_SECRET_WORKER: ${{ secrets.AZURE_CLIENT_SECRET_WORKER }}
+                API_CLIENT_ID: ${{ secrets.API_CLIENT_ID }}
+                AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
