@@ -1,6 +1,6 @@
 import express from 'express';
 import requireAuth, { isAuthenticated } from '../middleware/authMiddleware.js';
-import { analyticsDataUpdateDownloads, analyticsRecordFailedLogin, analyticsRecordLogin, analyticsRecordLogout, getHourlyActiveCount, processAndStoreHourlyData } from '../middleware/AnalyticsController.js';
+import { analyticsDataUpdateDownloads, analyticsRecordFailedLogin, analyticsRecordLogin, analyticsRecordLogout, processAndStoreHourlyData } from '../middleware/AnalyticsController.js';
 import { checkJwt } from '../middleware/azureMiddleware.js';
 
 const router = express.Router();
