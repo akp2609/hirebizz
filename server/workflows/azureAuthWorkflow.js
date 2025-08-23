@@ -4,9 +4,9 @@ const getToken = async()=>{
     console.log("Fetching Azure token...");
     const params = new URLSearchParams();
     params.append('grant_type', 'client_credentials');
-    params.append('client_id', process.env.AZURE_API_CLIENT_ID);
-    params.append('client_secret', process.env.AZURE_CLIENT_SECRET_WORKER);
-    params.append('scope',`api:\/\/${process.env.API_CLIENT_ID}\/.default`);
+    params.append('client_id', process.env.AZURE_CLIENT_ID_WORKER);
+    params.append('client_secret', process.env.AZURE_CLIENT_SECRET);
+    params.append('scope',`api:\/\/${process.env.AZURE_API_CLIENT_ID}\/.default`);
 
     const response = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, {
         method: 'POST',
