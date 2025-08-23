@@ -48,7 +48,7 @@ const callApi = async () => {
     console.log("Calling analytics API...");
     try {
         const token = await getToken();
-        const apiResponse = await fetch(`https://api.hirebizz.xyz/api/analytics/hourly-active-users`, {
+        const apiResponse = await fetch(`https://api.hirebizz.xyz/api/analytics/hourly-login`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
