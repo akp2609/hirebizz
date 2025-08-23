@@ -49,7 +49,7 @@ const callApi = async () => {
     try {
         const token = await getToken();
         const apiResponse = await fetch(`https://api.hirebizz.xyz/api/analytics/process-hourly-data`, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
