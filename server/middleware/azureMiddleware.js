@@ -10,12 +10,10 @@ export const checkJwt = expressjwt({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 10,
-        jwksUri: `https://login.microsoftonline.com/${tenantId}/discovery/v2.0/keys`
+        
+        jwksUri: `https://login.microsoftonline.com/${tenantId}/discovery/keys`
     }),
     audience: audience,
-    issuer: [
-        `https://login.microsoftonline.com/${tenantId}/v2.0`,
-        `https://sts.windows.net/${tenantId}/`
-    ],
+    issuer: `https://sts.windows.net/${tenantId}/`,
     algorithms: ['RS256']
 });
