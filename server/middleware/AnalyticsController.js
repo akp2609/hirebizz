@@ -170,12 +170,38 @@ export const analyticsRecordFailedLogin = async (userId, ipaddress, reason = "in
 }
 
 export const recordHourlyActiveUser = async (userId) => {
-    const redisClient = getRedisClient();
-    const now = dayjs().utc();
-    const hourKey = `active_users:${now.format("YYYY-MM-DD:HH")}`;
+    try {
+        console.log(`=== RECORDING HOURLY ACTIVE USER ===`);
+        console.log(`User ID: ${userId}`);
+        console.log(`Current UTC time: ${dayjs().utc().format("YYYY-MM-DD HH:mm:ss")}`);
+        
+        const redisClient = getRedisClient();
+        const now = dayjs().utc();
+        const hourKey = `active_users:${now.format("YYYY-MM-DD:HH")}`;
 
-    await redisClient.sAdd(hourKey, userId.toString());
-    await redisClient.expire(hourKey, 48 * 60 * 60);
+        console.log(`Redis key: ${hourKey}`);
+        
+        // Test Redis connection first
+        await redisClient.ping();
+        console.log(`Redis connection: OK`);
+        
+        const result = await redisClient.sAdd(hourKey, userId.toString());
+        console.log(`sAdd result: ${result} (1 = new member, 0 = already exists)`);
+        
+        await redisClient.expire(hourKey, 48 * 60 * 60);
+        console.log(`Set expiration: 48 hours`);
+        
+        // Verify it was added
+        const count = await redisClient.sCard(hourKey);
+        const members = await redisClient.sMembers(hourKey);
+        console.log(`Total active users for ${hourKey}: ${count}`);
+        console.log(`All members: ${JSON.stringify(members)}`);
+        console.log(`======================================`);
+        
+    } catch (error) {
+        console.error('Error recording hourly active user:', error);
+        throw error;
+    }
 }
 
 
