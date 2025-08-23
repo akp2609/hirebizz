@@ -180,11 +180,6 @@ export const recordHourlyActiveUser = async (userId) => {
 
 export const getHourlyActiveCount = async (req, res) => {
     const redisClient = getRedisClient();
-    const roles = req.user.roles || [];
-    if (!roles.includes("Hourly.Read")) {
-        return res.status(403).send({ message: "Insufficient permission" });
-    }
-
     const dateTime = req.query.dateTime ? new Date(req.query.dateTime) : new Date();
     if (isNaN(dateTime.getTime())) {
         return res.status(400).send({ message: "Invalid dateTime parameter" });
