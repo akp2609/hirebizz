@@ -178,15 +178,81 @@ export const recordHourlyActiveUser = async (userId) => {
     await redisClient.expire(hourKey, 48 * 60 * 60);
 }
 
-export const getHourlyActiveCount = async (req, res) => {
-    const redisClient = getRedisClient();
-    const dateTime = req.query.dateTime ? new Date(req.query.dateTime) : new Date();
-    if (isNaN(dateTime.getTime())) {
-        return res.status(400).send({ message: "Invalid dateTime parameter" });
+
+export const processAndStoreHourlyData = async (req, res) => {
+    try {
+        const redisClient = getRedisClient();
+        const dateTime = req.query.dateTime ? dayjs(req.query.dateTime).utc() : dayjs().utc().subtract(1, 'hour');
+        
+        if (!dateTime.isValid()) {
+            return res.status(400).send({ message: "Invalid dateTime parameter" });
+        }
+
+        const hourKey = `active_users:${dateTime.format("YYYY-MM-DD:HH")}`;
+        const count = await redisClient.sCard(hourKey);
+
+        
+        await storeHourlyDataInMongoDB(dateTime, count);
+
+        console.log(`Stored hourly data: ${count} active users for ${dateTime.format("YYYY-MM-DD HH:00")}`);
+        
+        return res.json({ 
+            success: true,
+            count, 
+            timestamp: dateTime.format("YYYY-MM-DD HH:00"),
+            stored: true 
+        });
+        
+    } catch (error) {
+        console.error('Error processing hourly data:', error);
+        return res.status(500).json({ error: 'Failed to process hourly data' });
     }
+};
 
-    const hourKey = `active_users:${dayjs(dateTime).utc().format("YYYY-MM-DD:HH")}`;
-    const count = await redisClient.sCard(hourKey);
-
-    return res.json({ count });
+const storeHourlyDataInMongoDB = async (dateTime, activeUsers) => {
+    try {
+        
+        let analyticsDoc = await AnalyticsData.findOne({}) || new AnalyticsData({});
+        
+        const year = dateTime.year();
+        const month = dateTime.month() + 1; 
+        const day = dateTime.date();
+        const hour = dateTime.hour();
+        
+        
+        const existingHourIndex = analyticsDoc.hourlyStats.findIndex(stat => 
+            stat.year === year && 
+            stat.month === month && 
+            stat.day === day && 
+            stat.hour === hour
+        );
+        
+        if (existingHourIndex !== -1) {
+            
+            analyticsDoc.hourlyStats[existingHourIndex].activeUsers = activeUsers;
+            analyticsDoc.hourlyStats[existingHourIndex].timestamp = dateTime.toDate();
+        } else {
+            
+            analyticsDoc.hourlyStats.push({
+                year,
+                month,
+                day,
+                hour,
+                activeUsers,
+                timestamp: dateTime.toDate()
+            });
+        }
+        
+        
+        const thirtyDaysAgo = dayjs().utc().subtract(30, 'days');
+        analyticsDoc.hourlyStats = analyticsDoc.hourlyStats.filter(stat => 
+            dayjs(stat.timestamp).isAfter(thirtyDaysAgo)
+        );
+        
+        await analyticsDoc.save();
+        
+    } catch (error) {
+        console.error('Error storing hourly data in MongoDB:', error);
+        throw error;
+    }
 };

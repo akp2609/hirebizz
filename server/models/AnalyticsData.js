@@ -42,6 +42,18 @@ const analyticsDataSchema = new mongoose.Schema({
                 activeUsers: { type: Number, default: 0 }
             }
         ], default: []
+    },
+    hourlyStats: {
+        type: [
+            {
+                year: Number,
+                month: Number, 
+                day: Number,   
+                hour: Number, 
+                activeUsers: { type: Number, default: 0 },
+                timestamp: { type: Date, default: Date.now }
+            }
+        ], default: []
     }
 
 });
