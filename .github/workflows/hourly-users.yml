@@ -11,10 +11,10 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/Checkout@v3
+              uses: actions/checkout@v4
 
             - name: Set up Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: '18'
 
@@ -25,13 +25,13 @@ jobs:
             - name: Run Azure Auth workflow
               run: node workflows/azureAuthWorkflow.js
               working-directory: server
+              env:
+                AZURE_WORKER_CLIENT_ID: ${{ secrets.AZURE_WORKER_CLIENT_ID }}
+                AZURE_WORKER_SECRET: ${{ secrets.AZURE_WORKER_SECRET }}
+                AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+                SCOPE: ${{ secrets.SCOPE }}
 
             - name: Debug environment
               run: |
-                echo "AZURE_API_CLIENT_ID is set: ${{ secrets.AZURE_API_CLIENT_ID }}"
+                echo "AZURE_API_CLIENT_ID is set: ${{ vars.AZURE_WORKER_CLIENT_ID != '' }}"
                 echo "Workflow executed successfully"
-              env:
-                AZURE_API_CLIENT_ID: ${{ secrets.AZURE_API_CLIENT_ID }}
-                AZURE_CLIENT_SECRET_WORKER: ${{ secrets.AZURE_CLIENT_SECRET }}
-                API_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_WORKER }}
-                AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
