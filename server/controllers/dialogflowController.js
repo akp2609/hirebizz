@@ -1,4 +1,4 @@
-import client from "../utils/dialogflowClient";
+import client from "../utils/dialogflowClient.js";
 
 const projectId = 'job-tracker-app-458110';
 const locationId = 'us-central1';
