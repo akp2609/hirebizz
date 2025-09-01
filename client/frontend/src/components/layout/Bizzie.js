@@ -43,7 +43,7 @@ const ChatBotWidget = ()=>{
           <div className="flex justify-between items-center p-3 bg-blue-600 text-white rounded-t-lg">
             <div className="flex items-center gap-2">
               <Bot className="w-5 h-5" />
-              <span>Chatbot</span>
+              <span>Bizzie - your helpbot</span>
             </div>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">✖</button>
           </div>
