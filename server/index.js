@@ -11,6 +11,7 @@ import chatRoutes from './routes/chatRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import reportRoutes from './routes/reportRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import dialogflowRoutes from './routes/dialogflowRoutes.js'
 import cors from 'cors';
 import { authLimiter, generalLimiter } from './utils/authLimiter.js';
 import { initRedis } from './utils/redis.js';
@@ -67,7 +68,8 @@ app.use('/api/job', jobRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/report', reportRoutes);
-app.use('/api/analytics', analyticsRoutes)
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/dialogflow',dialogflowRoutes);
 
 app.get('/', (req, res) => res.send('API running'));
 app.get('/health', (req, res) => res.send("Server is healthy!"));
