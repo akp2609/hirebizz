@@ -3,7 +3,7 @@ import { sendMessageToBot } from "../../services/dialogflowService";
 import { Bot } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
-const chatBotWidget = ()=>{
+const ChatBotWidget = ()=>{
 
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -28,7 +28,7 @@ const chatBotWidget = ()=>{
   }, [messages]);
 
     return(
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-6 right-4 z-50">
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
@@ -84,4 +84,4 @@ const chatBotWidget = ()=>{
     )
 }
 
-export default chatBotWidget;
+export default ChatBotWidget;
