@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/client/frontend"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "npm"
+    directory: "/server"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 5
