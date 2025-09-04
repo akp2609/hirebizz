@@ -105,6 +105,12 @@ This project spans across multiple repositories:
 
 ---
 
+### 🔒 Security & Maintenance
+- Automated dependency updates via **Dependabot**
+- Static code analysis and vulnerability scanning with **CodeQL**
+
+---
+
 ## 🧰 Setup & Installation
 
 > ⚠️ **Note**: This is a production-grade, multi-repo project with cloud-native infrastructure and advanced integrations. Due to its complexity, setup instructions are not included here.
