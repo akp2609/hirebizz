@@ -46,6 +46,10 @@ An enterprise-grade, full-stack job portal built with modern web technologies, c
 - Generate embeddings via OpenAI
 - Vector search for premium users using cosine similarity with job skill embeddings
 
+### 🐳 Docker Support
+- Backend services containerized using **Docker**
+- Simplifies local development, testing, and deployment to cloud platforms
+
 ### 🔐 Authentication & Authorization
 - JWT-based session auth
 - OAuth via Google & GitHub
