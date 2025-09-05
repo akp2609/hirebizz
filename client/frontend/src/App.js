@@ -31,6 +31,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import DownloadApkPrompt from "./components/common/DownloadApkPrompt";
 import AndroidDownloadBanner from "./components/common/AndroidDownloadBanner";
 import DownloadAPKPage from "./pages/common/DownloadAPKPage";
+import AccountIssues from "./pages/help/AccountIssues";
+import CandidateSupport from "./pages/help/CandidateSupport";
+import EmployerSupport from "./pages/help/EmployerSupport";
+import ReportHelp from "./pages/help/ReportHelp";
+import PaymentSupport from "./pages/help/PaymentSupport";
+import GeneralFallbackForm from "./pages/help/GeneralFallbackForm";
+import Help from "./pages/common/Help";
 
 
 
@@ -90,14 +97,23 @@ function App() {
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/github/callback" element={<GitHubCallback />} />
                   <Route path="/download" element={<DownloadAPKPage />} />
+                  <Route path="/help" element={<Help />}>
+                    <Route index element={<Navigate to="account-issues-guide" replace />} />
+                    <Route path="account-issues-guide" element={<AccountIssues />} />
+                    <Route path="candidate-support" element={<CandidateSupport />} />
+                    <Route path="employer-support" element={<EmployerSupport />} />
+                    <Route path="how-to-report" element={<ReportHelp />} />
+                    <Route path="payment-support" element={<PaymentSupport />} />
+                    <Route path="support" element={<GeneralFallbackForm />} />
+                  </Route>
                 </Route>
               </Routes>
             </div>
 
             <ToastContainer position="top-center" />
 
-            <DownloadApkPrompt/>
-            <AndroidDownloadBanner/>
+            <DownloadApkPrompt />
+            <AndroidDownloadBanner />
 
           </UserProvider>
 
