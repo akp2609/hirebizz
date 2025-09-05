@@ -25,7 +25,8 @@ function ScrollToTopOnRouteChange() {
 const Help = () => {
     return (
         <div className="flex min-h-screen">
-            <aside className="hidden md:block w-72 border-r bg-gray-50">
+            
+            <aside className="hidden md:block w-1/5 border-r bg-gray-50">
                 <div className="sticky top-0 h-screen overflow-y-auto p-4">
                     <h2 className="text-xl font-semibold mb-4">Help Center</h2>
                     <nav aria-label="Help topics">
@@ -50,10 +51,10 @@ const Help = () => {
                 </div>
             </aside>
 
-
-            <main className="flex-1">
+            
+            <main className="w-4/5">
                 <ScrollToTopOnRouteChange />
-                <div className="mx-auto max-w-3xl p-4 md:p-8">
+                <div className="mx-auto max-w-5xl p-6">
                     <Outlet />
                 </div>
             </main>

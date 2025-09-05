@@ -181,7 +181,7 @@ export const recordHourlyActiveUser = async (userId) => {
 
         console.log(`Redis key: ${hourKey}`);
         
-        // Test Redis connection first
+        
         await redisClient.ping();
         console.log(`Redis connection: OK`);
         
@@ -191,7 +191,7 @@ export const recordHourlyActiveUser = async (userId) => {
         await redisClient.expire(hourKey, 48 * 60 * 60);
         console.log(`Set expiration: 48 hours`);
         
-        // Verify it was added
+        
         const count = await redisClient.sCard(hourKey);
         const members = await redisClient.sMembers(hourKey);
         console.log(`Total active users for ${hourKey}: ${count}`);
