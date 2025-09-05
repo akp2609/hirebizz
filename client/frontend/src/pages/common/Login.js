@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, Github } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Github as GithubIcon } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import GoogleLoginButton from '../../components/auth/GoogleLoginButton';
+import GithubLoginButton from '../../components/auth/GithubLoginButton';
+import { loginUser, requestResetUserPassword } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
+import { useUser } from '../../context/UserContext';
+import { signInWithCustomToken } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { analyticsRecordLogin } from '../../services/analyticsService';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,29 +18,81 @@ const Login = () => {
     const [resetEmail, setResetEmail] = useState('');
     const [resetStatus, setResetStatus] = useState('');
     const [loading, setLoading] = useState(false);
+    const [resetLoading, setResetLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
+    const { login } = useAuth();
+    const { reloadUser } = useUser();
+    const navigate = useNavigate();
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
+        try {
+            setLoading(true);
+            const data = await loginUser({ email, password });
+            const { token, user } = data;
+            if (!token) {
+                throw new Error('No token received');
+            }
+            if (!user) {
+                throw new Error('No user data received');
+            }
 
-        console.log('Login submitted:', { email, password });
+            localStorage.setItem("token", token);
+            login(user);
+            await analyticsRecordLogin('web', user._id);
+
+            const firebaseToken = data.firebaseToken;
+            if (firebaseToken) {
+                await signInWithCustomToken(auth, firebaseToken);
+            }
+
+            await reloadUser();
+            navigate("/");
+        } catch (err) {
+            
+            setError(err?.response?.data?.message || err.message || "Login failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    
+    const handleSendReset = async () => {
+        setResetStatus('');
+        setError(null);
+        if (!resetEmail) {
+            setResetStatus('Please enter your email.');
+            return;
+        }
+        try {
+            setResetLoading(true);
+            await requestResetUserPassword({ email: resetEmail });
+            setResetStatus('Reset link sent! Check your email.');
+        } catch (err) {
+            setResetStatus(err?.response?.data?.message || 'Something went wrong.');
+        } finally {
+            setResetLoading(false);
+        }
     };
 
     return (
         <div className='flex flex-col lg:flex-row h-screen w-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden'>
 
+            
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl animate-pulse"></div>
                 <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
                 <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-to-br from-emerald-400/10 to-blue-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
             </div>
 
-
+            
             <div className='w-full lg:w-1/2 flex items-center justify-center p-4 min-h-screen relative z-10'>
                 <div className='bg-white/10 backdrop-blur-xl p-8 sm:p-10 md:p-12 rounded-3xl shadow-2xl border border-white/20 w-full max-w-md relative overflow-hidden'>
 
-
+                    
                     <div className="flex justify-center mb-8">
                         <div className="relative">
                             <img
@@ -43,6 +104,7 @@ const Login = () => {
                         </div>
                     </div>
 
+                    
                     <div className="text-center mb-8">
                         <h1 className='font-bold text-white text-4xl mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent'>
                             Welcome Back
@@ -50,8 +112,8 @@ const Login = () => {
                         <p className="text-white/70 text-lg">Sign in to your account</p>
                     </div>
 
-                    <div onSubmit={handleSubmit} className="space-y-6">
-
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                         <div className="relative group">
                             <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 group-focus-within:text-blue-400 transition-colors duration-300" size={20} />
                             <input
@@ -63,7 +125,6 @@ const Login = () => {
                                 required
                             />
                         </div>
-
 
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 group-focus-within:text-blue-400 transition-colors duration-300" size={20} />
@@ -79,6 +140,7 @@ const Login = () => {
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-blue-400 transition-colors duration-300"
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
                             >
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
@@ -90,11 +152,9 @@ const Login = () => {
                             </div>
                         )}
 
-
                         <button
                             type='submit'
                             disabled={loading}
-                            onClick={handleSubmit}
                             className='w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-4 rounded-2xl hover:from-blue-600 hover:to-indigo-700 transform hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed text-lg'
                         >
                             {loading ? (
@@ -104,39 +164,34 @@ const Login = () => {
                                 </div>
                             ) : 'Sign In'}
                         </button>
-                    </div>
+                    </form>
 
-
+                    
                     <div className="flex items-center my-8">
                         <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                         <span className="px-4 text-white/70 text-sm font-medium">Or continue with</span>
                         <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                     </div>
 
-
+                    
                     <div className='flex gap-4'>
-                        <button className='flex-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl py-3 px-4 hover:bg-white/15 transition-all duration-300 transform hover:scale-[1.02] group'>
-                            <div className="flex items-center justify-center gap-2">
-                                <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">G</span>
-                                </div>
-                                <span className="text-white font-medium group-hover:text-blue-200 transition-colors">Google</span>
-                            </div>
-                        </button>
+                        <div className="flex-1">
+                            <GoogleLoginButton loading={loading} setLoading={setLoading} />
+                        </div>
 
-                        <button className='flex-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl py-3 px-4 hover:bg-white/15 transition-all duration-300 transform hover:scale-[1.02] group'>
-                            <div className="flex items-center justify-center gap-2">
-                                <Github className="text-white" size={20} />
-                                <span className="text-white font-medium group-hover:text-blue-200 transition-colors">GitHub</span>
-                            </div>
-                        </button>
+                        <div className="flex-1">
+                            <GithubLoginButton loading={loading} setLoading={setLoading} />
+                        </div>
                     </div>
 
-
+                    
                     <div className='text-center mt-8 space-y-3'>
                         <p className="text-white/70">
                             Don't have an account?{" "}
-                            <button className='text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline'>
+                            <button
+                                onClick={() => navigate('/signup')}
+                                className='text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300 hover:underline'
+                            >
                                 Sign up
                             </button>
                         </p>
@@ -151,7 +206,7 @@ const Login = () => {
                 </div>
             </div>
 
-
+            
             {showForgotPassword && (
                 <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
                     <div className='bg-white/10 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/20 w-full max-w-md relative overflow-hidden'>
@@ -173,13 +228,12 @@ const Login = () => {
                             </div>
 
                             <button
-                                className='w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-4 rounded-2xl transform hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-blue-500/25'
-                                onClick={async () => {
-
-                                    setResetStatus('Reset link sent! Check your email.');
-                                }}
+                                type="button"
+                                className='w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-4 rounded-2xl transform hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed'
+                                onClick={handleSendReset}
+                                disabled={resetLoading}
                             >
-                                Send Reset Link
+                                {resetLoading ? 'Sending...' : 'Send Reset Link'}
                             </button>
 
                             {resetStatus && (
@@ -203,7 +257,7 @@ const Login = () => {
                 </div>
             )}
 
-
+            
             <div className='w-full lg:w-1/2 hidden lg:block relative overflow-hidden'>
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/20 to-black/40 z-10"></div>
                 <img
@@ -211,7 +265,6 @@ const Login = () => {
                     alt='Modern Office Space'
                     className='h-full w-full object-cover transform scale-110 hover:scale-100 transition-transform duration-700'
                 />
-
 
                 <div className="absolute bottom-8 left-8 right-8 z-20">
                     <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
@@ -234,7 +287,7 @@ const Login = () => {
                 </div>
             </div>
 
-
+            
             {loading && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
                     <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
