@@ -148,11 +148,11 @@ function Footer() {
                             </div>
                             <div className="flex items-center text-gray-300 hover:text-white transition-colors group">
                                 <Phone className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
-                                <span>+1 (555) 123-4567</span>
+                                <span>+91 7042783965</span>
                             </div>
                             <div className="flex items-center text-gray-300 hover:text-white transition-colors group">
                                 <MapPin className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
-                                <span>San Francisco, CA</span>
+                                <span>New Delhi ,India</span>
                             </div>
                         </div>
                     </div>
