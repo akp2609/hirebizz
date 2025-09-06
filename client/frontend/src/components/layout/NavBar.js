@@ -53,7 +53,7 @@ function NavBar() {
               </Link>
 
               {/* Profile + Dropdown */}
-              <div className="relative">
+              <div className="absolute right-0 top-14 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-blue-100/50 overflow-hidden animate-fade-in z-[9999]">
                 <div
                   className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-white/10 transition"
                   onClick={() => setIsOpen(!isOpen)}
