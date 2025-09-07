@@ -92,7 +92,7 @@ const ChatPage = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
+        <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
             {/* Header */}
             <div className="relative z-10 flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
                 <div className="flex items-center space-x-4">

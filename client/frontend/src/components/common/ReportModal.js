@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { AlertTriangle, X, Flag, Shield } from 'lucide-react';
+import React, { useState } from "react";
+import { createPortal } from "react-dom";
+import { AlertTriangle, X, Flag, Shield } from "lucide-react";
 
 const REPORT_REASONS = [
     "Spam or scam",
@@ -9,25 +10,24 @@ const REPORT_REASONS = [
 ];
 
 const ReportModal = ({ isOpen, onClose, onSubmit }) => {
-    const [reason, setReason] = useState('');
-    const [details, setDetails] = useState('');
+    const [reason, setReason] = useState("");
+    const [details, setDetails] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async () => {
         if (!reason) {
-            // Custom alert with shake animation
-            const reasonSelect = document.querySelector('[data-reason-select]');
-            reasonSelect?.classList.add('animate-shake');
-            setTimeout(() => reasonSelect?.classList.remove('animate-shake'), 500);
+            const reasonSelect = document.querySelector("[data-reason-select]");
+            reasonSelect?.classList.add("animate-shake");
+            setTimeout(() => reasonSelect?.classList.remove("animate-shake"), 500);
             return;
         }
 
         setIsSubmitting(true);
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
             onSubmit({ reason, details });
-            setReason('');
-            setDetails('');
+            setReason("");
+            setDetails("");
             onClose();
         } finally {
             setIsSubmitting(false);
@@ -36,36 +36,43 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
 
     const handleClose = () => {
         if (isSubmitting) return;
-        setReason('');
-        setDetails('');
+        setReason("");
+        setDetails("");
         onClose();
     };
 
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fadeIn">
-            {/* Backdrop with blur and gradient */}
-            <div 
+    // Render modal into document.body
+    return createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 animate-fadeIn">
+            {/* Backdrop */}
+            <div
                 className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-800/70 to-indigo-900/80 backdrop-blur-md"
                 onClick={handleClose}
             />
-            
-            {/* Floating particles effect */}
+
+            {/* Floating particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-red-400/30 rounded-full animate-float"></div>
-                <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-blue-400/40 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
-                <div className="absolute top-1/2 left-3/4 w-3 h-3 bg-indigo-400/20 rounded-full animate-float" style={{ animationDelay: '4s' }}></div>
+                <div
+                    className="absolute top-3/4 right-1/3 w-1 h-1 bg-blue-400/40 rounded-full animate-float"
+                    style={{ animationDelay: "2s" }}
+                ></div>
+                <div
+                    className="absolute top-1/2 left-3/4 w-3 h-3 bg-indigo-400/20 rounded-full animate-float"
+                    style={{ animationDelay: "4s" }}
+                ></div>
             </div>
 
             {/* Modal container */}
-            <div className="relative w-full max-w-md animate-modalSlideIn">
-                {/* Glow effect behind modal */}
+            <div className="relative w-full max-w-md mx-auto animate-modalSlideIn">
+                {/* Glow behind modal */}
                 <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 via-orange-500/15 to-red-500/20 rounded-2xl blur-2xl"></div>
-                
+
                 {/* Main modal */}
                 <div className="relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden">
-                    {/* Header with animated background */}
+                    {/* Header */}
                     <div className="relative px-6 pt-6 pb-4">
                         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-orange-500/10"></div>
                         <div className="relative flex items-center justify-between">
@@ -81,7 +88,6 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
                                     <p className="text-sm text-slate-300">Help us maintain quality</p>
                                 </div>
                             </div>
-                            
                             <button
                                 onClick={handleClose}
                                 disabled={isSubmitting}
@@ -94,7 +100,7 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
 
                     {/* Form content */}
                     <div className="px-6 pb-6 space-y-5">
-                        {/* Reason selection */}
+                        {/* Reason select */}
                         <div className="space-y-2">
                             <label className="flex items-center text-sm font-semibold text-slate-200">
                                 <AlertTriangle size={16} className="mr-2 text-red-400" />
@@ -108,19 +114,15 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
                                     className="w-full bg-slate-700/50 backdrop-blur-md border border-slate-600/50 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-red-400/50 focus:bg-slate-700/70 transition-all duration-300 appearance-none cursor-pointer hover:border-slate-500/70"
                                     disabled={isSubmitting}
                                 >
-                                    <option value="" className="bg-slate-800 text-slate-300">-- Select a reason --</option>
+                                    <option value="" className="bg-slate-800 text-slate-300">
+                                        -- Select a reason --
+                                    </option>
                                     {REPORT_REASONS.map((r, i) => (
-                                        <option key={i} value={r} className="bg-slate-800 text-white py-2">{r}</option>
+                                        <option key={i} value={r} className="bg-slate-800 text-white py-2">
+                                            {r}
+                                        </option>
                                     ))}
                                 </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </div>
-                                {reason && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-transparent rounded-xl pointer-events-none"></div>
-                                )}
                             </div>
                         </div>
 
@@ -131,22 +133,17 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
                                 Additional Details
                                 <span className="text-slate-400 font-normal ml-1">(Optional)</span>
                             </label>
-                            <div className="relative">
-                                <textarea
-                                    rows={4}
-                                    value={details}
-                                    onChange={(e) => setDetails(e.target.value)}
-                                    className="w-full bg-slate-700/50 backdrop-blur-md border border-slate-600/50 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-blue-400/50 focus:bg-slate-700/70 transition-all duration-300 resize-none"
-                                    placeholder="Provide any additional context that might help us understand the issue better..."
-                                    disabled={isSubmitting}
-                                />
-                                {details && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent rounded-xl pointer-events-none"></div>
-                                )}
-                            </div>
+                            <textarea
+                                rows={4}
+                                value={details}
+                                onChange={(e) => setDetails(e.target.value)}
+                                className="w-full bg-slate-700/50 backdrop-blur-md border border-slate-600/50 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-blue-400/50 focus:bg-slate-700/70 transition-all duration-300 resize-none"
+                                placeholder="Provide any additional context that might help us understand the issue better..."
+                                disabled={isSubmitting}
+                            />
                         </div>
 
-                        {/* Action buttons */}
+                        {/* Actions */}
                         <div className="flex justify-end gap-3 pt-4 border-t border-slate-700/50">
                             <button
                                 onClick={handleClose}
@@ -158,7 +155,7 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
                             <button
                                 onClick={handleSubmit}
                                 disabled={isSubmitting}
-                                className="relative px-5 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 border border-red-400/20"
+                                className="relative px-5 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed border border-red-400/20"
                             >
                                 {isSubmitting ? (
                                     <div className="flex items-center space-x-2">
@@ -171,61 +168,67 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
                                         <span>Submit Report</span>
                                     </div>
                                 )}
-                                {!isSubmitting && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-red-600/0 via-red-400/20 to-red-600/0 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-xl"></div>
-                                )}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Custom CSS animations */}
             <style jsx>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-
-                @keyframes modalSlideIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-20px) scale(0.95);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
-                }
-
-                @keyframes float {
-                    0%, 100% { transform: translateY(0px) rotate(0deg); }
-                    50% { transform: translateY(-20px) rotate(180deg); }
-                }
-
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-5px); }
-                    75% { transform: translateX(5px); }
-                }
-
-                .animate-fadeIn {
-                    animation: fadeIn 0.3s ease-out;
-                }
-
-                .animate-modalSlideIn {
-                    animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                }
-
-                .animate-float {
-                    animation: float 6s ease-in-out infinite;
-                }
-
-                .animate-shake {
-                    animation: shake 0.5s ease-in-out;
-                }
-            `}</style>
-        </div>
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(180deg);
+          }
+        }
+        @keyframes shake {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-5px);
+          }
+          75% {
+            transform: translateX(5px);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+        .animate-modalSlideIn {
+          animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+      `}</style>
+        </div>,
+        document.body
     );
 };
 

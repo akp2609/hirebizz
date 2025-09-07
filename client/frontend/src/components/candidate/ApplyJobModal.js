@@ -43,6 +43,9 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
             toast.success("Resume uploaded!");
             setUploadSuccess(true);
             setTimeout(() => setUploadSuccess(false), 3000);
+
+            // Update user context/resume state if needed
+            if (user) user.resumeURL = uploadedURL;
         } else {
             toast.error("Resume upload failed.");
         }
@@ -79,18 +82,25 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
     const nextStep = () => setStep(Math.min(step + 1, 3));
     const prevStep = () => setStep(Math.max(step - 1, 1));
 
+    const viewResume = () => {
+        const url = resume || user?.resumeURL;
+        if (!url) {
+            toast.error("No resume available");
+            return;
+        }
+        window.open(url, "_blank", "noopener,noreferrer");
+    };
+
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-4 transition-all duration-300 ${isVisible ? "bg-black/60 backdrop-blur-sm" : "bg-transparent pointer-events-none"
-                }`}
+            className={`fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-4 transition-all duration-300 ${isVisible ? "bg-black/60 backdrop-blur-sm" : "bg-transparent pointer-events-none"}`}
         >
             {/* background click */}
             <div className="absolute inset-0" onClick={handleClose} />
 
             {/* modal container */}
             <div
-                className={`relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl mx-auto transform transition-all duration-500 flex flex-col ${isVisible ? "scale-100 opacity-100 translate-y-0" : "scale-95 opacity-0 translate-y-8"
-                    }`}
+                className={`relative bg-white rounded-3xl shadow-2xl w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto transform transition-all duration-500 flex flex-col`}
             >
                 {/* header */}
                 <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 sm:p-8 rounded-t-3xl overflow-hidden">
@@ -122,16 +132,12 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="flex items-center">
                                 <div
-                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${i <= step ? "bg-white text-blue-600 shadow-lg" : "bg-white/20 text-white/60"
-                                        }`}
+                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${i <= step ? "bg-white text-blue-600 shadow-lg" : "bg-white/20 text-white/60"}`}
                                 >
                                     {i < step ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : i}
                                 </div>
                                 {i < 3 && (
-                                    <div
-                                        className={`w-10 sm:w-16 h-1 mx-1 sm:mx-2 rounded-full transition-colors duration-300 ${i < step ? "bg-white" : "bg-white/20"
-                                            }`}
-                                    />
+                                    <div className={`w-10 sm:w-16 h-1 mx-1 sm:mx-2 rounded-full transition-colors duration-300 ${i < step ? "bg-white" : "bg-white/20"}`} />
                                 )}
                             </div>
                         ))}
@@ -139,7 +145,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                 </div>
 
                 {/* content */}
-                <div className="p-6 sm:p-8 overflow-y-auto max-h-[70vh]">
+                <div className="p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[80vh]">
                     {/* step 1 resume */}
                     {step === 1 && (
                         <div className="space-y-6">
@@ -158,28 +164,24 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                                         <span className="font-semibold text-green-800">Current Resume Available</span>
                                     </div>
 
-                                    <a
-                                        href={resume || user.resumeURL}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <button
+                                        onClick={viewResume}
                                         className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium transition-colors duration-300 group"
                                     >
                                         <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                         <span>View Current Resume</span>
-                                    </a>
+                                    </button>
 
                                     <div className="mt-4 pt-4 border-t border-green-200">
                                         <p className="text-green-700 font-medium mb-2">Upload a new version (optional):</p>
                                         <div
-                                            className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 cursor-pointer ${dragOver ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
-                                                }`}
+                                            className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 cursor-pointer ${dragOver ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"}`}
                                             onDrop={handleDrop}
                                             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                                             onDragLeave={() => setDragOver(false)}
                                             onClick={() => document.getElementById("resume-upload").click()}
                                         >
-                                            <Upload className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 ${dragOver ? "text-blue-500" : "text-gray-400"
-                                                }`} />
+                                            <Upload className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 ${dragOver ? "text-blue-500" : "text-gray-400"}`} />
                                             <p className="font-medium text-gray-700">Drop your new resume here or click to browse</p>
                                             <p className="text-sm text-gray-500 mt-1">PDF format only</p>
                                         </div>
@@ -187,15 +189,13 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                                 </div>
                             ) : (
                                 <div
-                                    className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-300 cursor-pointer ${dragOver ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
-                                        }`}
+                                    className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-300 cursor-pointer ${dragOver ? "border-blue-400 bg-blue-50" : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"}`}
                                     onDrop={handleDrop}
                                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                                     onDragLeave={() => setDragOver(false)}
                                     onClick={() => document.getElementById("resume-upload").click()}
                                 >
-                                    <div className={`p-4 rounded-full mx-auto mb-4 ${dragOver ? "bg-blue-100" : "bg-gray-100"
-                                        }`}>
+                                    <div className={`p-4 rounded-full mx-auto mb-4 ${dragOver ? "bg-blue-100" : "bg-gray-100"}`}>
                                         <Upload className={`w-6 h-6 sm:w-8 sm:h-8 ${dragOver ? "text-blue-500" : "text-gray-400"}`} />
                                     </div>
                                     <h4 className="font-semibold text-gray-800 mb-2">Upload Your Resume</h4>
@@ -332,8 +332,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                             <button
                                 onClick={handleApply}
                                 className={`flex items-center space-x-2 px-5 sm:px-8 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 shadow-lg ${applying
-                                        ? "bg-gray-400 text-white cursor-not-allowed"
-                                        : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:scale-105"
+                                    ? "bg-gray-400 text-white cursor-not-allowed"
+                                    : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:scale-105"
                                     }`}
                                 disabled={uploading || applying}
                             >
