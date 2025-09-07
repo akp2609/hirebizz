@@ -18,10 +18,15 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [step, setStep] = useState(1);
+    const [currentResume, setCurrentResume] = useState(user?.resumeURL || resume);
 
     useEffect(() => {
         if (isOpen) setIsVisible(true);
     }, [isOpen]);
+
+    useEffect(() => {
+        setCurrentResume(resume || user?.resumeURL);
+    }, [resume, user?.resumeURL]);
 
     if (!isOpen) return null;
 
@@ -42,10 +47,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
         if (uploadedURL) {
             toast.success("Resume uploaded!");
             setUploadSuccess(true);
+            setCurrentResume(uploadedURL);
             setTimeout(() => setUploadSuccess(false), 3000);
-
-            // Update user context/resume state if needed
-            if (user) user.resumeURL = uploadedURL;
         } else {
             toast.error("Resume upload failed.");
         }
@@ -64,7 +67,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
     };
 
     const handleApply = async () => {
-        if (!user?.resumeURL && !resume) {
+        if (!currentResume) {
             toast.error("Please upload a resume first.");
             return;
         }
@@ -83,79 +86,75 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
     const prevStep = () => setStep(Math.max(step - 1, 1));
 
     const viewResume = () => {
-        const url = resume || user?.resumeURL;
-        if (!url) {
+        if (!currentResume) {
             toast.error("No resume available");
             return;
         }
-        window.open(url, "_blank", "noopener,noreferrer");
+        window.open(currentResume, "_blank", "noopener,noreferrer");
     };
 
     return (
-        <div
-            className={`fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-4 transition-all duration-300 ${isVisible ? "bg-black/60 backdrop-blur-sm" : "bg-transparent pointer-events-none"}`}
-        >
+        <div className={`fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-4 transition-all duration-300 ${isVisible ? "bg-black/60 backdrop-blur-sm" : "bg-transparent pointer-events-none"}`}>
             {/* background click */}
             <div className="absolute inset-0" onClick={handleClose} />
 
             {/* modal container */}
-            <div
-                className={`relative bg-white rounded-3xl shadow-2xl w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto transform transition-all duration-500 flex flex-col`}
-            >
-                {/* header */}
-                <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 sm:p-8 rounded-t-3xl overflow-hidden">
-                    <div className="relative flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
-                                <Briefcase className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
-                            </div>
-                            <div>
-                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Apply for Position</h2>
-                                <div className="flex flex-wrap items-center gap-1 text-sm sm:text-base">
-                                    <span className="text-white/90 font-medium">{jobTitle}</span>
-                                    <span className="text-white/70">•</span>
-                                    <span className="text-white/90">{company}</span>
+            <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto transform transition-all duration-500 flex flex-col max-h-[70vh]">
+
+                {/* content wrapper */}
+                <div className="overflow-y-auto p-4 sm:p-6 md:p-8 flex-1">
+                    {/* header */}
+                    <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 sm:p-8 rounded-t-3xl overflow-hidden">
+                        <div className="relative flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+                                    <Briefcase className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
+                                </div>
+                                <div>
+                                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Apply for Position</h2>
+                                    <div className="flex flex-wrap items-center gap-1 text-sm sm:text-base">
+                                        <span className="text-white/90 font-medium">{jobTitle}</span>
+                                        <span className="text-white/70">•</span>
+                                        <span className="text-white/90">{company}</span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <button
+                                onClick={handleClose}
+                                className="p-2 hover:bg-white/20 rounded-full transition-colors duration-300 group"
+                            >
+                                <X className="w-5 sm:w-6 h-5 sm:h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
+                            </button>
                         </div>
 
-                        <button
-                            onClick={handleClose}
-                            className="p-2 hover:bg-white/20 rounded-full transition-colors duration-300 group"
-                        >
-                            <X className="w-5 sm:w-6 h-5 sm:h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
-                        </button>
-                    </div>
-
-                    {/* steps */}
-                    <div className="flex items-center justify-center space-x-3 sm:space-x-4 mt-6">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="flex items-center">
-                                <div
-                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${i <= step ? "bg-white text-blue-600 shadow-lg" : "bg-white/20 text-white/60"}`}
-                                >
-                                    {i < step ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : i}
+                        {/* steps */}
+                        <div className="flex items-center justify-center space-x-3 sm:space-x-4 mt-6">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="flex items-center">
+                                    <div
+                                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${i <= step ? "bg-white text-blue-600 shadow-lg" : "bg-white/20 text-white/60"}`}
+                                    >
+                                        {i < step ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : i}
+                                    </div>
+                                    {i < 3 && (
+                                        <div className={`w-10 sm:w-16 h-1 mx-1 sm:mx-2 rounded-full transition-colors duration-300 ${i < step ? "bg-white" : "bg-white/20"}`} />
+                                    )}
                                 </div>
-                                {i < 3 && (
-                                    <div className={`w-10 sm:w-16 h-1 mx-1 sm:mx-2 rounded-full transition-colors duration-300 ${i < step ? "bg-white" : "bg-white/20"}`} />
-                                )}
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* content */}
-                <div className="p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[80vh]">
-                    {/* step 1 resume */}
+                    {/* step content */}
                     {step === 1 && (
-                        <div className="space-y-6">
+                        <div className="space-y-6 mt-4">
                             <div className="text-center">
                                 <User className="w-10 h-10 sm:w-12 sm:h-12 text-blue-500 mx-auto mb-4" />
                                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Upload Your Resume</h3>
                                 <p className="text-gray-600">Share your professional background</p>
                             </div>
 
-                            {user?.resumeURL || resume ? (
+                            {currentResume ? (
                                 <div className="bg-green-50 border border-green-200 rounded-2xl p-4 sm:p-6">
                                     <div className="flex items-center space-x-3 mb-4">
                                         <div className="p-2 bg-green-100 rounded-full">
@@ -236,9 +235,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                         </div>
                     )}
 
-                    {/* step 2 cover letter */}
                     {step === 2 && (
-                        <div className="space-y-6">
+                        <div className="space-y-6 mt-4">
                             <div className="text-center">
                                 <Mail className="w-10 h-10 sm:w-12 sm:h-12 text-purple-500 mx-auto mb-4" />
                                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Write Your Cover Letter</h3>
@@ -275,9 +273,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                         </div>
                     )}
 
-                    {/* step 3 review */}
                     {step === 3 && (
-                        <div className="space-y-6">
+                        <div className="space-y-6 mt-4">
                             <div className="text-center">
                                 <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-green-500 mx-auto mb-4" />
                                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Review Your Application</h3>
@@ -290,7 +287,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                                     <div className="flex items-center space-x-3">
                                         <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                                         <span className="text-gray-700">
-                                            Resume: {resume || user?.resumeURL ? "Attached" : "Not uploaded"}
+                                            Resume: {currentResume ? "Attached" : "Not uploaded"}
                                         </span>
                                     </div>
                                     <div className="flex items-start space-x-3">
