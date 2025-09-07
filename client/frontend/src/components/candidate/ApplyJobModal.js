@@ -85,77 +85,242 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
     const nextStep = () => setStep(Math.min(step + 1, 3));
     const prevStep = () => setStep(Math.max(step - 1, 1));
 
-    const viewResume = () => {
-        if (!currentResume) {
-            toast.error("No resume available");
-            return;
-        }
-        window.open(currentResume, "_blank", "noopener,noreferrer");
-    };
-
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center px-2 sm:px-4 transition-all duration-300 ${isVisible ? "bg-black/60 backdrop-blur-sm" : "bg-transparent pointer-events-none"
+            className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${isVisible ? "bg-black/60 backdrop-blur-sm" : "bg-transparent pointer-events-none"
                 }`}
         >
-            {/* background click */}
+            {/* Background click */}
             <div className="absolute inset-0" onClick={handleClose} />
 
-            {/* modal container */}
-            <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto transform transition-all duration-500 flex flex-col max-h-[70vh]">
-
-                {/* content wrapper with scroll if needed */}
-                <div className="flex-1 overflow-y-auto">
-                    {/* header */}
-                    <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 sm:p-8 rounded-t-3xl">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
-                                    <Briefcase className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
-                                </div>
-                                <div>
-                                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Apply for Position</h2>
-                                    <div className="flex flex-wrap items-center gap-1 text-sm sm:text-base">
-                                        <span className="text-white/90 font-medium">{jobTitle}</span>
-                                        <span className="text-white/70">•</span>
-                                        <span className="text-white/90">{company}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button
-                                onClick={handleClose}
-                                className="p-2 hover:bg-white/20 rounded-full transition-colors duration-300 group"
-                            >
-                                <X className="w-5 sm:w-6 h-5 sm:h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
-                            </button>
-                        </div>
+            {/* Modal container */}
+            <div
+                className={`relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl mx-4 transform transition-all duration-500 flex flex-col ${isVisible ? "scale-100 opacity-100 translate-y-0" : "scale-95 opacity-0 translate-y-8"
+                    }`}
+                style={{ maxHeight: "70vh" }}
+            >
+                {/* Header */}
+                <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 sm:p-8 rounded-t-3xl overflow-hidden">
+                    {/* Animated background circles */}
+                    <div className="absolute inset-0 opacity-20">
+                        <div className="absolute top-4 right-4 w-20 h-20 bg-white rounded-full blur-2xl animate-pulse" />
+                        <div className="absolute bottom-4 left-4 w-16 h-16 bg-white rounded-full blur-xl animate-pulse delay-1000" />
                     </div>
 
-                    {/* step content */}
-                    <div className="p-4 sm:p-6 md:p-8">
-                        {step === 1 && (
-                            <div className="space-y-6">
-                                {/* resume upload logic here (unchanged) */}
+                    <div className="relative flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                            <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
+                                <Briefcase className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
                             </div>
-                        )}
+                            <div>
+                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">Apply for Position</h2>
+                                <div className="flex flex-wrap items-center gap-1 text-sm sm:text-base">
+                                    <span className="text-white/90 font-medium">{jobTitle}</span>
+                                    <span className="text-white/70">•</span>
+                                    <span className="text-white/90">{company}</span>
+                                </div>
+                            </div>
+                        </div>
 
-                        {step === 2 && (
-                            <div className="space-y-6">
-                                {/* cover letter logic here (unchanged) */}
-                            </div>
-                        )}
+                        <button
+                            onClick={handleClose}
+                            className="p-2 hover:bg-white/20 rounded-full transition-colors duration-300 group"
+                        >
+                            <X className="w-5 sm:w-6 h-5 sm:h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
+                        </button>
+                    </div>
 
-                        {step === 3 && (
-                            <div className="space-y-6">
-                                {/* review step logic here (unchanged) */}
+                    {/* Steps */}
+                    <div className="flex items-center justify-center space-x-4 mt-6">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="flex items-center">
+                                <div
+                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${i <= step ? "bg-white text-blue-600 shadow-lg" : "bg-white/20 text-white/60"
+                                        }`}
+                                >
+                                    {i < step ? <CheckCircle className="w-4 h-4" /> : i}
+                                </div>
+                                {i < 3 && (
+                                    <div
+                                        className={`w-12 sm:w-16 h-1 mx-2 rounded-full transition-colors duration-300 ${i < step ? "bg-white" : "bg-white/20"
+                                            }`}
+                                    />
+                                )}
                             </div>
-                        )}
+                        ))}
                     </div>
                 </div>
 
-                {/* footer always fixed at bottom of modal card */}
-                <div className="bg-gray-50 px-4 sm:px-8 py-4 sm:py-6 rounded-b-3xl flex justify-between">
+                {/* Scrollable content */}
+                <div className="flex-1 overflow-y-auto p-6 sm:p-8">
+                    {/* Step 1: Resume */}
+                    {step === 1 && (
+                        <div className="space-y-6 animate-fadeIn">
+                            {currentResume ? (
+                                <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
+                                    <div className="flex items-center space-x-3 mb-4">
+                                        <div className="p-2 bg-green-100 rounded-full">
+                                            <CheckCircle className="w-5 h-5 text-green-600" />
+                                        </div>
+                                        <span className="font-semibold text-green-800">Current Resume Available</span>
+                                    </div>
+
+                                    <button
+                                        onClick={() => window.open(currentResume, "_blank", "noopener,noreferrer")}
+                                        className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium transition-colors duration-300 group"
+                                    >
+                                        <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                        <span>View Current Resume</span>
+                                    </button>
+
+                                    <div className="mt-4 pt-4 border-t border-green-200">
+                                        <p className="text-green-700 font-medium mb-2">Upload a new version (optional):</p>
+                                        <div
+                                            className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 cursor-pointer ${dragOver
+                                                    ? "border-blue-400 bg-blue-50"
+                                                    : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                                                }`}
+                                            onDrop={handleDrop}
+                                            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                                            onDragLeave={() => setDragOver(false)}
+                                            onClick={() => document.getElementById("resume-upload").click()}
+                                        >
+                                            <Upload
+                                                className={`w-8 h-8 mx-auto mb-2 transition-colors duration-300 ${dragOver ? "text-blue-500" : "text-gray-400"
+                                                    }`}
+                                            />
+                                            <p className="font-medium text-gray-700">Drop your new resume here or click to browse</p>
+                                            <p className="text-sm text-gray-500 mt-1">PDF format only</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div
+                                    className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer ${dragOver
+                                            ? "border-blue-400 bg-blue-50"
+                                            : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                                        }`}
+                                    onDrop={handleDrop}
+                                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                                    onDragLeave={() => setDragOver(false)}
+                                    onClick={() => document.getElementById("resume-upload").click()}
+                                >
+                                    <div className={`p-4 rounded-full mx-auto mb-4 ${dragOver ? "bg-blue-100" : "bg-gray-100"}`}>
+                                        <Upload className={`w-8 h-8 ${dragOver ? "text-blue-500" : "text-gray-400"}`} />
+                                    </div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">Upload Your Resume</h4>
+                                    <p className="text-gray-600 mb-4">Drop your resume here or click to browse</p>
+                                    <p className="text-sm text-gray-500">PDF format only • Max 5MB</p>
+                                </div>
+                            )}
+
+                            <input
+                                id="resume-upload"
+                                type="file"
+                                accept=".pdf"
+                                onChange={handleFileSelect}
+                                disabled={uploading}
+                                className="hidden"
+                            />
+
+                            {uploading && (
+                                <div className="flex items-center justify-center space-x-3 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                                    <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                                    <span className="text-blue-700 font-medium">Uploading resume...</span>
+                                </div>
+                            )}
+
+                            {uploadSuccess && (
+                                <div className="flex items-center space-x-3 bg-green-50 border border-green-200 rounded-xl p-4 animate-fadeIn">
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
+                                    <span className="text-green-700 font-medium">Resume uploaded successfully!</span>
+                                </div>
+                            )}
+
+                            {uploadError && (
+                                <div className="flex items-center space-x-3 bg-red-50 border border-red-200 rounded-xl p-4">
+                                    <AlertCircle className="w-5 h-5 text-red-600" />
+                                    <span className="text-red-700 font-medium">{uploadError.message}</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Step 2: Cover Letter */}
+                    {step === 2 && (
+                        <div className="space-y-6 animate-fadeIn">
+                            <div className="text-center">
+                                <Mail className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">Write Your Cover Letter</h3>
+                                <p className="text-gray-600">Tell us why you're the perfect fit</p>
+                            </div>
+
+                            <div className="relative">
+                                <textarea
+                                    className="w-full border-2 border-gray-200 focus:border-purple-500 rounded-2xl p-6 text-gray-700 placeholder-gray-400 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-500/20 resize-none"
+                                    placeholder="Dear Hiring Manager,&#10;&#10;I am excited to apply for this position because..."
+                                    rows={8}
+                                    value={coverLetter}
+                                    onChange={(e) => setCoverLetter(e.target.value)}
+                                />
+                                <div className="absolute bottom-4 right-4 text-sm text-gray-400">
+                                    {coverLetter.length}/500 characters
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-2xl p-6">
+                                <div className="flex items-start space-x-3">
+                                    <Sparkles className="w-5 h-5 text-purple-500 mt-0.5" />
+                                    <div>
+                                        <h4 className="font-semibold text-purple-800 mb-2">Tips for a great cover letter:</h4>
+                                        <ul className="text-purple-700 text-sm space-y-1">
+                                            <li>• Mention specific skills relevant to the job</li>
+                                            <li>• Show enthusiasm for the company and role</li>
+                                            <li>• Keep it concise and professional</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Step 3: Review */}
+                    {step === 3 && (
+                        <div className="space-y-6 animate-fadeIn">
+                            <div className="text-center">
+                                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">Review Your Application</h3>
+                                <p className="text-gray-600">Make sure everything looks perfect</p>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
+                                <h4 className="font-semibold text-gray-800 mb-4">Application Summary:</h4>
+
+                                <div className="space-y-4">
+                                    <div className="flex items-center space-x-3">
+                                        <FileText className="w-5 h-5 text-blue-500" />
+                                        <span className="text-gray-700">Resume: {currentResume ? "Attached" : "Not uploaded"}</span>
+                                    </div>
+
+                                    <div className="flex items-start space-x-3">
+                                        <Mail className="w-5 h-5 text-purple-500 mt-0.5" />
+                                        <div className="flex-1">
+                                            <span className="text-gray-700">Cover Letter:</span>
+                                            <div className="mt-2 bg-white rounded-lg p-3 border border-gray-200">
+                                                <p className="text-gray-600 text-sm">
+                                                    {coverLetter || "No cover letter provided"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="bg-gray-50 px-6 sm:px-8 py-4 sm:py-6 rounded-b-3xl flex justify-between">
                     <button
                         onClick={step === 1 ? handleClose : prevStep}
                         className="px-4 sm:px-6 py-2 sm:py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-100 hover:border-gray-400 transition-all duration-300"
@@ -176,8 +341,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                             <button
                                 onClick={handleApply}
                                 className={`flex items-center space-x-2 px-5 sm:px-8 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 shadow-lg ${applying
-                                    ? "bg-gray-400 text-white cursor-not-allowed"
-                                    : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:scale-105"
+                                        ? "bg-gray-400 text-white cursor-not-allowed"
+                                        : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:scale-105"
                                     }`}
                                 disabled={uploading || applying}
                             >
@@ -197,6 +362,16 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                     </div>
                 </div>
             </div>
+
+            <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.4s ease-out forwards;
+        }
+      `}</style>
         </div>
     );
 };
