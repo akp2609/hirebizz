@@ -25,8 +25,9 @@ const SavedJobs = () => {
         fetchSavedJobs();
     }, []);
 
-    const handleViewApply = (job) => {
-        navigate(`/jobs/${job._id}`);
+    const handleViewApply = (jobId) => {
+        if (!jobId) return;
+        navigate(`/jobs/${jobId}`);
     };
 
     const handleRemoveSaved = (id) => {
@@ -78,22 +79,22 @@ const SavedJobs = () => {
                             <div className="space-y-2 mb-4 text-sm">
                                 <div className="flex items-center space-x-2 text-gray-600">
                                     <Building2 className="w-4 h-4" />
-                                    <span>{job.company?.name}</span>
+                                    <span>{job.company?.name || "Unknown Company"}</span>
                                 </div>
                                 <div className="flex items-center space-x-2 text-gray-600">
                                     <MapPin className="w-4 h-4" />
-                                    <span>{job.location}</span>
+                                    <span>{job.location || "Remote / N/A"}</span>
                                 </div>
-                                {job.salary && (
+                                {job.compensation && (
                                     <div className="flex items-center space-x-2 text-gray-600">
                                         <DollarSign className="w-4 h-4" />
-                                        <span>{job.salary}</span>
+                                        <span>₹{job.compensation}</span>
                                     </div>
                                 )}
                             </div>
 
                             <button
-                                onClick={() => handleViewApply(job)}
+                                onClick={() => handleViewApply(job._id)}
                                 className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-xl hover:from-purple-600 hover:to-blue-600 transition-all duration-300 font-medium"
                             >
                                 <Eye className="w-4 h-4" />
