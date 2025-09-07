@@ -64,7 +64,7 @@ function App() {
 
     <GoogleOAuthProvider clientId={clientId}>
 
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-100 via-gray-50 to-white">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <BrowserRouter>
 
           <UserProvider>

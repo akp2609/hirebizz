@@ -48,7 +48,7 @@ const JobFilters = ({ filters, onChange }) => {
     return (
         <div className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/50 mb-8">
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 via-transparent to-indigo-400/5"></div>
+            
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
             
             <div className="relative p-8">

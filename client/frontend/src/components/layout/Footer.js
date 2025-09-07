@@ -20,11 +20,12 @@ function Footer() {
     }
 
     const stats = [
-        { icon: Users, value: '50K+', label: 'Job Seekers' },
-        { icon: Briefcase, value: '5K+', label: 'Active Jobs' },
-        { icon: TrendingUp, value: '95%', label: 'Success Rate' },
-        { icon: Star, value: '4.9', label: 'Rating' }
+        { icon: Users, value: '—', label: 'Job Seekers (Demo)' },
+        { icon: Briefcase, value: '—', label: 'Active Jobs (Demo)' },
+        { icon: TrendingUp, value: '—', label: 'Success Rate (Demo)' },
+        { icon: Star, value: '—', label: 'Rating (Demo)' }
     ]
+
 
     const quickLinks = [
         'Find Jobs', 'Post Jobs', 'Company Profiles', 'Career Advice', 'Salary Guide', 'Resume Builder'
@@ -38,15 +39,15 @@ function Footer() {
         <footer className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 overflow-hidden">
             {/* Animated Background Elements */}
             <div className="absolute inset-0 opacity-10">
-                <div 
+                <div
                     className="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl animate-pulse"
                     style={{ transform: `translateY(${scrollY * 0.1}px)` }}
                 />
-                <div 
+                <div
                     className="absolute top-40 right-20 w-24 h-24 bg-purple-500 rounded-full blur-2xl animate-pulse delay-1000"
                     style={{ transform: `translateY(${scrollY * -0.05}px)` }}
                 />
-                <div 
+                <div
                     className="absolute bottom-20 left-1/3 w-20 h-20 bg-indigo-500 rounded-full blur-2xl animate-pulse delay-2000"
                     style={{ transform: `translateY(${scrollY * 0.08}px)` }}
                 />
@@ -74,8 +75,8 @@ function Footer() {
                 {/* Stats Section */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
                     {stats.map((stat, index) => (
-                        <div 
-                            key={index} 
+                        <div
+                            key={index}
                             className="group bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/20 transition-all duration-300 hover:scale-105 border border-white/10"
                         >
                             <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 group-hover:rotate-12 transition-transform duration-300">
@@ -98,8 +99,8 @@ function Footer() {
                         <ul className="space-y-3">
                             {quickLinks.map((link, index) => (
                                 <li key={index}>
-                                    <a 
-                                        href="#" 
+                                    <a
+                                        href="#"
                                         className="text-gray-300 hover:text-white transition-colors duration-300 hover:translate-x-2 transform inline-block group"
                                     >
                                         <span className="relative">
@@ -121,8 +122,8 @@ function Footer() {
                         <ul className="space-y-3">
                             {jobCategories.map((category, index) => (
                                 <li key={index}>
-                                    <a 
-                                        href="#" 
+                                    <a
+                                        href="#"
                                         className="text-gray-300 hover:text-white transition-colors duration-300 hover:translate-x-2 transform inline-block group"
                                     >
                                         <span className="relative">
@@ -168,9 +169,9 @@ function Footer() {
                                 Get the latest job opportunities delivered to your inbox.
                             </p>
                             <div className="flex">
-                                <input 
-                                    type="email" 
-                                    placeholder="Enter your email" 
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
                                     className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-l-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 backdrop-blur-sm"
                                 />
                                 <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-r-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105">
@@ -186,16 +187,16 @@ function Footer() {
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="flex space-x-6">
                             {[Facebook, Twitter, Linkedin, Instagram].map((Icon, index) => (
-                                <a 
-                                    key={index} 
-                                    href="#" 
+                                <a
+                                    key={index}
+                                    href="#"
                                     className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 group"
                                 >
                                     <Icon className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                                 </a>
                             ))}
                         </div>
-                        
+
                         <div className="text-center md:text-right">
                             <p className="text-gray-400 text-sm">
                                 © {new Date().getFullYear()} HireBizz. All rights reserved.
