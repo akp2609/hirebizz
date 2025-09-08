@@ -14,6 +14,7 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
     const { resume, uploadNewResume, uploading, error: uploadError } = useResumeUpload();
     const { postNewApplication, applying } = useApplication();
 
+    
     const [coverLetter, setCoverLetter] = useState("");
     const [dragOver, setDragOver] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -38,6 +39,22 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
             setCoverLetter("");
             setStep(1);
         }, 300);
+    };
+
+
+    const handleResumeUpload = async (file) => {
+        if (!file) return;
+        setUploadSuccess(false);
+        const uploadedURL = await uploadNewResume(file);
+
+        if (uploadedURL) {
+            toast.success("Resume uploaded!");
+            setUploadSuccess(true);
+            setCurrentResume(uploadedURL);
+            setTimeout(() => setUploadSuccess(false), 3000);
+        } else {
+            toast.error("Resume upload failed.");
+        }
     };
 
     const handleFileSelect = (e) => {
