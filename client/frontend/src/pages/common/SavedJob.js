@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MapPin, Building2, DollarSign, Eye, Trash2 } from 'lucide-react';
-import { getUserSavedJobs } from '../../services/userService';
+import { getUserSavedJobs, removeSavedJob } from '../../services/userService';
 import { useNavigate } from 'react-router-dom';
 
 const SavedJobs = () => {
@@ -30,9 +30,14 @@ const SavedJobs = () => {
         navigate(`/jobs/${jobId}`);
     };
 
-    const handleRemoveSaved = (id) => {
-        setJobs((prev) => prev.filter((job) => job._id !== id));
-        // TODO: Call backend API to remove saved job
+    const handleRemoveSaved = async (id) => {
+        try {
+            await removeSavedJob(id);
+            setJobs((prev) => prev.filter((job) => job._id !== id));
+        } catch (err) {
+            console.error("❌ Failed to remove saved job:", err.message);
+            alert("Failed to remove saved job. Please try again.");
+        }
     };
 
     return (
