@@ -26,7 +26,7 @@ const SavedJobs = () => {
     }, []);
 
     const handleViewApply = (job) => {
-        navigate(/jobs/${job._id});
+        navigate(`/jobs/${job._id}`);
     };
 
     return (
