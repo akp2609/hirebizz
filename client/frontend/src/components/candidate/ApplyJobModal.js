@@ -1,34 +1,52 @@
 import React, { useState, useEffect } from "react";
 import {
     X, Upload, FileText, Send, CheckCircle, AlertCircle,
-    Eye, Sparkles, Briefcase, User, Mail
+    Eye, Sparkles, Briefcase, Mail
 } from "lucide-react";
 import { useUser } from "../../context/UserContext";
 import useResumeUpload from "../../hooks/useResumeUpload";
 import { useApplication } from "../../hooks/useApplication";
 import { toast } from "react-hot-toast";
-
+import { refreshUserResumeURL } from "../../services/userService";
 
 const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company = "Company" }) => {
     const { user } = useUser();
     const { resume, uploadNewResume, uploading, error: uploadError } = useResumeUpload();
     const { postNewApplication, applying } = useApplication();
 
-    
     const [coverLetter, setCoverLetter] = useState("");
     const [dragOver, setDragOver] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [step, setStep] = useState(1);
-    const [currentResume, setCurrentResume] = useState(user?.objectName || resume);
+    const [currentResume, setCurrentResume] = useState(null);
 
+    // when modal opens, fetch fresh resume URL
     useEffect(() => {
-        if (isOpen) setIsVisible(true);
+        const fetchResume = async () => {
+            try {
+                const latestResume = await refreshUserResumeURL();
+                if (latestResume) {
+                    setCurrentResume(latestResume);
+                } else {
+                    setCurrentResume(null); // no resume uploaded yet
+                }
+            } catch (err) {
+                console.error("Error refreshing resume URL:", err);
+                setCurrentResume(user?.resumeURL || null); // fallback
+            }
+        };
+
+        if (isOpen) {
+            setIsVisible(true);
+            fetchResume();
+        }
     }, [isOpen]);
 
+    // update when new resume is uploaded via hook
     useEffect(() => {
-        setCurrentResume(resume || user?.resumeURL);
-    }, [resume, user?.resumeURL]);
+        if (resume) setCurrentResume(resume);
+    }, [resume]);
 
     if (!isOpen) return null;
 
@@ -40,7 +58,6 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
             setStep(1);
         }, 300);
     };
-
 
     const handleResumeUpload = async (file) => {
         if (!file) return;
@@ -104,7 +121,6 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
             >
                 {/* Header */}
                 <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 sm:p-8 rounded-t-3xl overflow-hidden">
-                    {/* Animated background circles */}
                     <div className="absolute inset-0 opacity-20">
                         <div className="absolute top-4 right-4 w-20 h-20 bg-white rounded-full blur-2xl animate-pulse" />
                         <div className="absolute bottom-4 left-4 w-16 h-16 bg-white rounded-full blur-xl animate-pulse delay-1000" />
@@ -180,8 +196,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                                         <p className="text-green-700 font-medium mb-2">Upload a new version (optional):</p>
                                         <div
                                             className={`border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 cursor-pointer ${dragOver
-                                                    ? "border-blue-400 bg-blue-50"
-                                                    : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                                                ? "border-blue-400 bg-blue-50"
+                                                : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
                                                 }`}
                                             onDrop={handleDrop}
                                             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -200,8 +216,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                             ) : (
                                 <div
                                     className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer ${dragOver
-                                            ? "border-blue-400 bg-blue-50"
-                                            : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                                        ? "border-blue-400 bg-blue-50"
+                                        : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
                                         }`}
                                     onDrop={handleDrop}
                                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -270,20 +286,6 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                                     {coverLetter.length}/500 characters
                                 </div>
                             </div>
-
-                            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-2xl p-6">
-                                <div className="flex items-start space-x-3">
-                                    <Sparkles className="w-5 h-5 text-purple-500 mt-0.5" />
-                                    <div>
-                                        <h4 className="font-semibold text-purple-800 mb-2">Tips for a great cover letter:</h4>
-                                        <ul className="text-purple-700 text-sm space-y-1">
-                                            <li>• Mention specific skills relevant to the job</li>
-                                            <li>• Show enthusiasm for the company and role</li>
-                                            <li>• Keep it concise and professional</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     )}
 
@@ -344,8 +346,8 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
                             <button
                                 onClick={handleApply}
                                 className={`flex items-center space-x-2 px-5 sm:px-8 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 shadow-lg ${applying
-                                        ? "bg-gray-400 text-white cursor-not-allowed"
-                                        : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:scale-105"
+                                    ? "bg-gray-400 text-white cursor-not-allowed"
+                                    : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 hover:scale-105"
                                     }`}
                                 disabled={uploading || applying}
                             >
