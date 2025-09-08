@@ -3,36 +3,38 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import NotificationBell from "../ui/Notification";
 import { useUser } from "../../context/UserContext";
+import { Menu, X } from "lucide-react";
 
 function NavBar() {
   const { isAuthenticated, user, logout, loading } = useContext(AuthContext);
   const { loadingUser } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
   const defaultProfilePic = "https://www.w3schools.com/howto/img_avatar.png";
   const navigate = useNavigate();
 
   if (loading || loadingUser) return null;
 
   return (
-    <nav className="relative overflow-visible bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white shadow-2xl border-b border-blue-500/20 backdrop-blur-sm z-50">
-      {/* Background gradient strip */}
+    <nav className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white shadow-2xl border-b border-blue-500/20 backdrop-blur-sm z-50">
+      {/* Background strip */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
 
-      <div className="relative max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
+        <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
           <img
             src="https://res.cloudinary.com/dmcnrrfxo/image/upload/v1754482525/hirebizz-logo_pjmqr9.png"
             alt="HireBizz Logo"
-            className="w-12 h-12 rounded-2xl object-cover ring-2 ring-white/30 group-hover:ring-white/60 transition-all duration-500 shadow-xl group-hover:shadow-2xl transform group-hover:scale-105"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl object-cover ring-2 ring-white/30 group-hover:ring-white/60 transition-all duration-500 shadow-xl group-hover:shadow-2xl transform group-hover:scale-105"
           />
-          <span className="text-3xl font-black bg-gradient-to-r from-white via-cyan-100 to-blue-200 bg-clip-text text-transparent group-hover:from-cyan-200 group-hover:via-white group-hover:to-indigo-200 transition-all duration-500 tracking-tight">
+          <span className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-white via-cyan-100 to-blue-200 bg-clip-text text-transparent group-hover:from-cyan-200 group-hover:via-white group-hover:to-indigo-200 transition-all duration-500 tracking-tight">
             HireBizz
           </span>
         </Link>
 
-        {/* Right side */}
-        <div className="flex items-center gap-6 relative">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-6">
           {isAuthenticated && user ? (
             <>
               {/* Notifications */}
@@ -52,7 +54,7 @@ function NavBar() {
                 About
               </Link>
 
-              {/* Profile + Dropdown */}
+              {/* Profile Dropdown */}
               <div className="relative">
                 <div
                   className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-white/10 transition"
@@ -64,8 +66,9 @@ function NavBar() {
                     className="w-10 h-10 rounded-full object-cover ring-2 ring-white/40"
                   />
                   <svg
-                    className={`w-5 h-5 transition-transform duration-300 ${isOpen ? "rotate-180" : ""
-                      }`}
+                    className={`w-5 h-5 transition-transform duration-300 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
@@ -106,8 +109,8 @@ function NavBar() {
                           My Applications
                         </Link>
                       )}
-                      <Link to="/setting" className="dropdown-item">
-                        Settings
+                      <Link to="/help" className="dropdown-item">
+                        Help
                       </Link>
                       <Link to="/chats" className="dropdown-item">
                         Chats
@@ -136,7 +139,54 @@ function NavBar() {
             </Link>
           )}
         </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button
+            onClick={() => setMobileMenu(!mobileMenu)}
+            className="p-2 rounded-md hover:bg-white/10 transition"
+          >
+            {mobileMenu ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenu && (
+        <div className="md:hidden px-6 pb-6 space-y-4 bg-gradient-to-b from-blue-900 via-blue-800 to-indigo-900 border-t border-blue-500/20">
+          {isAuthenticated && user ? (
+            <>
+              <NotificationBell userId={user._id} />
+
+              <Link to="/" className="block nav-item">
+                Home
+              </Link>
+              <Link to="/about" className="block nav-item">
+                About
+              </Link>
+              <Link to="/profile" className="block nav-item">
+                Profile
+              </Link>
+              <Link to="/chats" className="block nav-item">
+                Chats
+              </Link>
+              <button
+                onClick={logout}
+                className="w-full text-left nav-item text-red-400 hover:text-red-500"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="block nav-item text-center bg-white/10 border border-white/20 rounded-lg py-2"
+            >
+              Join HireBizz
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

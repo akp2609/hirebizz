@@ -213,10 +213,11 @@ function Footer() {
             {showScrollTop && (
                 <button
                     onClick={scrollToTop}
-                    className="fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-20 group"
+                    className="fixed bottom-24 right-8 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
                 >
                     <ArrowUp className="w-6 h-6 mx-auto group-hover:-translate-y-1 transition-transform" />
                 </button>
+
             )}
         </footer>
     )

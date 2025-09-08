@@ -7,18 +7,20 @@ import { useUser } from "../../context/UserContext";
 import useResumeUpload from "../../hooks/useResumeUpload";
 import { useApplication } from "../../hooks/useApplication";
 import { toast } from "react-hot-toast";
+import { refreshUserResumeURL } from '../../services/userService';
 
 const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company = "Company" }) => {
     const { user } = useUser();
     const { resume, uploadNewResume, uploading, error: uploadError } = useResumeUpload();
     const { postNewApplication, applying } = useApplication();
 
+    const [isLoading, setIsLoading] = useState(true);
     const [coverLetter, setCoverLetter] = useState("");
     const [dragOver, setDragOver] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [step, setStep] = useState(1);
-    const [currentResume, setCurrentResume] = useState(user?.resumeURL || resume);
+    const [currentResume, setCurrentResume] = useState(user?.objectName || resume);
 
     useEffect(() => {
         if (isOpen) setIsVisible(true);
@@ -38,6 +40,22 @@ const ApplyJobModal = ({ jobId, isOpen, onClose, jobTitle = "Job Title", company
             setStep(1);
         }, 300);
     };
+
+    const fetchRefreshedResume = async () => {
+            try {
+                setIsLoading(true);
+                const res = await refreshUserResumeURL();
+                setResume(res);
+            } catch (err) {
+                console.error("Failed to fetch resume:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+    
+        useEffect(() => {
+            fetchRefreshedResume();
+        }, []);
 
     const handleResumeUpload = async (file) => {
         if (!file) return;
