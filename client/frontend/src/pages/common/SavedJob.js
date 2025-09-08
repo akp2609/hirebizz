@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { getUserSavedJobs } from '../../services/userService';
-import JobCard from '../../components/common/JobCard';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { getUserSavedJobs } from "../../services/userService";
+import JobCard from "../../components/common/JobCard";
+import JobDetailsModal from "../../components/candidate/JobDetailsModal";
+import { updateJobStats } from "../../services/jobService";
+import { useUser } from "../../context/UserContext";
 
 const SavedJobs = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
+
+    const [selectedJob, setSelectedJob] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchSavedJobs = async () => {
@@ -25,13 +31,32 @@ const SavedJobs = () => {
         fetchSavedJobs();
     }, []);
 
-    const handleViewApply = (job) => {
-        navigate(`/jobs/${job._id}`);
+    const jobStatsUpdate = async (jobId) => {
+        if (jobId && user) {
+            try {
+                await updateJobStats(jobId, "view");
+            } catch (err) {
+                console.warn("⚠️ Failed to update job stats:", err.message);
+            }
+        }
+    };
+
+    const openJobDetails = (job) => {
+        jobStatsUpdate(job._id);
+        setSelectedJob(job);
+        setShowDetailsModal(true);
+    };
+
+    const closeJobDetails = () => {
+        setSelectedJob(null);
+        setShowDetailsModal(false);
     };
 
     return (
         <div className="min-h-screen py-10 px-4 sm:px-8 bg-gray-50">
-            <h1 className="text-3xl font-bold mb-6 text-center text-blue-800">Your Saved Jobs</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center text-blue-800">
+                Your Saved Jobs
+            </h1>
 
             {loading ? (
                 <div className="flex justify-center items-center mt-20">
@@ -51,11 +76,20 @@ const SavedJobs = () => {
                         <JobCard
                             key={job._id}
                             job={job}
-                            onClick={handleViewApply}
+                            onClick={() => openJobDetails(job)}
                             isSaved={true}
                         />
                     ))}
                 </div>
+            )}
+
+            {/* Job Details Modal */}
+            {selectedJob && (
+                <JobDetailsModal
+                    job={selectedJob}
+                    isOpen={showDetailsModal}
+                    onClose={closeJobDetails}
+                />
             )}
         </div>
     );
