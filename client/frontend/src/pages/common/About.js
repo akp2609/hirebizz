@@ -329,7 +329,7 @@ const About = () => {
                                 <span>Visit My GitHub</span>
                                 <Star className="w-5 h-5 text-yellow-400 animate-pulse" />
                             </a>
-                            <a href="https://hirebizz.com" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center space-x-3 px-8 py-4 bg-white/10 border-2 border-white/20 text-white rounded-2xl font-bold text-lg hover:bg-white/20 transition-all duration-300 hover:scale-110">
+                            <a href="https://hirebizz.xyz" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center space-x-3 px-8 py-4 bg-white/10 border-2 border-white/20 text-white rounded-2xl font-bold text-lg hover:bg-white/20 transition-all duration-300 hover:scale-110">
                                 <Globe className="w-6 h-6 group-hover:rotate-12 transition-transform" />
                                 <span>Live Platform</span>
                                 <ExternalLink className="w-5 h-5" />
