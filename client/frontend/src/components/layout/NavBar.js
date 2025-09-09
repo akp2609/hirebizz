@@ -6,8 +6,8 @@ import { useUser } from "../../context/UserContext";
 import { Menu, X } from "lucide-react";
 
 function NavBar() {
-  const { isAuthenticated, user, logout, loading } = useContext(AuthContext);
-  const { loadingUser } = useUser();
+  const { isAuthenticated, logout, loading } = useContext(AuthContext);
+  const { loadingUser,user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const defaultProfilePic = "https://www.w3schools.com/howto/img_avatar.png";
@@ -66,9 +66,8 @@ function NavBar() {
                     className="w-10 h-10 rounded-full object-cover ring-2 ring-white/40"
                   />
                   <svg
-                    className={`w-5 h-5 transition-transform duration-300 ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
+                    className={`w-5 h-5 transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
@@ -166,6 +165,14 @@ function NavBar() {
               </Link>
               <Link to="/profile" className="block nav-item">
                 Profile
+              </Link>
+              {user.role === "candidate" && (
+                <Link to="/my-applications" className="block nav-item">
+                  My Applications
+                </Link>
+              )}
+              <Link to="/help" className="block nav-item">
+                Help
               </Link>
               <Link to="/chats" className="block nav-item">
                 Chats
