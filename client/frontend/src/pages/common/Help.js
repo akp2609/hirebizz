@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { HelpCircle, User, Building2, FileText, CreditCard, MessageSquare, ChevronRight, Menu, X } from 'lucide-react';
+import React, { useState } from 'react'
+import { HelpCircle, User, Building2, FileText, CreditCard, MessageSquare, ChevronRight, Menu, X, Search, Briefcase, Facebook, Twitter, Linkedin, Instagram, Mail, Phone } from 'lucide-react';
 
 const nav = [
     { to: "account-issues-guide", label: "Account Issues", icon: User, description: "Login, password, and profile help" },
@@ -13,6 +13,7 @@ const nav = [
 const Help = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('account-issues-guide');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -22,177 +23,175 @@ const Help = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="flex justify-between items-center h-16">
+                        {/* Logo */}
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                                <Briefcase size={20} className="text-white" />
+                            </div>
+                            <div>
+                                <h1 className="text-lg font-bold text-gray-900 sm:text-xl">HireBizz</h1>
+                                <p className="text-xs text-gray-500 hidden sm:block">Help Center</p>
+                            </div>
+                        </div>
 
-            <div className="md:hidden fixed top-4 left-4 z-50">
-                <button
-                    onClick={toggleMobileMenu}
-                    className="p-3 bg-white/80 backdrop-blur-md rounded-xl shadow-lg border border-white/20 hover:bg-white/90 transition-all duration-200"
-                >
-                    {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-                </button>
+                        {/* Desktop Nav */}
+                        <nav className="hidden md:flex items-center space-x-6">
+                            <a href="#" className="text-gray-600 hover:text-blue-600">Home</a>
+                            <a href="#" className="text-gray-600 hover:text-blue-600">Jobs</a>
+                            <a href="#" className="text-gray-600 hover:text-blue-600">Companies</a>
+                            <a href="#" className="text-blue-600 font-medium">Help</a>
+                        </nav>
+
+                        {/* Mobile menu toggle */}
+                        <button onClick={toggleMobileMenu} className="md:hidden p-2 rounded-lg hover:bg-gray-100">
+                            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile Nav */}
+                {isMobileMenuOpen && (
+                    <div className="md:hidden border-t border-gray-200 bg-white">
+                        <div className="px-4 py-3 space-y-3">
+                            {['Home', 'Jobs', 'Companies', 'Help'].map((item) => (
+                                <a key={item} href="#" className={`block ${item === 'Help' ? 'text-blue-600 font-medium' : 'text-gray-600 hover:text-blue-600'}`}>
+                                    {item}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </header>
+
+            {/* Hero */}
+            <div className="text-center py-8 px-4">
+                <div className="inline-flex w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl items-center justify-center mb-4">
+                    <HelpCircle size={28} className="text-white" />
+                </div>
+                <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">How can we help you?</h1>
+                <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                    Find answers to common questions, get support, and learn how to make the most of HireBizz.
+                </p>
+                <div className="max-w-lg mx-auto relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Search size={18} className="text-gray-400" />
+                    </div>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search for help articles..."
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                    />
+                </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40" onClick={toggleMobileMenu} />
-            )}
+            {/* Content */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col lg:flex-row gap-6">
+                {/* Sidebar */}
+                <div className="lg:w-72 flex-shrink-0">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 overflow-x-auto flex lg:block space-x-3 lg:space-x-0 lg:space-y-2">
+                        {nav.map((item) => {
+                            const Icon = item.icon;
+                            const active = activeSection === item.to;
+                            return (
+                                <button
+                                    key={item.to}
+                                    onClick={() => handleNavClick(item.to)}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg whitespace-nowrap ${active ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-gray-700 hover:bg-gray-50'
+                                        }`}
+                                >
+                                    <Icon size={18} className={active ? 'text-blue-600' : 'text-gray-500'} />
+                                    <span className="text-sm">{item.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
 
-            <div className="flex min-h-screen relative">
+                {/* Main Panel */}
+                <div className="flex-1">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                            {nav.find(item => item.to === activeSection)?.label || 'Welcome'}
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            {nav.find(item => item.to === activeSection)?.description || 'Select a topic to get started.'}
+                        </p>
 
-                <aside className={`
-                    fixed md:static inset-y-0 left-0 z-40 w-80 md:w-1/3 lg:w-1/4 xl:w-1/5
-                    transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
-                    transition-transform duration-300 ease-out
-                `}>
-                    <div className="h-full bg-white/60 backdrop-blur-xl border-r border-white/20 shadow-2xl">
-                        <div className="sticky top-0 h-screen overflow-y-auto">
-
-                            <div className="p-6 pb-4 border-b border-white/10">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                                        <HelpCircle size={24} className="text-white" />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                                            Help Center
-                                        </h2>
-                                        <p className="text-sm text-gray-500 mt-0.5">Find answers and get support</p>
-                                    </div>
-                                </div>
+                        <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                            {/* Quick Actions */}
+                            <div className="bg-blue-50 rounded-lg p-4">
+                                <h3 className="font-semibold mb-3">Quick Actions</h3>
+                                {['Reset your password', 'Update profile', 'Manage notifications', 'Delete account'].map(a => (
+                                    <p key={a} className="text-sm text-gray-700 flex items-center gap-2"><div className="w-2 h-2 bg-blue-500 rounded-full" /> {a}</p>
+                                ))}
                             </div>
+                            <div className="bg-emerald-50 rounded-lg p-4">
+                                <h3 className="font-semibold mb-3">Popular Articles</h3>
+                                {['Getting started guide', 'How to apply', 'Creating the perfect resume', 'Interview tips'].map(a => (
+                                    <p key={a} className="text-sm text-gray-700 flex items-center gap-2"><div className="w-2 h-2 bg-emerald-500 rounded-full" /> {a}</p>
+                                ))}
+                            </div>
+                        </div>
 
-
-                            <nav aria-label="Help topics" className="p-4">
-                                <ul className="space-y-2">
-                                    {nav.map((item, index) => {
-                                        const Icon = item.icon;
-                                        const isActive = activeSection === item.to;
-                                        return (
-                                            <li key={item.to}>
-                                                <button
-                                                    onClick={() => handleNavClick(item.to)}
-                                                    className={`w-full group relative overflow-hidden rounded-2xl p-4 transition-all duration-300 transform hover:scale-[1.02] ${isActive
-                                                        ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-xl shadow-blue-500/25"
-                                                        : "bg-white/40 hover:bg-white/60 border border-white/20 hover:border-white/30 hover:shadow-lg text-gray-700"
-                                                        }`}
-                                                    style={{
-                                                        animationDelay: `${index * 100}ms`,
-                                                    }}
-                                                >
-
-                                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-
-                                                    <div className="relative flex items-start gap-3 text-left">
-                                                        <div className={`p-2 rounded-xl transition-colors duration-300 ${isActive ? "bg-white/20" : "bg-gray-100 group-hover:bg-gray-200"
-                                                            }`}>
-                                                            <Icon size={20} className="transition-transform duration-300 group-hover:scale-110" />
-                                                        </div>
-
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center justify-between">
-                                                                <h3 className="font-semibold text-sm leading-tight mb-1">
-                                                                    {item.label}
-                                                                </h3>
-                                                                <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1" />
-                                                            </div>
-                                                            <p className="text-xs opacity-75 leading-relaxed">
-                                                                {item.description}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </button>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </nav>
-
-                            {/* Footer */}
-                            <div className="p-4 mt-auto border-t border-white/10">
-                                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-4 border border-emerald-200/50">
-                                    <h4 className="font-semibold text-sm text-gray-800 mb-2">Need more help?</h4>
-                                    <p className="text-xs text-gray-600 mb-3">Can't find what you're looking for? Contact our support team.</p>
-                                    <button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 text-white text-xs font-medium py-2 px-4 rounded-xl hover:shadow-lg transition-all duration-200 transform hover:scale-105">
-                                        Contact Support
-                                    </button>
+                        {/* FAQ */}
+                        <div className="border-t pt-6">
+                            <h3 className="text-lg font-semibold mb-4">FAQ</h3>
+                            <div className="space-y-3">
+                                <div className="bg-gray-50 p-3 rounded">
+                                    <h4 className="font-medium">How do I create an account?</h4>
+                                    <p className="text-sm text-gray-600">Click “Sign Up” on the homepage and follow instructions.</p>
+                                </div>
+                                <div className="bg-gray-50 p-3 rounded">
+                                    <h4 className="font-medium">How do I search for jobs?</h4>
+                                    <p className="text-sm text-gray-600">Use filters by location, job title, or keywords.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </aside>
+                </div>
+            </div>
 
-
-                <main className="flex-1 md:ml-0 relative">
-
-                    <div className="relative">
-
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-blue-400/10 to-indigo-400/10 rounded-full blur-3xl" />
-                            <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl" />
-                        </div>
-
-
-                        <div className="relative z-10 min-h-screen p-4 md:p-6 lg:p-8">
-                            <div className="w-full max-w-none">
-
-                                <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden w-full">
-                                    <div className="p-6 md:p-8 lg:p-12">
-                                        <div className="text-center mb-8">
-                                            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-4">
-                                                {nav.find(item => item.to === activeSection)?.label || 'Welcome to Help Center'}
-                                            </h1>
-                                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                                {nav.find(item => item.to === activeSection)?.description || 'Select a topic from the sidebar to get started.'}
-                                            </p>
-                                        </div>
-
-                                        <div className="grid md:grid-cols-2 gap-6 mt-12">
-                                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-                                                <h3 className="font-semibold text-lg text-gray-800 mb-3">Quick Actions</h3>
-                                                <ul className="space-y-2 text-gray-600">
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                        Reset your password
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                        Update profile information
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                        Manage notifications
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-100">
-                                                <h3 className="font-semibold text-lg text-gray-800 mb-3">Popular Articles</h3>
-                                                <ul className="space-y-2 text-gray-600">
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                                        Getting started guide
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                                        Troubleshooting tips
-                                                    </li>
-                                                    <li className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                                        Best practices
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            {/* Footer */}
+            <footer className="bg-gray-900 text-white mt-12">
+                <div className="max-w-7xl mx-auto px-4 py-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="sm:col-span-2">
+                        <h3 className="text-xl font-bold mb-3">HireBizz</h3>
+                        <p className="text-gray-400 mb-4">Connecting professionals with opportunities.</p>
+                        <div className="flex space-x-3">
+                            {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
+                                <a key={i} href="#" className="w-9 h-9 bg-gray-800 rounded flex items-center justify-center hover:bg-gray-700"><Icon size={16} /></a>
+                            ))}
                         </div>
                     </div>
-                </main>
-            </div>
+                    <div>
+                        <h4 className="font-semibold mb-3">Quick Links</h4>
+                        <ul className="space-y-2 text-gray-400 text-sm">
+                            <li><a href="#">Browse Jobs</a></li>
+                            <li><a href="#">Companies</a></li>
+                            <li><a href="#">Post a Job</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold mb-3">Support</h4>
+                        <ul className="space-y-2 text-gray-400 text-sm">
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="border-t border-gray-800 py-4 text-center text-gray-500 text-sm">
+                    © 2024 HireBizz • support@hirebizz.com • +1 (555) 123-4567
+                </div>
+            </footer>
         </div>
-    )
-}
+    );
+};
 
-export default Help
+export default Help;

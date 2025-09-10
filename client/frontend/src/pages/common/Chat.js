@@ -6,6 +6,8 @@ import { db } from "../../firebase";
 import ChatBubble from "../../components/common/ChatBubble";
 import { useUser } from "../../context/UserContext";
 import { sendMessage, markMessageAsSeen } from "../../services/chatService";
+import { postReport } from "../../services/reportService";
+import ReportModal from "../../components/common/ReportModal";
 
 const ChatPage = () => {
     const { userId: chatUserId } = useParams();
@@ -21,6 +23,24 @@ const ChatPage = () => {
     const [messages, setMessages] = useState([]);
     const [newMsg, setNewMsg] = useState("");
     const [showScrollDown, setShowScrollDown] = useState(false);
+    const [isReportOpen, setIsReportOpen] = useState(false);
+
+    const handleOpenReport = () => {
+        setIsReportOpen(true);
+    };
+
+    const handleCloseReport = () => {
+        setIsReportOpen(false);
+    };
+
+    const handleSubmitReport = async (reportData) => {
+        try {
+            await postReport(reportData);
+            console.log("Report submitted successfully");
+        } catch (err) {
+            console.error("Failed to submit report", err);
+        }
+    };
 
     const chatId = [user._id, chatUserId].sort().join("_");
 
@@ -119,7 +139,7 @@ const ChatPage = () => {
                 </div>
 
                 {/* Menu only */}
-                <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition">
+                <button onClick={handleOpenReport} className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition">
                     <MoreVertical size={18} className="text-gray-600" />
                 </button>
             </div>
@@ -192,6 +212,12 @@ const ChatPage = () => {
                     </button>
                 </div>
             </div>
+
+            <ReportModal
+                isOpen={isReportOpen}
+                onClose={handleCloseReport}
+                onSubmit={handleSubmitReport}
+            />
         </div>
     );
 };
