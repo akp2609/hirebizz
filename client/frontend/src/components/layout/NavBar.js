@@ -3,17 +3,30 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import NotificationBell from "../ui/Notification";
 import { useUser } from "../../context/UserContext";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Loader2 } from "lucide-react";
 
 function NavBar() {
   const { isAuthenticated, logout, loading } = useContext(AuthContext);
-  const { loadingUser,user } = useUser();
+  const { loadingUser, user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const defaultProfilePic = "https://www.w3schools.com/howto/img_avatar.png";
   const navigate = useNavigate();
 
   if (loading || loadingUser) return null;
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout(); 
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <nav className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white shadow-2xl border-b border-blue-500/20 backdrop-blur-sm z-50">
@@ -119,10 +132,18 @@ function NavBar() {
                     {/* Logout */}
                     <div className="border-t border-blue-100/50">
                       <button
-                        onClick={logout}
-                        className="dropdown-item text-red-600 hover:text-red-700 w-full text-left"
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        className="dropdown-item text-red-600 hover:text-red-700 w-full text-left flex items-center gap-2"
                       >
-                        Logout
+                        {isLoggingOut ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Logging out...
+                          </>
+                        ) : (
+                          "Logout"
+                        )}
                       </button>
                     </div>
                   </div>
@@ -178,10 +199,18 @@ function NavBar() {
                 Chats
               </Link>
               <button
-                onClick={logout}
-                className="w-full text-left nav-item text-red-400 hover:text-red-500"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="w-full text-left nav-item text-red-400 hover:text-red-500 flex items-center gap-2"
               >
-                Logout
+                {isLoggingOut ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Logging out...
+                  </>
+                ) : (
+                  "Logout"
+                )}
               </button>
             </>
           ) : (
