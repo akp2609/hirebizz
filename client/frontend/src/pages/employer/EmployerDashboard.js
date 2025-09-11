@@ -179,7 +179,7 @@ const EmployerDashboard = () => {
                                     </Link>
                                     <div className="flex items-center text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-xl">
                                         <p>{job.applications?.length || 0} applications</p>
-                                        <p>{job.views?.length || 0} views</p>
+                                        <p> {job.views?.length || 0} views</p>
                                     </div>
                                 </div>
                             </div>
